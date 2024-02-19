@@ -10,9 +10,11 @@ function ViewPostsComponent() {
       const result = await axios.get(`http://localhost:8080/api/v1/posts`);
 
       setPosts(result.data);
+      console.log(result.data);
+      
     };
 
-    // fetchData();
+    fetchData();
   }, []);
 
   return (
@@ -24,10 +26,10 @@ function ViewPostsComponent() {
           key={post.id}
         >
           <div className="flex justify-between">
-            <h3>Post {post.id}:</h3>
-            <h4>{post.date}</h4>
+            <h3>Post by {post.id}:</h3>
+            <h4>{post.postedDate}</h4>
           </div>
-          <h4>{post.text}</h4>
+          <h4>{post.content}</h4>
         </div>
       ))}
     </div>
