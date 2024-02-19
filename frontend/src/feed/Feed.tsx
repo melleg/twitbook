@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import Post from "../post/post";
-import { Link } from "react-router-dom";
 import PostCard from "../post/PostCard";
 
 interface FeedProps {
