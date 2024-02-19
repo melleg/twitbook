@@ -25,7 +25,7 @@ const Feed: React.FC<FeedProps> = ({ getFunction }) => {
     <>
       {loading && <div>Loading</div>}
       {posts.map((post) => (
-        <PostCard post={post} />
+        <PostCard key={post.id} post={post} />
       ))}
     </>
   );
