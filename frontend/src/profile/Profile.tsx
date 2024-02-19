@@ -48,7 +48,9 @@ function Profile() {
                   className="h-40 -mt-32 rounded-md aspect-square border-solid border-4 border-white"
                   src="https://picsum.photos/200"
                 ></img>
-                <button>Follow</button>
+                <button type="button" className="btn-action">
+                  Follow
+                </button>
               </div>
               {/* Additional profile info */}
               <div className="px-4 pb-4">

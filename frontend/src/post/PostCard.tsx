@@ -9,10 +9,12 @@ interface PostCardProps {
 const PostCard: React.FC<PostCardProps> = ({ post }) => {
   return (
     <div className="card flex flex-wrap items-start gap-2" key={post.id}>
-      <img
-        className="w-14 rounded-full aspect-square"
-        src="https://picsum.photos/50"
-      ></img>
+      <Link to={`/profile/${post.username}`}>
+        <img
+          className="w-14 rounded-full aspect-square"
+          src="https://picsum.photos/50"
+        ></img>
+      </Link>
       <div className="flex flex-col">
         <div className="flex flex-wrap gap-2 items-center">
           <Link to={`/profile/${post.username}`}>
@@ -23,6 +25,14 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
           </span>
         </div>
         <p>{post.content}</p>
+        <div className="flex flex-wrap gap-10 mt-1">
+          <button className="btn-icon" type="button">
+            👍1k
+          </button>
+          <button className="btn-icon" type="button">
+            🔁1k
+          </button>
+        </div>
       </div>
     </div>
   );
