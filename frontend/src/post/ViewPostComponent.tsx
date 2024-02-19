@@ -19,7 +19,10 @@ function ViewPostsComponent() {
     <div className="mt-16 mx-72">
       <p>Posts in the database:</p>
       {posts.map((post) => (
-        <div className="border-black border-2 mb-12 px-2 rounded-md" key={post.id}>
+        <div
+          className="border-black border-2 mb-12 px-2 rounded-md"
+          key={post.id}
+        >
           <div className="flex justify-between">
             <h3>Post {post.id}:</h3>
             <h4>{post.date}</h4>
