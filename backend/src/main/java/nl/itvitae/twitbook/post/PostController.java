@@ -30,13 +30,18 @@ public class PostController {
   private final UserRepository userRepository;
 
   @GetMapping
-  public List<Post> getAll() {
-    return postRepository.findAll();
+  public List<PostDTO> getAll() {
+    return postRepository.findAll().stream().map(PostDTO::new).toList();
   }
 
   @GetMapping("{id}")
-  public Optional<Post> getById(@PathVariable Long id) {
-    return postRepository.findById(id);
+  public ResponseEntity<?> getById(@PathVariable Long id) {
+    Optional<Post> post = postRepository.findById(id);
+
+    if(post.isEmpty())
+      return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+
+    return new ResponseEntity<>(new PostDTO(post.get()), HttpStatus.OK);
   }
 
   @PostMapping
@@ -56,6 +61,8 @@ public class PostController {
         .buildAndExpand(newPost.getId())
         .toUri();
 
-    return ResponseEntity.created(uri).body(newPost);
+    PostDTO newPostDTO = new PostDTO(newPost);
+
+    return ResponseEntity.created(uri).body(newPostDTO);
   }
 }
