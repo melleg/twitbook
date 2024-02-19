@@ -25,11 +25,11 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
           </span>
         </div>
         <p>{post.content}</p>
-        <div className="flex flex-wrap gap-10 mt-1">
-          <button className="btn-icon" type="button">
+        <div className="flex flex-wrap gap-2 mt-1">
+          <button className="btn-icon w-16 text-left" type="button">
             👍1k
           </button>
-          <button className="btn-icon" type="button">
+          <button className="btn-icon w-16 text-left" type="button">
             🔁1k
           </button>
         </div>
