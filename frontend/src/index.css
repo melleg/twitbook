@@ -5,12 +5,19 @@
 :root {
   --action: #72ddff;
   --action-hover: #58c9ec;
+  --text-light: grey;
 }
 
 body {
   width: min(50rem, calc(100% - 20px));
   margin: 1rem auto;
   border: 1px solid rgb(209, 209, 209);
+}
+
+h1,
+h2,
+h3 {
+  font-weight: bold;
 }
 
 h1 {
@@ -39,12 +46,17 @@ input {
 }
 
 button {
-  padding: 0.25rem 0.35rem;
+  padding: 0.35rem 0.95rem;
   font-weight: bold;
   color: white;
   background-color: var(--action) !important;
+  border-radius: 0.9rem;
 
   &:hover {
     background-color: var(--action-hover) !important;
   }
+}
+
+.text-light {
+  color: var(--text-light);
 }
