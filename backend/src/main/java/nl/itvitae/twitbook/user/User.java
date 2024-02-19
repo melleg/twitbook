@@ -5,15 +5,18 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
+import jakarta.persistence.ManyToMany;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import nl.itvitae.twitbook.post.Post;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -21,7 +24,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
 @Entity(name = "`users`")
 public class User implements UserDetails {
 
@@ -35,10 +37,18 @@ public class User implements UserDetails {
 
   private Role[] roles;
 
+  @ManyToMany
+  private Set<Post> likedPosts = new HashSet<>();
+
   public User(String username, String password, Role... roles) {
     this.username = username;
     this.password = password;
     this.roles = roles;
+  }
+
+  public void addLikedPost(Post newLikedPost){
+    this.likedPosts.add(newLikedPost);
+    System.out.println("liked posts = " + this.likedPosts.size());
   }
 
   @Override

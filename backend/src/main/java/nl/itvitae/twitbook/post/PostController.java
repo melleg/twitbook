@@ -65,4 +65,10 @@ public class PostController {
 
     return ResponseEntity.created(uri).body(newPostDTO);
   }
+
+  @GetMapping("/likes")
+  public int getLikes(){
+    System.out.println(postRepository.findById(1L).get().getLikedBy().size());
+    return postRepository.findById(1L).get().getLikedBy().size();
+  }
 }
