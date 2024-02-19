@@ -26,7 +26,7 @@ function ViewPostsComponent() {
           key={post.id}
         >
           <div className="flex justify-between">
-            <h3>Post by {post.id}:</h3>
+            <h3>Post by {post.author.username}:</h3>
             <h4>{post.postedDate}</h4>
           </div>
           <h4>{post.content}</h4>
