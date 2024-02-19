@@ -2,9 +2,12 @@ package nl.itvitae.twitbook.post;
 
 import java.util.List;
 import java.util.Optional;
+
+import lombok.AllArgsConstructor;
+
 import nl.itvitae.twitbook.user.User;
 import nl.itvitae.twitbook.user.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -18,14 +21,13 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 @RestController
 @CrossOrigin
+@AllArgsConstructor
 @RequestMapping("api/v1/posts")
 public class PostController {
 
-  @Autowired
-  private PostRepository postRepository;
+  private final PostRepository postRepository;
 
-  @Autowired
-  private UserRepository userRepository;
+  private final UserRepository userRepository;
 
   @GetMapping
   public List<Post> getAll() {

@@ -1,11 +1,13 @@
 package nl.itvitae.twitbook.seeder;
 
 import lombok.AllArgsConstructor;
+
 import nl.itvitae.twitbook.post.Post;
 import nl.itvitae.twitbook.post.PostRepository;
 import nl.itvitae.twitbook.user.User;
 import nl.itvitae.twitbook.user.User.Role;
 import nl.itvitae.twitbook.user.UserRepository;
+
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
