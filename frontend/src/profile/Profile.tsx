@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import User from "./user";
 import { useParams } from "react-router-dom";
-import axios from "axios";
 import { getUserByUsername } from "./user-service";
 
 function Profile() {
