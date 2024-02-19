@@ -1,11 +1,13 @@
+import { Outlet } from "react-router-dom";
+import NavBar from "./navbar/NavBar";
+
 function App() {
   return (
     <>
-    <h1 className="text-center">
-      twitbook
-    </h1>
+      <NavBar />
+      <Outlet />
     </>
-  )
+  );
 }
 
-export default App
+export default App;
