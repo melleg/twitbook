@@ -13,6 +13,7 @@ body {
   width: min(50rem, calc(100% - 20px));
   margin: 1rem auto;
   border: 1px solid rgb(209, 209, 209);
+  font-size: 1.15rem;
 }
 
 h1,
@@ -71,5 +72,5 @@ a:hover {
 
 .card {
   border-top: 2px solid var(--grey-light);
-  padding: 0.2rem 0.5rem;
+  padding: 1rem 1rem;
 }

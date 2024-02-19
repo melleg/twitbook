@@ -36,13 +36,13 @@ function Profile() {
             <div>
               {/* Background banner */}
               <div
-                className="h-48"
+                className="h-48 bg-cover"
                 style={{
                   backgroundImage: "url(https://picsum.photos/782/300)",
                 }}
               ></div>
               {/* Username & follow */}
-              <div className="px-4 py-2 flex justify-between items-end">
+              <div className="px-4 py-2 flex flex-wrap gap-2 justify-between items-end">
                 {/* Profile picture */}
                 <img
                   className="h-40 -mt-32 rounded-md aspect-square border-solid border-4 border-white"
