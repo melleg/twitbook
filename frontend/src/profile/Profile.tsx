@@ -29,7 +29,19 @@ function Profile() {
       {loading ? (
         <p>Loading {id}...</p>
       ) : (
-        <>{user ? <div>{user.username}</div> : <div>User not found</div>}</>
+        <>
+          {user ? (
+            <div>
+              <img
+                className="w-48 aspect-square"
+                src="https://picsum.photos/200"
+              ></img>
+              <h3>{user.username}</h3>
+            </div>
+          ) : (
+            <div>User not found</div>
+          )}
+        </>
       )}
     </>
   );

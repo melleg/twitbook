@@ -2,8 +2,49 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --action: #72ddff;
+  --action-hover: #58c9ec;
+}
+
 body {
   width: min(50rem, calc(100% - 20px));
   margin: 1rem auto;
   border: 1px solid rgb(209, 209, 209);
+}
+
+h1 {
+  font-size: 2rem;
+}
+
+h2 {
+  font-size: 1.75rem;
+}
+
+h3 {
+  font-size: 1.5rem;
+}
+
+h4 {
+  font-size: 1.25rem;
+}
+
+h5 {
+  font-size: 1;
+}
+
+input {
+  padding: 0.25rem 0.35rem;
+  border-radius: 0.25rem;
+}
+
+button {
+  padding: 0.25rem 0.35rem;
+  font-weight: bold;
+  color: white;
+  background-color: var(--action) !important;
+
+  &:hover {
+    background-color: var(--action-hover) !important;
+  }
 }

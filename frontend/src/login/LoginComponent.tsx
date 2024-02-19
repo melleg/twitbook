@@ -10,8 +10,9 @@ const LoginComponent = () => {
   };
 
   return (
-    <div className="pt-16 text-center">
+    <div>
       <form
+        className="flex flex-col gap-1 max-w-64"
         onSubmit={(e) => {
           e.preventDefault();
           console.log(`username: ${username}`);
@@ -19,22 +20,26 @@ const LoginComponent = () => {
           clearInputFields();
         }}
       >
-        <label className="px-2">username: </label>
-        <input
-          className="border-2 border-black"
-          type="text"
-          placeholder="username"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-        />
-        <label className="px-2">password: </label>
-        <input
-          className="border-2 border-black"
-          type="password"
-          placeholder="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
+        <label>
+          Username
+          <input
+            className="block border-2 border-black"
+            type="text"
+            placeholder="username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+          />
+        </label>
+        <label>
+          Password
+          <input
+            className="block border-2 border-black"
+            type="password"
+            placeholder="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+        </label>
         <button type="submit">Login</button>
       </form>
     </div>

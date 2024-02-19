@@ -2,7 +2,7 @@ import Feed from "../feed/Feed";
 
 function ViewPostsComponent() {
   return (
-    <div className="mt-16 mx-72">
+    <div>
       <p>Posts in the database:</p>
       <Feed endpoint="http://localhost:8080/api/v1/posts" />
     </div>
