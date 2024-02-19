@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import User from "./user";
 import { useParams } from "react-router-dom";
 import axios from "axios";
+import { getUserByUsername } from "./user-service";
 
 function Profile() {
   const { id } = useParams();
@@ -16,10 +17,10 @@ function Profile() {
     setLoading(true);
 
     try {
-      setUser(
-        (await axios.get<User>(`http://localhost:8080/api/v1/user/${id}`)).data
-      );
-    } catch {}
+      setUser(await getUserByUsername(id!));
+    } catch {
+      setUser(null);
+    }
 
     setLoading(false);
   };
@@ -27,7 +28,7 @@ function Profile() {
   return (
     <>
       {loading ? (
-        <p>Loading...</p>
+        <p>Loading {id}...</p>
       ) : (
         <>{user ? <div>{user.username}</div> : <div>User not found</div>}</>
       )}

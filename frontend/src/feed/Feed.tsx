@@ -31,8 +31,8 @@ const Feed: React.FC<FeedProps> = ({ endpoint }) => {
           key={post.id}
         >
           <div className="flex justify-between">
-            <Link to={`/profile/${post.author.username}`}>
-              Post by {post.author.username}:
+            <Link to={`/profile/${post.username}`}>
+              Post by {post.username}:
             </Link>
             <h4>{post.postedDate.toString()}</h4>
           </div>
