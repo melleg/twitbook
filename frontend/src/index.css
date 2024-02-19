@@ -6,6 +6,7 @@
   --action: #72ddff;
   --action-hover: #58c9ec;
   --text-light: grey;
+  --grey-light: rgb(196, 196, 196);
 }
 
 body {
@@ -16,7 +17,9 @@ body {
 
 h1,
 h2,
-h3 {
+h3,
+h4,
+h5 {
   font-weight: bold;
 }
 
@@ -57,6 +60,16 @@ button {
   }
 }
 
+a:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
 .text-light {
   color: var(--text-light);
+}
+
+.card {
+  border-top: 2px solid var(--grey-light);
+  padding: 0.2rem 0.5rem;
 }
