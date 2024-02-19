@@ -32,10 +32,12 @@ public class Post {
   public Post(PostModel model, User author) {
     this.content = model.content();
     this.author = author;
+    postedDate = LocalDateTime.now();
   }
 
   public Post(String content, User author) {
     this.content = content;
     this.author = author;
+    postedDate = LocalDateTime.now();
   }
 }
