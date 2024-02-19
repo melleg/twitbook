@@ -44,6 +44,14 @@ public class PostController {
     return new ResponseEntity<>(new PostDTO(post.get()), HttpStatus.OK);
   }
 
+  @GetMapping("by-username/{username}")
+  public ResponseEntity<?> getByUsername(@PathVariable String username) {
+    Optional<User> user = userRepository.findByUsername(username);
+    if(user.isEmpty()) return ResponseEntity.notFound().build();
+
+    return ResponseEntity.ok(postRepository.findByAuthor(user.get()).stream().map(PostDTO::new).toList());
+  }
+
   @PostMapping
   public ResponseEntity<?> createPost(@RequestBody PostModel model, UriComponentsBuilder uriBuilder) {
 

@@ -3,6 +3,7 @@ import User from "./user";
 import { useParams } from "react-router-dom";
 import { getUserByUsername } from "./user-service";
 import Feed from "../feed/Feed";
+import { getPostsByUser } from "../post/post-service";
 
 function Profile() {
   const { id } = useParams();
@@ -55,7 +56,7 @@ function Profile() {
                 <p className="text-light">User since: xxx</p>
               </div>
 
-              <Feed />
+              <Feed getFunction={getPostsByUser(user.username)} />
             </div>
           ) : (
             <div>User not found</div>

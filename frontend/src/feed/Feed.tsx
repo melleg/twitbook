@@ -1,22 +1,20 @@
 import { useEffect, useState } from "react";
 import Post from "../post/post";
-import axios from "axios";
 import { Link } from "react-router-dom";
 
 interface FeedProps {
-  endpoint: string;
+  getFunction: Promise<Post[]>;
 }
 
-const Feed: React.FC<FeedProps> = ({ endpoint }) => {
+const Feed: React.FC<FeedProps> = ({ getFunction }) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [posts, setPosts] = useState<Post[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
-      const result = await axios.get(endpoint);
+      setPosts(await getFunction);
       setLoading(false);
-      setPosts(result.data);
     };
 
     fetchData();
