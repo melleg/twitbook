@@ -35,16 +35,16 @@ public class LikeController {
 
   private record PostData(Long postId, String username){}
   @PostMapping
-  public ResponseEntity<Like> likePost(@RequestBody PostData postData, UriComponentsBuilder ucb) {
+  public ResponseEntity<LikeDTO> likePost(@RequestBody PostData postData, UriComponentsBuilder ucb) {
     Optional<Post> post = postRepository.findById(postData.postId);
     Optional<User> user = userRepository.findByUsernameIgnoreCase(postData.username);
     if (post.isPresent() && user.isPresent()) {
-      Like like = new Like(post.get(), user.get());
+      Like like = likeRepository.save(new Like(post.get(), user.get()));
       URI locationOfLike = ucb
           .path("/{id}")
           .buildAndExpand(likeRepository.findAll())
           .toUri();
-      return ResponseEntity.created(locationOfLike).body(like);
+      return ResponseEntity.created(locationOfLike).body(new LikeDTO(like));
     } else {
       return ResponseEntity.badRequest().build();
     }
