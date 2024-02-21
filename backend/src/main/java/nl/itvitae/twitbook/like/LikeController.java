@@ -37,7 +37,7 @@ public class LikeController {
   @PostMapping
   public ResponseEntity<Like> likePost(@RequestBody PostData postData, UriComponentsBuilder ucb) {
     Optional<Post> post = postRepository.findById(postData.postId);
-    Optional<User> user = userRepository.findByUsername(postData.username);
+    Optional<User> user = userRepository.findByUsernameIgnoreCase(postData.username);
     if (post.isPresent() && user.isPresent()) {
       Like like = new Like(post.get(), user.get());
       URI locationOfLike = ucb

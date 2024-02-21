@@ -21,11 +21,9 @@ public class Like {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-
   @ManyToOne
   @JoinColumn(name = "post_id", referencedColumnName = "id")
   private Post post;
-
 
   @ManyToOne
   @JoinColumn(name = "user_id", referencedColumnName = "id")
