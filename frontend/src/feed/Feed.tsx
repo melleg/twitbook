@@ -21,12 +21,23 @@ const Feed: React.FC<FeedProps> = ({ getFunction }) => {
   }, []);
 
   return (
-    <>
-      {loading && <div>Loading</div>}
-      {posts.map((post) => (
-        <PostCard key={post.id} post={post} />
-      ))}
-    </>
+    <div className="flex flex-col gap-2 pt-2">
+      {loading ? (
+        <span>Loading</span>
+      ) : (
+        <>
+          {posts.length === 0 ? (
+            <div className="glass rounded-lg p-4">No posts found</div>
+          ) : (
+            <>
+              {posts.map((post) => (
+                <PostCard key={post.id} post={post} />
+              ))}
+            </>
+          )}
+        </>
+      )}
+    </div>
   );
 };
 

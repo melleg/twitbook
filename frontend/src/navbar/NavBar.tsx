@@ -5,9 +5,9 @@ const NavBar = () => {
     <>
       <nav className="sticky top-0 w-full text-xl font-medium flex bg-black text-white">
         <Link to="/" className="p-3">
-          Twitbook
+          twitbook
         </Link>
-        <Link to="/login" className="p-3">
+        <Link to="/login" className="p-3 ml-auto">
           Login
         </Link>
       </nav>

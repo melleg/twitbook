@@ -49,7 +49,8 @@ public class PostController {
     Optional<User> user = userRepository.findByUsername(username);
     if(user.isEmpty()) return ResponseEntity.notFound().build();
 
-    return ResponseEntity.ok(postRepository.findByAuthor(user.get()).stream().map(PostDTO::new).toList());
+    List<Post> posts = postRepository.findByAuthor_Username(user.get().getUsername());
+    return ResponseEntity.ok(posts.stream().map(PostDTO::new).toList());
   }
 
   @PostMapping
