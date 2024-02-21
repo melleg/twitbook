@@ -1,9 +1,10 @@
 package nl.itvitae.twitbook.post;
 
+import jakarta.persistence.Id;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 
 import java.time.LocalDateTime;
 
@@ -27,6 +28,7 @@ public class Post {
 
   private LocalDateTime postedDate;
 
+  @ManyToOne
   private User author;
 
   public Post(PostModel model, User author) {

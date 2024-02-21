@@ -5,7 +5,14 @@ function App() {
   return (
     <>
       <NavBar />
-      <Outlet />
+      <div
+        className="mx-auto text-lg"
+        style={{
+          width: "min(50rem, calc(100% - 20px))",
+        }}
+      >
+        <Outlet />
+      </div>
     </>
   );
 }
