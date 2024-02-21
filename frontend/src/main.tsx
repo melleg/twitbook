@@ -1,10 +1,10 @@
-import ReactDOM from 'react-dom/client'
-import App from './App.tsx'
-import './index.css'
-import ViewPostsComponent from './post/ViewPostComponent.tsx'
-import Home from './routes/Home.tsx'
-import { RouterProvider, createBrowserRouter } from 'react-router-dom'
-import LoginComponent from './login/LoginComponent.tsx'
+import ReactDOM from "react-dom/client";
+import App from "./App.tsx";
+import "./index.css";
+import Home from "./routes/Home.tsx";
+import { RouterProvider, createBrowserRouter } from "react-router-dom";
+import LoginComponent from "./login/LoginComponent.tsx";
+import Profile from "./user/Profile.tsx";
 
 const router = createBrowserRouter([
   {
@@ -16,12 +16,12 @@ const router = createBrowserRouter([
         element: <Home />,
       },
       {
-        path: "posts",
-        element: <ViewPostsComponent />,
-      },
-      {
         path: "login",
         element: <LoginComponent />,
+      },
+      {
+        path: "profile/:username",
+        element: <Profile />,
       },
     ],
   },

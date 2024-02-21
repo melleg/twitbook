@@ -5,8 +5,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
@@ -41,11 +41,14 @@ public class User implements UserDetails {
 
   @OneToMany(mappedBy = "user")
   private Set<Like> likes = new HashSet<>();
+  
+  private LocalDateTime registerDate;
 
   public User(String username, String password, Role... roles) {
     this.username = username;
     this.password = password;
     this.roles = roles;
+    this.registerDate = LocalDateTime.now();
   }
 
   @Override

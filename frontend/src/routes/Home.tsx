@@ -1,7 +1,12 @@
+import Feed from "../feed/Feed";
+import { getPosts } from "../post/post-service";
+
 function Home() {
   return (
     <>
-      <h1 className="mt-16">home</h1>
+      <div>
+        <Feed getFunction={getPosts()} />
+      </div>{" "}
     </>
   );
 }
