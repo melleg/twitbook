@@ -8,10 +8,7 @@ interface PostCardProps {
 
 const PostCard: React.FC<PostCardProps> = ({ post }) => {
   return (
-    <div
-      className="p-4 glass rounded-lg flex flex-wrap items-start gap-2"
-      key={post.id}
-    >
+    <div className="p-4 glass rounded-lg flex flex-wrap items-start gap-2">
       <Link to={`/profile/${post.username}`}>
         <img
           className="w-14 rounded-full aspect-square"
