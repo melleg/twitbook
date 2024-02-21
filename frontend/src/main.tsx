@@ -5,6 +5,7 @@ import ViewPostsComponent from './post/ViewPostComponent.tsx'
 import Home from './routes/Home.tsx'
 import { RouterProvider, createBrowserRouter } from 'react-router-dom'
 import LoginComponent from './login/LoginComponent.tsx'
+import RegisterComponent from './regsiter/RegisterComponent.tsx'
 
 const router = createBrowserRouter([
   {
@@ -22,6 +23,10 @@ const router = createBrowserRouter([
       {
         path: "login",
         element: <LoginComponent />,
+      },
+      {
+        path: "register",
+        element: <RegisterComponent />,
       },
     ],
   },
