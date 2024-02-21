@@ -41,6 +41,12 @@ public class User implements UserDetails {
     this.roles = roles;
   }
 
+  public User(UserModel model, Role... role) {
+    this.username = model.username();
+    this.password = model.password();
+    this.roles = role;
+  }
+
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {
     return Arrays.stream(roles).map(Role::toAuthority).toList();
