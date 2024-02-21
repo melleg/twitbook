@@ -40,9 +40,6 @@ public class Post {
   @OneToMany(mappedBy = "post")
   private Set<Like> likes = new HashSet<>();
 
-  public Set<Long> getLikeIds(){
-    return likes.stream().map(Like::getId).collect(Collectors.toSet());
-  }
   public Post(PostModel model, User author) {
     this.content = model.content();
     this.author = author;
