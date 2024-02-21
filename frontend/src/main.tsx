@@ -4,7 +4,7 @@ import "./index.css";
 import Home from "./routes/Home.tsx";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import LoginComponent from "./login/LoginComponent.tsx";
-import Profile from "./profile/Profile.tsx";
+import Profile from "./user/Profile.tsx";
 
 const router = createBrowserRouter([
   {
@@ -20,7 +20,7 @@ const router = createBrowserRouter([
         element: <LoginComponent />,
       },
       {
-        path: "profile/:id",
+        path: "profile/:username",
         element: <Profile />,
       },
     ],
