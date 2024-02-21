@@ -32,6 +32,7 @@ function ViewPostsComponent() {
             <h4>{post.postedDate.toString()}</h4>
           </div>
           <h4>{post.content}</h4>
+          <h4>{post.likeIds.length} likes</h4>
         </div>
       ))}
     </div>
