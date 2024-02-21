@@ -58,7 +58,7 @@ public class PostController {
 
     // TODO: replace with get user from auth
     List<User> allUsers = userRepository.findAll();
-    if (allUsers.size() == 0) return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
+    if (allUsers.isEmpty()) return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
     User author = allUsers.getFirst();
 
     // Create post and save to database
