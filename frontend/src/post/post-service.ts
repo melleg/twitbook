@@ -13,7 +13,7 @@ export const getPostsByUser = async (username: string) => {
 
 export const likePost = async (postId: number, username: string) => {
   return (
-    await api.post<number>(`likes`, {
+    await api.post<number>(`${uri}/like`, {
       postId: postId,
       username: username,
     })

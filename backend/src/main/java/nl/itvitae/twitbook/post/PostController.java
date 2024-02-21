@@ -1,10 +1,14 @@
 package nl.itvitae.twitbook.post;
 
+import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 
 import lombok.AllArgsConstructor;
 
+import nl.itvitae.twitbook.like.Like;
+import nl.itvitae.twitbook.like.LikeDTO;
+import nl.itvitae.twitbook.like.LikeRepository;
 import nl.itvitae.twitbook.user.User;
 import nl.itvitae.twitbook.user.UserRepository;
 
@@ -28,6 +32,8 @@ public class PostController {
   private final PostRepository postRepository;
 
   private final UserRepository userRepository;
+
+  private final LikeRepository likeRepository;
 
   @GetMapping
   public List<PostDTO> getAll() {
@@ -73,5 +79,29 @@ public class PostController {
     PostDTO newPostDTO = new PostDTO(newPost);
 
     return ResponseEntity.created(uri).body(newPostDTO);
+  }
+
+  private record PostData(Long postId, String username) {
+
+  }
+
+  @PostMapping("/like")
+  public ResponseEntity<LikeDTO> likePost(@RequestBody PostData postData,
+      UriComponentsBuilder ucb) {
+    Optional<Post> post = postRepository.findById(postData.postId);
+    Optional<User> user = userRepository.findByUsernameIgnoreCase(postData.username);
+    if (post.isEmpty() && user.isEmpty()) {
+      return ResponseEntity.badRequest().build();
+    } else if (likeRepository.existsLikeByUserAndPost(user.get(), post.get())) {
+      likeRepository.delete(likeRepository.findLikeByUserAndPost(user.get(), post.get()));
+    } else {
+      Like like = likeRepository.save(new Like(post.get(), user.get()));
+      URI locationOfLike = ucb
+          .path("/{id}")
+          .buildAndExpand(likeRepository.findAll())
+          .toUri();
+      return ResponseEntity.created(locationOfLike).body(new LikeDTO(like));
+    }
+    return ResponseEntity.badRequest().build();
   }
 }
