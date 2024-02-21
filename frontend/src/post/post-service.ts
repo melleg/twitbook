@@ -10,3 +10,12 @@ export const getPosts = async () => {
 export const getPostsByUser = async (username: string) => {
   return (await api.get<Post[]>(`${uri}/by-username/${username}`)).data;
 };
+
+export const likePost = async (postId: number, username: string) => {
+  return (
+    await api.post(`likes`, {
+      postId: postId,
+      username: username,
+    })
+  ).data;
+};

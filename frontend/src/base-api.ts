@@ -7,6 +7,7 @@ const api: AxiosInstance = axios.create({
 });
 
 const setJwtHeader = (jwtToken: string) => {
+  localStorage.setItem("token", jwtToken);
   api.defaults.headers.common.Authorization = `Bearer ${jwtToken}`;
 };
 

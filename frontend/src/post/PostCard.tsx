@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import Post from "./post";
 import { format } from "date-fns";
+import { likePost } from "./post-service";
 
 interface PostCardProps {
   post: Post;
@@ -26,8 +27,8 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
         </div>
         <p>{post.content}</p>
         <div className="flex flex-wrap gap-2 mt-1">
-          <button className="btn-icon w-16 text-left" type="button">
-            👍1k
+          <button className="btn-icon w-16 text-left" type="button" onClick={() => {likePost(post.id, "raafi")}}>
+            👍{post.likes}
           </button>
           <button className="btn-icon w-16 text-left" type="button">
             🔁1k
