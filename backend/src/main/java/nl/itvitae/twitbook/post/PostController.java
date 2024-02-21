@@ -44,12 +44,21 @@ public class PostController {
     return new ResponseEntity<>(new PostDTO(post.get()), HttpStatus.OK);
   }
 
+  @GetMapping("by-username/{username}")
+  public ResponseEntity<?> getAllByUsername(@PathVariable String username) {
+    Optional<User> user = userRepository.findByUsernameIgnoreCase(username);
+    if(user.isEmpty()) return ResponseEntity.notFound().build();
+
+    List<Post> posts = postRepository.findByAuthor_UsernameIgnoreCase(user.get().getUsername());
+    return ResponseEntity.ok(posts.stream().map(PostDTO::new).toList());
+  }
+
   @PostMapping
   public ResponseEntity<?> createPost(@RequestBody PostModel model, UriComponentsBuilder uriBuilder) {
 
     // TODO: replace with get user from auth
     List<User> allUsers = userRepository.findAll();
-    if (allUsers.size() == 0) return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
+    if (allUsers.isEmpty()) return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
     User author = allUsers.getFirst();
 
     // Create post and save to database

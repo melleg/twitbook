@@ -5,6 +5,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.UUID;
@@ -35,10 +36,13 @@ public class User implements UserDetails {
 
   private Role[] roles;
 
+  private LocalDateTime registerDate;
+
   public User(String username, String password, Role... roles) {
     this.username = username;
     this.password = password;
     this.roles = roles;
+    this.registerDate = LocalDateTime.now();
   }
 
   public User(UserModel model, Role... role) {
