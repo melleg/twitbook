@@ -6,6 +6,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
@@ -16,6 +17,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import nl.itvitae.twitbook.like.Like;
 import nl.itvitae.twitbook.post.Post;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -37,18 +39,13 @@ public class User implements UserDetails {
 
   private Role[] roles;
 
-  @ManyToMany
-  private Set<Post> likedPosts = new HashSet<>();
+  @OneToMany
+  private Set<Like> likes = new HashSet<>();
 
   public User(String username, String password, Role... roles) {
     this.username = username;
     this.password = password;
     this.roles = roles;
-  }
-
-  public void addLikedPost(Post newLikedPost){
-    this.likedPosts.add(newLikedPost);
-    System.out.println("liked posts = " + this.likedPosts.size());
   }
 
   @Override

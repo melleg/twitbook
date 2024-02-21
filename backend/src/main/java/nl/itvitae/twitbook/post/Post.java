@@ -6,6 +6,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import java.time.LocalDateTime;
 
 import java.util.HashSet;
@@ -14,6 +15,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import nl.itvitae.twitbook.like.Like;
 import nl.itvitae.twitbook.user.User;
 
 @Getter
@@ -32,8 +34,8 @@ public class Post {
 
   private User author;
 
-  @ManyToMany
-  private Set<User> likedBy = new HashSet<>();
+  @OneToMany
+  private Set<Like> likes = new HashSet<>();
 
   public Post(PostModel model, User author) {
     this.content = model.content();
@@ -45,10 +47,5 @@ public class Post {
     this.content = content;
     this.author = author;
     postedDate = LocalDateTime.now();
-  }
-
-  public void addLikedBy(User user){
-    this.likedBy.add(user);
-    System.out.println("liked users = " + this.likedBy.size());
   }
 }

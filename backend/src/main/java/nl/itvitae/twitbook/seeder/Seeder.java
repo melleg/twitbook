@@ -26,8 +26,6 @@ public class Seeder implements CommandLineRunner {
 
     var post1 = savePost("Bingleblong", nol);
     savePost("Melle en Raafi zijn chads", sjaakie);
-
-    likePost(raafi, post1);
   }
 
   private Post savePost(String content, User author) {
@@ -40,12 +38,5 @@ public class Seeder implements CommandLineRunner {
     User user = new User(username, password, roles);
     userRepository.save(user);
     return user;
-  }
-
-  private void likePost(User user, Post post) {
-    user.addLikedPost(post);
-    userRepository.save(user);
-    post.addLikedBy(user);
-    postRepository.save(post);
   }
 }
