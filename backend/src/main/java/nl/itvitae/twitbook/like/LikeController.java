@@ -24,6 +24,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 @AllArgsConstructor
 @RequestMapping("api/v1/likes")
 public class LikeController {
+
   private final LikeRepository likeRepository;
   private final PostRepository postRepository;
   private final UserRepository userRepository;
@@ -33,12 +34,17 @@ public class LikeController {
     return ResponseEntity.ok(likeRepository.findAll());
   }
 
-  private record PostData(Long postId, String username){}
+  private record PostData(Long postId, String username) {
+
+  }
+
   @PostMapping
-  public ResponseEntity<LikeDTO> likePost(@RequestBody PostData postData, UriComponentsBuilder ucb) {
+  public ResponseEntity<LikeDTO> likePost(@RequestBody PostData postData,
+      UriComponentsBuilder ucb) {
     Optional<Post> post = postRepository.findById(postData.postId);
     Optional<User> user = userRepository.findByUsernameIgnoreCase(postData.username);
-    if (post.isPresent() && user.isPresent()) {
+    if (post.isPresent() && user.isPresent() && !likeRepository.existsLikeByUserAndPost(user.get(),
+        post.get())) {
       Like like = likeRepository.save(new Like(post.get(), user.get()));
       URI locationOfLike = ucb
           .path("/{id}")
