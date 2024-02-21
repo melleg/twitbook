@@ -7,7 +7,7 @@ import { getPostsByUser } from "../post/post-service";
 import { format } from "date-fns";
 
 function Profile() {
-  const { id } = useParams();
+  const { username } = useParams();
   const [loading, setLoading] = useState<boolean>(true);
   const [user, setUser] = useState<User | null>(null);
 
@@ -19,7 +19,7 @@ function Profile() {
     setLoading(true);
 
     try {
-      setUser(await getUserByUsername(id!));
+      setUser(await getUserByUsername(username!));
     } catch {
       setUser(null);
     }
@@ -30,7 +30,7 @@ function Profile() {
   return (
     <>
       {loading ? (
-        <p>Loading {id}...</p>
+        <p>Loading {username}...</p>
       ) : (
         <>
           {user ? (
