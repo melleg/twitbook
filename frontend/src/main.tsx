@@ -3,9 +3,10 @@ import App from "./App.tsx";
 import "./index.css";
 import Home from "./routes/Home.tsx";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
-import LoginComponent from "./login/LoginComponent.tsx";
+import LoginComponent from "./auth/LoginComponent.tsx";
 import Profile from "./user/Profile.tsx";
-import RegisterComponent from './register/RegisterComponent.tsx'
+import RegisterComponent from "./auth/RegisterComponent.tsx";
+import RegisterSuccess from "./auth/RegisterSuccess.tsx";
 
 const router = createBrowserRouter([
   {
@@ -26,7 +27,16 @@ const router = createBrowserRouter([
       },
       {
         path: "register",
-        element: <RegisterComponent />,
+        children: [
+          {
+            path: "",
+            element: <RegisterComponent />,
+          },
+          {
+            path: "success",
+            element: <RegisterSuccess />,
+          },
+        ],
       },
     ],
   },

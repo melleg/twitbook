@@ -9,6 +9,7 @@
   --grey: rgb(196, 196, 196);
   --grey-light: #ebebeb;
   --glass: #d2d2d287;
+  --red: red;
 }
 
 .border {
@@ -48,6 +49,10 @@ h5 {
   font-size: 1;
 }
 
+label > input {
+  width: 100%;
+}
+
 input {
   padding: 0.25rem 0.35rem;
   border-radius: 0.25rem;
@@ -59,6 +64,7 @@ input {
   color: white;
   background-color: var(--action) !important;
   border-radius: 0.9rem;
+  text-align: center;
 
   &:hover {
     background-color: var(--action-hover) !important;
@@ -87,4 +93,8 @@ a:hover {
 .glass {
   background-color: var(--glass);
   backdrop-filter: blur(23px);
+}
+
+.error-message {
+  color: var(--red);
 }
