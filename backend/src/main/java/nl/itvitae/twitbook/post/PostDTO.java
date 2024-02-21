@@ -7,6 +7,6 @@ public record PostDTO(Long id, String content, LocalDateTime postedDate, String 
 
   public PostDTO(Post post) {
     this(post.getId(), post.getContent(), post.getPostedDate(), post.getAuthor().getUsername(),
-        (long) post.getLikes().size());
+        post.getLikes().size());
   }
 }
