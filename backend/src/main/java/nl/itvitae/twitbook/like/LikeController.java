@@ -43,17 +43,18 @@ public class LikeController {
       UriComponentsBuilder ucb) {
     Optional<Post> post = postRepository.findById(postData.postId);
     Optional<User> user = userRepository.findByUsernameIgnoreCase(postData.username);
-    if (post.isPresent() && user.isPresent() && !likeRepository.existsLikeByUserAndPost(user.get(),
-        post.get())) {
-      Like like = likeRepository.save(new Like(post.get(), user.get()));
-      URI locationOfLike = ucb
-          .path("/{id}")
-          .buildAndExpand(likeRepository.findAll())
-          .toUri();
-      return ResponseEntity.created(locationOfLike).body(new LikeDTO(like));
-    } else {
-      return ResponseEntity.badRequest().build();
+    if (post.isPresent() && user.isPresent()) {
+      if (likeRepository.existsLikeByUserAndPost(user.get(), post.get())) {
+        likeRepository.delete(likeRepository.findLikeByUserAndPost(user.get(), post.get()));
+      } else {
+        Like like = likeRepository.save(new Like(post.get(), user.get()));
+        URI locationOfLike = ucb
+            .path("/{id}")
+            .buildAndExpand(likeRepository.findAll())
+            .toUri();
+        return ResponseEntity.created(locationOfLike).body(new LikeDTO(like));
+      }
     }
-
+    return ResponseEntity.badRequest().build();
   }
 }
