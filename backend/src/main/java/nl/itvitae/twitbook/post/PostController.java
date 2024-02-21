@@ -45,11 +45,11 @@ public class PostController {
   }
 
   @GetMapping("by-username/{username}")
-  public ResponseEntity<?> getByUsername(@PathVariable String username) {
-    Optional<User> user = userRepository.findByUsername(username);
+  public ResponseEntity<?> getAllByUsername(@PathVariable String username) {
+    Optional<User> user = userRepository.findByUsernameIgnoreCase(username);
     if(user.isEmpty()) return ResponseEntity.notFound().build();
 
-    List<Post> posts = postRepository.findByAuthor_Username(user.get().getUsername());
+    List<Post> posts = postRepository.findByAuthor_UsernameIgnoreCase(user.get().getUsername());
     return ResponseEntity.ok(posts.stream().map(PostDTO::new).toList());
   }
 

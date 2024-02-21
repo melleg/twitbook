@@ -24,7 +24,7 @@ public class UserController {
 
   @GetMapping("by-username/{username}")
   public ResponseEntity<?> findByUsername(@PathVariable String username) {
-    Optional<User> user = userRepository.findByUsername(username);
+    Optional<User> user = userRepository.findByUsernameIgnoreCase(username);
 
     if(user.isEmpty())
       return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);

@@ -5,5 +5,5 @@ import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface UserRepository extends JpaRepository<User, UUID> {
-    public Optional<User> findByUsername(String username);
+    public Optional<User> findByUsernameIgnoreCase(String username);
 }
