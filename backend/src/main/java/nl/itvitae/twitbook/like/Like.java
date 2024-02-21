@@ -1,10 +1,8 @@
 package nl.itvitae.twitbook.like;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -20,15 +18,15 @@ import nl.itvitae.twitbook.user.User;
 @Getter
 public class Like {
   @Id
-  @GeneratedValue
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @JsonIgnore
+
   @ManyToOne
   @JoinColumn(name = "post_id", referencedColumnName = "id")
   private Post post;
 
-  @JsonIgnore
+
   @ManyToOne
   @JoinColumn(name = "user_id", referencedColumnName = "id")
   private User user;
