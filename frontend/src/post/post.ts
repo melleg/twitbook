@@ -4,4 +4,5 @@ export default interface Post {
     postedDate: Date;
     username: string;
     likes: number;
+    hasLiked: boolean;
 }

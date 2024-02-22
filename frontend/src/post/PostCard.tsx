@@ -8,6 +8,9 @@ interface PostCardProps {
 }
 
 const PostCard: React.FC<PostCardProps> = ({ post }) => {
+  const handleLike = () => {
+    likePost(post.id, "nol"); {/* should change later to username from logged in account*/}
+  };
   return (
     <div className="p-4 glass rounded-lg flex flex-wrap items-start gap-2">
       <Link to={`/profile/${post.username}`}>
@@ -30,11 +33,10 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
           <button
             className="btn-icon w-16 text-left"
             type="button"
-            onClick={() => {
-              likePost(post.id, "nol"); {/* should change later to username from logged in account*/}
-            }}
+            onClick={handleLike}
           >
             👍{post.likes}
+            {post.hasLiked ? <p>liked by you</p> : <p> click to like</p>}
           </button>
           <button className="btn-icon w-16 text-left" type="button">
             🔁1k
