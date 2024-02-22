@@ -15,18 +15,16 @@ import javax.crypto.SecretKey;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
 @Service
 public class JWTService {
+  @Value("${app.jwt.secret}")
+  private String JWT_SECRET;
 
-//  @Value("${spring.jwt.secret}")
-  private final String JWT_SECRET = "d7929ef0109bcf45992736d6a7963d7166ad5450e5b16ecafd4a8f935184e5c4ba7f1513b949f9f3db6a181218967f077e706a734815c5b72981297cd22fb152";
-
-//  @Value("${spring.jwt.jwtExpirationTimeInMs}")
-  private final int JWT_EXPIRATION_TIME = 360000000;
+  @Value("${app.jwt.expirationMs}")
+  private int JWT_EXPIRATION_TIME;
 
   private final UserRepository userRepository;
 
@@ -59,7 +57,6 @@ public class JWTService {
   public String extractUsernameFromToken(String theToken) {
     return extractClaim(theToken, Claims::getSubject);
   }
-
   public Date extractExpirationTimeFromToken(String theToken) {
     return extractClaim(theToken, Claims::getExpiration);
   }
@@ -81,6 +78,4 @@ public class JWTService {
   private boolean isTokenExpired(String theToken) {
     return extractExpirationTimeFromToken(theToken).before(new Date());
   }
-
-
 }

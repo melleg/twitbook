@@ -22,7 +22,10 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
     private final JWTService jwtService;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+    protected void doFilterInternal(
+        HttpServletRequest request,
+        HttpServletResponse response,
+        FilterChain filterChain)
             throws ServletException, IOException {
 
         String token = null;

@@ -6,7 +6,7 @@ function Home() {
     <>
       <div>
         <Feed getFunction={getPosts()} />
-      </div>{" "}
+      </div>
     </>
   );
 }
