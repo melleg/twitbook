@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
 @RestController
-@CrossOrigin
+@CrossOrigin("http://localhost:5173")
 @AllArgsConstructor
 @RequestMapping("api/v1/posts")
 public class PostController {
