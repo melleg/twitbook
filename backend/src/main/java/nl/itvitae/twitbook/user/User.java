@@ -46,10 +46,11 @@ public class User implements UserDetails {
     this.registerDate = LocalDateTime.now();
   }
 
-  public User(RegisterModel model, Role... role) {
+  public User(RegisterModel model, Role... roles) {
     this.username = model.username();
     this.password = model.password();
-    this.roles = role;
+    this.roles = roles;
+    this.registerDate = LocalDateTime.now();
   }
 
   @Override
