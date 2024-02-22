@@ -47,10 +47,7 @@ public class User implements UserDetails {
   }
 
   public User(RegisterModel model, Role... roles) {
-    this.username = model.username();
-    this.password = model.password();
-    this.roles = roles;
-    this.registerDate = LocalDateTime.now();
+    this(model.username(), model.password(), roles);
   }
 
   @Override

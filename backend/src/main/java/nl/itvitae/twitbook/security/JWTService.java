@@ -29,10 +29,9 @@ public class JWTService {
   private final UserRepository userRepository;
 
   public String generateUserJWT(String username) {
-    User user =
-        userRepository
-            .findByUsernameIgnoreCase(username)
-            .orElseThrow(() -> new RuntimeException(username));
+    User user = userRepository
+        .findByUsernameIgnoreCase(username)
+        .orElseThrow(() -> new RuntimeException(username));
 
     Map<String, Object> claims = new HashMap<>();
     claims.put("roles", user.getAuthorities());
@@ -54,20 +53,20 @@ public class JWTService {
     return Keys.hmacShaKeyFor(keyBytes);
   }
 
-  public String extractUsernameFromToken(String theToken) {
-    return extractClaim(theToken, Claims::getSubject);
+  public String extractUsernameFromToken(String token) {
+    return extractClaim(token, Claims::getSubject);
   }
-  public Date extractExpirationTimeFromToken(String theToken) {
-    return extractClaim(theToken, Claims::getExpiration);
+  public Date extractExpirationTimeFromToken(String token) {
+    return extractClaim(token, Claims::getExpiration);
   }
 
-  public Boolean validateToken(String theToken, UserDetails userDetails) {
-    final String username = extractUsernameFromToken(theToken);
-    return (username.equals(userDetails.getUsername()) && !isTokenExpired(theToken));
+  public Boolean validateToken(String token, UserDetails userDetails) {
+    String username = extractUsernameFromToken(token);
+    return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
   }
 
   private <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
-    final Claims claims = extractAllClaims(token);
+    Claims claims = extractAllClaims(token);
     return claimsResolver.apply(claims);
   }
 

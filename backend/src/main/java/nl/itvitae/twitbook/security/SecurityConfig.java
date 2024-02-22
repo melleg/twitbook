@@ -22,17 +22,14 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig  {
-
     private final MyUserDetailsService userDetailsService;
     private final JWTAuthenticationFilter authenticationFilter;
 
-    private static final String[] ADMIN_URLS = {};
-    private static final String[] USER_POST_URLS = {"api/v1/posts/**"};
-    private static final String[] USER_URLS = { };
-    // TODO:
-    // Replace the User_Post_Urls and User_Urls with a single
-    // array of request matchers where we can specify the restricted methods
-    // individually (e.g. (HttpMethod.POST, "posts"), (HttpMethod.DELETE, "user")
+    private static final String ROLE_USER = "USER";
+    private static final String ROLE_ADMIN = "ADMIN";
+
+    private static final String[] ADMIN_ONLY = {};
+    private static final String[] USER_POST_ONLY = {"api/v1/posts/**"};
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -40,12 +37,10 @@ public class SecurityConfig  {
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                    .requestMatchers(ADMIN_URLS)
-                    .hasRole("ADMIN")
-                    .requestMatchers(HttpMethod.POST, USER_POST_URLS)
-                    .hasAnyRole("ADMIN", "USER")
-                    .requestMatchers(HttpMethod.POST, USER_URLS)
-                    .hasAnyRole("ADMIN", "USER")
+                    .requestMatchers(ADMIN_ONLY)
+                    .hasAnyRole(ROLE_ADMIN)
+                    .requestMatchers(HttpMethod.POST, USER_POST_ONLY)
+                    .hasAnyRole(ROLE_USER, ROLE_ADMIN)
                     .anyRequest()
                     .permitAll())
                 .sessionManagement(
@@ -64,8 +59,6 @@ public class SecurityConfig  {
     @Bean
     public PasswordEncoder passwordEncoder() {
          return PasswordEncoderFactories.createDelegatingPasswordEncoder();
-//        return NoOpPasswordEncoder.getInstance();
-//        return new BCryptPasswordEncoder();
     }
 
     @Bean

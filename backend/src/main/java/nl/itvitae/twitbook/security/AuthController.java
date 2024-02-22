@@ -19,7 +19,6 @@ import nl.itvitae.twitbook.user.User;
 import nl.itvitae.twitbook.user.User.Role;
 import nl.itvitae.twitbook.user.UserRepository;
 
-
 @RestController
 @CrossOrigin("http://localhost:5173")
 @AllArgsConstructor
