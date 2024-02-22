@@ -1,16 +1,15 @@
-# Persona
-**name:** Hank
-**age:** 23
-**occupation:** Student at ITVitae
-**amount of friends:** Many
+# Persona 
+**Name:** Hank
+**Age:** 23
+**Occupation:** Student at ITVitae
+**Amount of friends:** Many
 
-## Scenario
-Hank hears all about social media platforms from his friends. 
-Every one of his friends uses a gazillion different apps to:
-- Post all about everything they do and think.
-- Follow the posts of their friends and their favorite celebrities.
-- Show that they like the posts that they like... By liking the posts...
-- Get all the attention other people get by reposting the same things... 
+## Case
+Hank hears all about social media platforms from his friends. All of his friends use different apps, but Hank doesn't want to download, create an account and following/befriending everyone he knows on multiple platforms. That's why Hank is looking for a social media platform that has everything and everyone in one place. One that he himself can recommend to his friends. But most importantly: one website that looks better than all the other ones combined.
 
-Hank wants in on the fun. But what Hank doesn't want is having to download, create an account and following/befriending everyone he knows on multiple platforms.
-That's why Hank is looking for a social media platform that does it all. One that he himself can recommend to his friends. But most importantly: one website that looks better than all the other ones combined.
+## Scenarios
+- Hank wants to make posts about everything they want.
+- Hank would like to be able to follow the posts of their friends and their favorite celebrities.
+- Hank wants to show that they like a post that they like
+- Hank wants to forward/repost posts by other people to get more people to see the post
+
