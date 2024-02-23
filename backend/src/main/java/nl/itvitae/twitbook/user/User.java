@@ -15,7 +15,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import nl.itvitae.twitbook.auth.RegisterModel;
+import nl.itvitae.twitbook.security.RegisterModel;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -46,12 +46,6 @@ public class User implements UserDetails {
     this.registerDate = LocalDateTime.now();
   }
 
-  public User(RegisterModel model, Role... role) {
-    this.username = model.username();
-    this.password = model.password();
-    this.roles = role;
-  }
-
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {
     return Arrays.stream(roles).map(Role::toAuthority).toList();
@@ -68,9 +62,7 @@ public class User implements UserDetails {
   }
 
   @Override
-  public boolean isCredentialsNonExpired() {
-    return true;
-  }
+  public boolean isCredentialsNonExpired() { return true; }
 
   @Override
   public boolean isEnabled() {

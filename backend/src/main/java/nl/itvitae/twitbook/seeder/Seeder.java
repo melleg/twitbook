@@ -9,6 +9,7 @@ import nl.itvitae.twitbook.user.User.Role;
 import nl.itvitae.twitbook.user.UserRepository;
 
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Component;
 public class Seeder implements CommandLineRunner {
   private final PostRepository postRepository;
   private final UserRepository userRepository;
+  private final PasswordEncoder passwordEncoder;
 
   @Override
   public void run(String... args) {
@@ -35,7 +37,7 @@ public class Seeder implements CommandLineRunner {
   }
 
   private User saveUser(String username, String password, Role... roles) {
-    User user = new User(username, password, roles);
+    User user = new User(username, passwordEncoder.encode(password), roles);
     userRepository.save(user);
     return user;
   }
