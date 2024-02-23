@@ -74,12 +74,12 @@ public class PostController {
     return ResponseEntity.created(uri).body(newPostDTO);
   }
 
-  @DeleteMapping
-  public ResponseEntity<?> deletePost(@RequestBody Long postId) {
-    if (postId == null) {
+  @DeleteMapping("delete/{id}")
+  public ResponseEntity<?> deletePost(@PathVariable Long id) {
+    if (id == null) {
       return ResponseEntity.badRequest().build();
     }
-    Optional<Post> post = postRepository.findById(postId);
+    Optional<Post> post = postRepository.findById(id);
     if (post.isEmpty()) {
       return ResponseEntity.badRequest().build();
     }
