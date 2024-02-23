@@ -5,11 +5,14 @@ import java.util.Optional;
 
 import lombok.AllArgsConstructor;
 
+import nl.itvitae.twitbook.user.MyUserDetailsService;
 import nl.itvitae.twitbook.user.User;
 import nl.itvitae.twitbook.user.UserRepository;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,6 +21,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 @RestController
 @CrossOrigin("http://localhost:5173")
@@ -52,15 +57,15 @@ public class PostController {
   }
 
   @PostMapping
-  public ResponseEntity<?> createPost(@RequestBody PostModel model, UriComponentsBuilder uriBuilder) {
+  public ResponseEntity<?> createPost(@RequestBody PostModel model, UriComponentsBuilder uriBuilder, @AuthenticationPrincipal UserDetails userDetails) {
 
-    // TODO: replace with get user from auth
-    List<User> allUsers = userRepository.findAll();
-    if (allUsers.isEmpty()) return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
-    User author = allUsers.getFirst();
+    Optional<User> author = userRepository.findByUsernameIgnoreCase(userDetails.getUsername());
+
+    if (author.isEmpty())
+      return new ResponseEntity<>("User not logged in.", HttpStatus.BAD_REQUEST);
 
     // Create post and save to database
-    Post newPost = new Post(model, author);
+    Post newPost = new Post(model, author.get());
     postRepository.save(newPost);
 
     // Return post uri

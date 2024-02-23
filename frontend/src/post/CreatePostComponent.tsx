@@ -18,13 +18,18 @@ const CreatePostComponent: React.FC<CreatePostProps> = ({ onSubmit }) => {
       return;
     }
 
+    console.log("pre-model");
+
     const model: PostModel = {
       content,
     };
 
+    console.log("pre-try");
+
     try {
       await createPost(model);
       onSubmit();
+      console.log("in try complete");
     } catch (err: any) {
       setErrorMessage(err.response.data);
     }
