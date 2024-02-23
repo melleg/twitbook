@@ -5,7 +5,6 @@ import java.util.Optional;
 
 import lombok.AllArgsConstructor;
 
-import nl.itvitae.twitbook.user.MyUserDetailsService;
 import nl.itvitae.twitbook.user.User;
 import nl.itvitae.twitbook.user.UserRepository;
 
@@ -21,8 +20,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 
 @RestController
 @CrossOrigin("http://localhost:5173")
