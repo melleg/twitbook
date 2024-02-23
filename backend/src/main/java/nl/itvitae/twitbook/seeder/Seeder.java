@@ -26,14 +26,19 @@ public class Seeder implements CommandLineRunner {
     User nol = saveUser("Nol", "Password", Role.ROLE_ADMIN);
     User sjaakie = saveUser("sjaakie", "Password", Role.ROLE_USER);
 
-    savePost("Bingleblong", nol);
-    savePost("Melle en Raafi zijn chads", sjaakie);
+    Post post1 = savePost("Bingleblong", nol);
+    Post post2 = savePost("Melle en Raafi zijn chads", sjaakie);
+    Post post3 = saveRepost("Mee eens", nol, post2);
   }
 
   private Post savePost(String content, User author) {
     Post post = new Post(content, author);
-    postRepository.save(post);
-    return post;
+    return postRepository.save(post);
+  }
+
+  private Post saveRepost(String content, User author, Post linkedPost) {
+    Post post = new Post(content, author, linkedPost);
+    return postRepository.save(post);
   }
 
   private User saveUser(String username, String password, Role... roles) {

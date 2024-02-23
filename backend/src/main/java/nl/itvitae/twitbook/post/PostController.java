@@ -27,9 +27,14 @@ public class PostController {
   private final PostRepository postRepository;
   private final UserRepository userRepository;
 
+  // Returns the proper DTO based on post type
+  private Object getPostDTO(Post post) {
+    return post.getLinkedPost() == null ? new PostDTO(post) : new RepostDTO(post);
+  }
+
   @GetMapping
-  public List<PostDTO> getAll() {
-    return postRepository.findAll().stream().map(PostDTO::new).toList();
+  public List<?> getAll() {
+    return postRepository.findAll().stream().map(this::getPostDTO).toList();
   }
 
   @GetMapping("{id}")
@@ -39,7 +44,7 @@ public class PostController {
     if(post.isEmpty())
       return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
 
-    return new ResponseEntity<>(new PostDTO(post.get()), HttpStatus.OK);
+    return new ResponseEntity<>(getPostDTO(post.get()), HttpStatus.OK);
   }
 
   @GetMapping("by-username/{username}")
@@ -48,7 +53,7 @@ public class PostController {
     if(user.isEmpty()) return ResponseEntity.notFound().build();
 
     List<Post> posts = postRepository.findByAuthor_UsernameIgnoreCase(user.get().getUsername());
-    return ResponseEntity.ok(posts.stream().map(PostDTO::new).toList());
+    return ResponseEntity.ok(posts.stream().map(this::getPostDTO).toList());
   }
 
   @PostMapping
@@ -59,8 +64,18 @@ public class PostController {
     if (allUsers.isEmpty()) return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
     User author = allUsers.getFirst();
 
+    Post newPost = new Post(model.content(), author);
+
+    // If we're linking a post, try to add to post or return
+    if(model.linkedPostId() != null) {
+      Optional<Post> linkedPost = postRepository.findById(model.linkedPostId());
+      if(linkedPost.isEmpty())
+        return new ResponseEntity<>("Unable to find linked post", HttpStatus.NOT_FOUND);
+
+      newPost = new Post(model.content(), author, linkedPost.get());
+    }
+
     // Create post and save to database
-    Post newPost = new Post(model, author);
     postRepository.save(newPost);
 
     // Return post uri
@@ -68,8 +83,6 @@ public class PostController {
         .buildAndExpand(newPost.getId())
         .toUri();
 
-    PostDTO newPostDTO = new PostDTO(newPost);
-
-    return ResponseEntity.created(uri).body(newPostDTO);
+    return ResponseEntity.created(uri).body(getPostDTO(newPost));
   }
 }

@@ -1,10 +1,6 @@
 package nl.itvitae.twitbook.post;
 
-import jakarta.persistence.Id;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 
@@ -31,13 +27,17 @@ public class Post {
   @ManyToOne
   private User author;
 
-  public Post(PostModel model, User author) {
-    this(model.content(), author);
-  }
+  @ManyToOne
+  private Post linkedPost;
 
   public Post(String content, User author) {
     this.content = content;
     this.author = author;
     postedDate = LocalDateTime.now();
+  }
+
+  public Post(String content, User author, Post linkedPost) {
+    this(content, author);
+    this.linkedPost = linkedPost;
   }
 }
