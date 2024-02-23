@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Feed from "../feed/Feed";
 import CreatePostComponent from "../post/CreatePostComponent";
 import { getPosts } from "../post/post-service";
