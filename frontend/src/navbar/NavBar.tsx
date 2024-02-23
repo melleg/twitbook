@@ -10,6 +10,9 @@ const NavBar = () => {
         <Link to="/login" className="p-3 ml-auto">
           Login
         </Link>
+        <Link to="/register" className="p-3">
+          Register
+        </Link>
       </nav>
     </>
   );
