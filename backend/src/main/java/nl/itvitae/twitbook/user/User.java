@@ -46,10 +46,6 @@ public class User implements UserDetails {
     this.registerDate = LocalDateTime.now();
   }
 
-  public User(RegisterModel model, Role... roles) {
-    this(model.username(), model.password(), roles);
-  }
-
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {
     return Arrays.stream(roles).map(Role::toAuthority).toList();

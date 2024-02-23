@@ -9,5 +9,5 @@ export const login = async (model: LoginModel) => {
 };
 
 export const register = async (model: RegisterModel) => {
-  return (await api.post(`${uri}/logi`, model)).data;
+  return (await api.post(`${uri}/register`, model)).data;
 };
