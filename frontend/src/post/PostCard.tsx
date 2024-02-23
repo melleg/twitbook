@@ -11,8 +11,8 @@ interface PostCardProps {
 const PostCard: React.FC<PostCardProps> = ({ post }) => {
   const [deleted, setDeleted] = useState<boolean>(false);
 
-  const handleDelete = () => {
-    deletePost(post.id);
+  const handleDelete = async () => {
+    if (await deletePost(post.id) == 204)    
     setDeleted(true);
   };
   return (
@@ -50,7 +50,7 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
                   type="button"
                   onClick={handleDelete}
                 >
-                  Delete Post
+                  🗑 Delete Post
                 </button>
               </div>
             </div>
