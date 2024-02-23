@@ -11,6 +11,7 @@ import nl.itvitae.twitbook.user.UserRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -71,5 +72,18 @@ public class PostController {
     PostDTO newPostDTO = new PostDTO(newPost);
 
     return ResponseEntity.created(uri).body(newPostDTO);
+  }
+
+  @DeleteMapping
+  public ResponseEntity<?> deletePost(@RequestBody Long postId) {
+    if (postId == null) {
+      return ResponseEntity.badRequest().build();
+    }
+    Optional<Post> post = postRepository.findById(postId);
+    if (post.isEmpty()) {
+      return ResponseEntity.badRequest().build();
+    }
+    postRepository.delete(post.get());
+    return ResponseEntity.noContent().build();
   }
 }
