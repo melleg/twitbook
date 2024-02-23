@@ -28,7 +28,7 @@ public class SecurityConfig  {
     private static final String ROLE_USER = "USER";
     private static final String ROLE_ADMIN = "ADMIN";
 
-    private static final String[] ADMIN_ONLY = {"api/v1/posts/delete/**"};
+    private static final String[] ADMIN_ONLY = {};
     private static final String[] USER_POST_ONLY = {"api/v1/posts/**"};
 
     @Bean

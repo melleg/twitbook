@@ -1,12 +1,16 @@
 import { Link } from "react-router-dom";
 import Post from "./post";
 import { format } from "date-fns";
+import { deletePost } from "./post-service";
 
 interface PostCardProps {
   post: Post;
 }
 
 const PostCard: React.FC<PostCardProps> = ({ post }) => {
+  const handleDelete = () => {
+    deletePost(post.id);
+  };
   return (
     <div className="p-4 glass rounded-lg flex flex-wrap items-start gap-2">
       <Link to={`/profile/${post.username}`}>
@@ -31,6 +35,9 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
           </button>
           <button className="btn-icon w-16 text-left" type="button">
             🔁1k
+          </button>
+          <button className="btn-icon text-left" type="button"             onClick={handleDelete}>
+            Delete Post
           </button>
         </div>
       </div>
