@@ -25,11 +25,11 @@ public class SecurityConfig  {
     private final MyUserDetailsService userDetailsService;
     private final JWTAuthenticationFilter authenticationFilter;
 
-    private static final String ROLE_USER = "USER";
-    private static final String ROLE_ADMIN = "ADMIN";
+    public static final String ROLE_USER = "USER";
+    public static final String ROLE_ADMIN = "ADMIN";
 
-    private static final String[] ADMIN_ONLY = {};
     private static final String[] USER_POST_ONLY = {"api/v1/posts/**"};
+    private static final String[] USER_DELETE_ONLY = {"api/v1/posts/**"};
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -37,8 +37,8 @@ public class SecurityConfig  {
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                    .requestMatchers(ADMIN_ONLY)
-                    .hasAnyRole(ROLE_ADMIN)
+                    .requestMatchers(HttpMethod.DELETE, USER_DELETE_ONLY)
+                    .hasAnyRole(ROLE_USER, ROLE_ADMIN)
                     .requestMatchers(HttpMethod.POST, USER_POST_ONLY)
                     .hasAnyRole(ROLE_USER, ROLE_ADMIN)
                     .anyRequest()
