@@ -14,11 +14,10 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
 
   const handleDelete = async () => {
     try {
-      if (await deletePost(post.id) == 204) {
-        setDeleted(true);
-      } 
+      await deletePost(post.id);
+      setDeleted(true);
     } catch (error: any) {
-      setErrorMessage("Post could not be deleted")
+      setErrorMessage("Post could not be deleted");
     }
   };
   return (
