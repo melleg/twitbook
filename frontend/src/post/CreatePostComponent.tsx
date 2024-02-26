@@ -1,6 +1,7 @@
 import { useState } from "react";
 import PostModel from "./post-model";
 import { createPost } from "./post-service";
+import { AxiosError } from "axios";
 
 interface CreatePostProps {
   onSubmit: () => void;
@@ -26,7 +27,9 @@ const CreatePostComponent: React.FC<CreatePostProps> = ({ onSubmit }) => {
       await createPost(model);
       onSubmit();
     } catch (err: any) {
-      setErrorMessage(err.response.data);
+      console.log(err.status);
+      console.error(err);
+      setErrorMessage("");
     }
   };
 

@@ -1,9 +1,16 @@
 import { Outlet } from "react-router-dom";
 import NavBar from "./navbar/NavBar";
+import { MyGlobalContext } from "./auth/GlobalContext";
+import { useState } from "react";
 
 function App() {
+  const [loggedIn, setLoggedIn] = useState<boolean>(false);
+  const [username, setUsername] = useState<string>("");
+
   return (
-    <>
+    <MyGlobalContext.Provider
+      value={{ loggedIn, setLoggedIn, username, setUsername }}
+    >
       <NavBar />
       <div
         className="mx-auto text-lg"
@@ -13,7 +20,7 @@ function App() {
       >
         <Outlet />
       </div>
-    </>
+    </MyGlobalContext.Provider>
   );
 }
 

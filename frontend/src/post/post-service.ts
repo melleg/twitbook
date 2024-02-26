@@ -17,7 +17,7 @@ export const getPostsByUser = async (username: string) => {
 };
 
 export const createPost = async (model: PostModel) => {
-  return (await api.post(`${uri}`, model)).data;
+  return (await api.post(`${uri}`, model));
 };
 
 const mapPost = (p: Post) => {

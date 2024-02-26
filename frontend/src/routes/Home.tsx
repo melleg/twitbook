@@ -8,6 +8,7 @@ function Home() {
 
   return (
     <>
+      
       <CreatePostComponent onSubmit={() => setRefresh(refresh + 1)} />
       <Feed getFunction={getPosts()} refresh={refresh} />
     </>

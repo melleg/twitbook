@@ -4,35 +4,38 @@ import { login } from "./auth-service";
 import LoginModel from "./login-model";
 import { setJwtHeader } from "../base-api";
 import { useNavigate } from "react-router-dom";
+import { useGlobalContext } from "./GlobalContext";
 
 const LoginComponent = () => {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const [usernameInput, setUsernameInput] = useState("");
+  const [passwordInput, setPasswordInput] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const { setLoggedIn, setUsername } = useGlobalContext();
 
   const navigate = useNavigate();
 
   const handleLogin = async (e: any) => {
-    e.preventDefault();   
+    e.preventDefault();
 
-    if(username.length === 0 || password.length === 0)
+    if (usernameInput.length === 0 || passwordInput.length === 0)
       setErrorMessage("Please enter credentials");
 
     try {
       const loginModel: LoginModel = {
-        username,
-        password
+        username: usernameInput,
+        password: passwordInput,
       };
       const jwt = await login(loginModel);
       setJwtHeader(jwt);
-      navigate(`/profile/${username}`);
-    }
-    catch (err: any) {
+      setLoggedIn(true);
+      setUsername(usernameInput);
+      navigate(`/profile/${usernameInput}`);
+    } catch (err: any) {
       console.log(err);
       setErrorMessage(err.response.data);
-      setPassword("");
+      setPasswordInput("");
     }
-  }
+  };
 
   return (
     <form
@@ -48,8 +51,8 @@ const LoginComponent = () => {
           className="block border-2 border-black"
           type="text"
           placeholder="username"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
+          value={usernameInput}
+          onChange={(e) => setUsernameInput(e.target.value)}
         />
       </label>
       <label>
@@ -58,8 +61,8 @@ const LoginComponent = () => {
           className="block border-2 border-black"
           type="password"
           placeholder="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          value={passwordInput}
+          onChange={(e) => setPasswordInput(e.target.value)}
         />
       </label>
       <button type="submit" className="btn-action">

@@ -54,15 +54,10 @@ public class PostController {
   }
 
   @PostMapping
-  public ResponseEntity<?> createPost(@RequestBody PostModel model, UriComponentsBuilder uriBuilder, @AuthenticationPrincipal UserDetails userDetails) {
-
-    Optional<User> author = userRepository.findByUsernameIgnoreCase(userDetails.getUsername());
-
-    if (author.isEmpty())
-      return new ResponseEntity<>("User not logged in.", HttpStatus.BAD_REQUEST);
+  public ResponseEntity<?> createPost(@RequestBody PostModel model, UriComponentsBuilder uriBuilder, @AuthenticationPrincipal User user) {
 
     // Create post and save to database
-    Post newPost = new Post(model, author.get());
+    Post newPost = new Post(model, user);
     postRepository.save(newPost);
 
     // Return post uri
