@@ -10,10 +10,16 @@ interface PostCardProps {
 
 const PostCard: React.FC<PostCardProps> = ({ post }) => {
   const [deleted, setDeleted] = useState<boolean>(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const handleDelete = async () => {
-    if (await deletePost(post.id) == 204)    
-    setDeleted(true);
+    try {
+      if (await deletePost(post.id) == 204) {
+        setDeleted(true);
+      } 
+    } catch (error: any) {
+      setErrorMessage("Post could not be deleted")
+    }
   };
   return (
     <>
@@ -52,6 +58,7 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
                 >
                   🗑 Delete Post
                 </button>
+                <p className="error-message">{errorMessage}</p>
               </div>
             </div>
           </>

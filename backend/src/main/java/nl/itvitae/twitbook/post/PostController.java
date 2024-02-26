@@ -1,15 +1,19 @@
 package nl.itvitae.twitbook.post;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
 import lombok.AllArgsConstructor;
 
 import nl.itvitae.twitbook.user.User;
+import nl.itvitae.twitbook.user.User.Role;
 import nl.itvitae.twitbook.user.UserRepository;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -74,16 +78,27 @@ public class PostController {
     return ResponseEntity.created(uri).body(newPostDTO);
   }
 
-  @DeleteMapping("delete/{id}")
-  public ResponseEntity<?> deletePost(@PathVariable Long id) {
-    if (id == null) {
-      return ResponseEntity.badRequest().build();
-    }
+  @DeleteMapping("{id}")
+  public ResponseEntity<?> deletePost(@PathVariable long id, @AuthenticationPrincipal User user) {
+
+//    if (id == null)
+//      return ResponseEntity.badRequest().build();
+
     Optional<Post> post = postRepository.findById(id);
-    if (post.isEmpty()) {
+    if (post.isEmpty())
       return ResponseEntity.badRequest().build();
+
+    var userRoles = List.of(user.getRoles());
+
+    if(userRoles.contains(Role.ROLE_ADMIN)) {
+      postRepository.delete(post.get());
+      return ResponseEntity.noContent().build();
     }
-    postRepository.delete(post.get());
-    return ResponseEntity.noContent().build();
+    else if(userRoles.contains(Role.ROLE_USER) && post.get().getAuthor().getId().equals(user.getId())) {
+      postRepository.delete(post.get());
+      return ResponseEntity.noContent().build();
+    }
+
+    return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
   }
 }
