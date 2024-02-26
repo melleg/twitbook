@@ -1,5 +1,7 @@
 package nl.itvitae.twitbook.security;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -30,8 +32,8 @@ public class AuthController {
   private final AuthenticationManager authenticationManager;
   private final JWTService jwtService;
   private final PasswordEncoder passwordEncoder;
-
   private static final int MIN_USERNAME_LENGTH = 3;
+  private static final int MAX_USERNAME_LENGTH = 25;
 
   @PostMapping("login")
   public ResponseEntity<?> login(@RequestBody LoginModel loginModel) {
@@ -52,9 +54,14 @@ public class AuthController {
   @PostMapping("register")
   public ResponseEntity<?> createUser(@RequestBody RegisterModel model,
       UriComponentsBuilder uriBuilder) {
-    if (model.username().length() < MIN_USERNAME_LENGTH) {
-      return new ResponseEntity<>("Username is too short, should be atleast 3 characters long",
-          HttpStatus.CONFLICT);
+    final Pattern pattern = Pattern.compile("[\\w\\d_]{" + MIN_USERNAME_LENGTH + "," + MAX_USERNAME_LENGTH + "}", Pattern.CASE_INSENSITIVE);
+    // Match regex against input
+    final Matcher matcher = pattern.matcher(model.username());
+    // Use results...
+
+    if (!matcher.matches()) {
+      return ResponseEntity.badRequest().body(
+          "Username is invalid, should be between 3 and 25 characters long and only include alphabetical numerical characters or underscores");
     }
 
     if (userRepository.findByUsernameIgnoreCase(model.username()).isPresent()) {
