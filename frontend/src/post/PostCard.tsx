@@ -3,6 +3,8 @@ import Post from "./post";
 import { format } from "date-fns";
 import { deletePost } from "./post-service";
 import { useState } from "react";
+import { useGlobalContext } from "../auth/GlobalContext";
+import { Globals } from "../globals";
 
 interface PostCardProps {
   post: Post;
@@ -11,6 +13,7 @@ interface PostCardProps {
 const PostCard: React.FC<PostCardProps> = ({ post }) => {
   const [deleted, setDeleted] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const { loggedIn, myUsername, roles } = useGlobalContext();
 
   const handleDelete = async () => {
     try {
@@ -50,13 +53,13 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
             <button className="btn-icon w-16 text-left" type="button">
               🔁1k
             </button>
-            <button
+            {(loggedIn && (myUsername === post.username || roles.includes(Globals.ROLE_ADMIN)))&& (<button
               className="btn-icon text-left"
               type="button"
               onClick={handleDelete}
             >
               🗑 Delete Post
-            </button>
+            </button>)}
             <p className="error-message">{errorMessage}</p>
           </div>
         </>

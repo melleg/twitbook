@@ -10,9 +10,17 @@ const LoginComponent = () => {
   const [usernameInput, setUsernameInput] = useState("");
   const [passwordInput, setPasswordInput] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-  const { setLoggedIn, setMyUsername: setUsername } = useGlobalContext();
+  const { setLoggedIn, setMyUsername, setRoles } = useGlobalContext();
 
   const navigate = useNavigate();
+
+  const parseJwt = (token: string) => {
+    try {
+      return JSON.parse(atob(token.split(".")[1]));
+    } catch (err: any) {
+      return null;
+    }
+  };
 
   const handleLogin = async (e: any) => {
     e.preventDefault();
@@ -26,9 +34,11 @@ const LoginComponent = () => {
         password: passwordInput,
       };
       const jwt = await login(loginModel);
+      const parsedJwt = parseJwt(jwt);
       setJwtHeader(jwt);
       setLoggedIn(true);
-      setUsername(usernameInput);
+      setMyUsername(usernameInput);
+      setRoles(parsedJwt.roles.flatMap((r: any) => r.authority));
       navigate(`/profile/${usernameInput}`);
     } catch (err: any) {
       console.log(err);

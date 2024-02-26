@@ -1,7 +1,6 @@
 import { useState } from "react";
 import PostModel from "./post-model";
 import { createPost } from "./post-service";
-import { AxiosError } from "axios";
 
 interface CreatePostProps {
   onSubmit: () => void;

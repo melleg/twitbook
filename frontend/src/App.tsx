@@ -5,15 +5,18 @@ import { useState } from "react";
 
 function App() {
   const [loggedIn, setLoggedIn] = useState<boolean>(false);
-  const [username, setUsername] = useState<string>("");
+  const [myUsername, setMyUsername] = useState<string>("");
+  const [roles, setRoles] = useState<string[]>([]);
 
   return (
     <MyGlobalContext.Provider
       value={{
         loggedIn,
         setLoggedIn,
-        myUsername: username,
-        setMyUsername: setUsername,
+        myUsername,
+        setMyUsername,
+        roles,
+        setRoles,
       }}
     >
       <NavBar />
