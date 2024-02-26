@@ -1,6 +1,5 @@
 package nl.itvitae.twitbook.post;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -13,7 +12,6 @@ import nl.itvitae.twitbook.user.UserRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -61,18 +59,10 @@ public class PostController {
   }
 
   @PostMapping
-  public ResponseEntity<?> createPost(@RequestBody PostModel model,
-      UriComponentsBuilder uriBuilder) {
-
-    // TODO: replace with get user from auth
-    List<User> allUsers = userRepository.findAll();
-    if (allUsers.isEmpty()) {
-      return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
-    }
-    User author = allUsers.getFirst();
+  public ResponseEntity<?> createPost(@RequestBody PostModel model, UriComponentsBuilder uriBuilder, @AuthenticationPrincipal User user) {
 
     // Create post and save to database
-    Post newPost = new Post(model, author);
+    Post newPost = new Post(model, user);
     postRepository.save(newPost);
 
     // Return post uri
