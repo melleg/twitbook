@@ -31,28 +31,38 @@ public class AuthController {
   private final JWTService jwtService;
   private final PasswordEncoder passwordEncoder;
 
+  private static final int MIN_USERNAME_LENGTH = 3;
+
   @PostMapping("login")
   public ResponseEntity<?> login(@RequestBody LoginModel loginModel) {
     try {
       Authentication authentication = authenticationManager.authenticate(
-        new UsernamePasswordAuthenticationToken(loginModel.username(), loginModel.password()));
+          new UsernamePasswordAuthenticationToken(loginModel.username(), loginModel.password()));
 
-      if (!authentication.isAuthenticated())
+      if (!authentication.isAuthenticated()) {
         return new ResponseEntity<>("Invalid user credentials", HttpStatus.UNAUTHORIZED);
+      }
 
       return new ResponseEntity<>(jwtService.generateUserJWT(loginModel.username()), HttpStatus.OK);
-    }
-    catch(AuthenticationException exc) {
+    } catch (AuthenticationException exc) {
       return new ResponseEntity<>("Invalid user credentials", HttpStatus.UNAUTHORIZED);
     }
   }
 
   @PostMapping("register")
-  public ResponseEntity<?> createUser(@RequestBody RegisterModel model, UriComponentsBuilder uriBuilder) {
-    if (userRepository.findByUsernameIgnoreCase(model.username()).isPresent())
-      return new ResponseEntity<>("Username already exists", HttpStatus.CONFLICT);
+  public ResponseEntity<?> createUser(@RequestBody RegisterModel model,
+      UriComponentsBuilder uriBuilder) {
+    if (model.username().length() < MIN_USERNAME_LENGTH) {
+      return new ResponseEntity<>("Username is too short, should be atleast 3 characters long",
+          HttpStatus.CONFLICT);
+    }
 
-    User newUser = new User(model.username(), passwordEncoder.encode(model.password()), Role.ROLE_USER);
+    if (userRepository.findByUsernameIgnoreCase(model.username()).isPresent()) {
+      return new ResponseEntity<>("Username already exists", HttpStatus.CONFLICT);
+    }
+
+    User newUser = new User(model.username(), passwordEncoder.encode(model.password()),
+        Role.ROLE_USER);
     userRepository.save(newUser);
 
     var uri = uriBuilder.path("/profile/{id}")
