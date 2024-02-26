@@ -24,3 +24,7 @@ const mapPost = (p: Post) => {
   p.postedDate = new Date(p.postedDate);
   return p;
 };
+
+export const deletePost = async (postId: number) => {
+  return (await api.delete(`${uri}/${postId}`));
+};

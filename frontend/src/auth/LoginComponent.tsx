@@ -51,6 +51,7 @@ const LoginComponent = () => {
           className="block border-2 border-black"
           type="text"
           placeholder="username"
+          autoComplete="username"
           value={usernameInput}
           onChange={(e) => setUsernameInput(e.target.value)}
         />
@@ -61,6 +62,7 @@ const LoginComponent = () => {
           className="block border-2 border-black"
           type="password"
           placeholder="password"
+          autoComplete="current-password"
           value={passwordInput}
           onChange={(e) => setPasswordInput(e.target.value)}
         />

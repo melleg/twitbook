@@ -28,6 +28,8 @@ public class Seeder implements CommandLineRunner {
 
     savePost("Bingleblong", nol);
     savePost("Melle en Raafi zijn chads", sjaakie);
+    savePost("this post should be deleted", melle);
+    savePost("this is a post", raafi);
   }
 
   private Post savePost(String content, User author) {
