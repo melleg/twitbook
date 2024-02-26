@@ -54,10 +54,11 @@ public class AuthController {
   @PostMapping("register")
   public ResponseEntity<?> createUser(@RequestBody RegisterModel model,
       UriComponentsBuilder uriBuilder) {
-    final Pattern pattern = Pattern.compile("[\\w\\d_]{" + MIN_USERNAME_LENGTH + "," + MAX_USERNAME_LENGTH + "}", Pattern.CASE_INSENSITIVE);
-    // Match regex against input
+
+    final Pattern pattern = Pattern.compile(
+        String.format("[\\w\\d_]{%d,%d}", MIN_USERNAME_LENGTH, MAX_USERNAME_LENGTH),
+        Pattern.CASE_INSENSITIVE);
     final Matcher matcher = pattern.matcher(model.username());
-    // Use results...
 
     if (!matcher.matches()) {
       return ResponseEntity.badRequest().body(
