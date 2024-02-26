@@ -34,15 +34,18 @@ const LoginComponent = () => {
         password: passwordInput,
       };
       const jwt = await login(loginModel);
-      const parsedJwt = parseJwt(jwt);
+      const jwtParsed = parseJwt(jwt);
+      if (!jwtParsed) throw new Error("JWT invalid");
+
       setJwtHeader(jwt);
       setLoggedIn(true);
-      setMyUsername(usernameInput);
-      setRoles(parsedJwt.roles.flatMap((r: any) => r.authority));
-      navigate(`/profile/${usernameInput}`);
+      setMyUsername(jwtParsed.sub);
+      setRoles(jwtParsed.roles.flatMap((r: any) => r.authority));
+      
+      navigate(`/profile/${jwtParsed.sub}`);
     } catch (err: any) {
       console.log(err);
-      setErrorMessage(err.response.data);
+      setErrorMessage(err.response?.data ?? err.message);
       setPasswordInput("");
     }
   };
