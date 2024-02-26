@@ -58,6 +58,7 @@ const RegisterComponent = () => {
           className="block border-2 border-black"
           type="password"
           placeholder="password"
+          autoComplete="new-password"
           onChange={(e) => setPassword(e.target.value)}
         />
       </label>
@@ -67,6 +68,7 @@ const RegisterComponent = () => {
           className="block border-2 border-black"
           type="password"
           placeholder="re-enter password"
+          autoComplete="new-password"
           onChange={(e) => setCheckPassword(e.target.value)}
         />
       </label>
