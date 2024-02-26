@@ -63,7 +63,7 @@ public class AuthController {
     if (!matcher.matches()) {
       return ResponseEntity.badRequest().body(
           String.format(
-              "Username is invalid, should be between %d and %d characters long and only include alphabetical numerical characters or underscores",
+              "Username should be between %d and %d characters long and only include letters, numbers or underscores",
               MIN_USERNAME_LENGTH, MAX_USERNAME_LENGTH));
     }
 
