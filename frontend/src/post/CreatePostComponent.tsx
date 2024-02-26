@@ -27,9 +27,7 @@ const CreatePostComponent: React.FC<CreatePostProps> = ({ onSubmit }) => {
       onSubmit();
       setContent("");
     } catch (err: any) {
-      console.log(err.status);
-      console.error(err);
-      setErrorMessage("");
+      setErrorMessage("Unable to post");
     }
   };
 
