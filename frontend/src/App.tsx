@@ -9,7 +9,12 @@ function App() {
 
   return (
     <MyGlobalContext.Provider
-      value={{ loggedIn, setLoggedIn, username, setUsername }}
+      value={{
+        loggedIn,
+        setLoggedIn,
+        myUsername: username,
+        setMyUsername: setUsername,
+      }}
     >
       <NavBar />
       <div

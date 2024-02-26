@@ -10,7 +10,7 @@ const LoginComponent = () => {
   const [usernameInput, setUsernameInput] = useState("");
   const [passwordInput, setPasswordInput] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-  const { setLoggedIn, setUsername } = useGlobalContext();
+  const { setLoggedIn, setMyUsername: setUsername } = useGlobalContext();
 
   const navigate = useNavigate();
 

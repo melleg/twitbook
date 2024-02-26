@@ -2,16 +2,16 @@ import { createContext, useContext } from "react";
 
 export type GlobalContent = {
   loggedIn: boolean;
-  username: string;
+  myUsername: string;
   setLoggedIn: (val: boolean) => void;
-  setUsername: (val: string) => void;
+  setMyUsername: (val: string) => void;
 };
 
 export const MyGlobalContext = createContext<GlobalContent>({
   loggedIn: false, // default
-  username: "",
+  myUsername: "",
   setLoggedIn: () => {},
-  setUsername: () => {},
+  setMyUsername: () => {},
 });
 
 export const useGlobalContext = () => useContext(MyGlobalContext);

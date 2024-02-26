@@ -26,6 +26,7 @@ const CreatePostComponent: React.FC<CreatePostProps> = ({ onSubmit }) => {
     try {
       await createPost(model);
       onSubmit();
+      setContent("");
     } catch (err: any) {
       console.log(err.status);
       console.error(err);

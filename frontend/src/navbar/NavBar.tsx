@@ -1,9 +1,8 @@
 import { Link } from "react-router-dom";
-import { useEffect } from "react";
 import { useGlobalContext } from "../auth/GlobalContext";
 
 const NavBar = () => {
-  const { loggedIn, username } = useGlobalContext();
+  const { loggedIn, myUsername } = useGlobalContext();
 
   return (
     <>
@@ -13,7 +12,7 @@ const NavBar = () => {
         </Link>
         {loggedIn ? (
           <>
-            <Link to={`/profile/${username}`} className="p-3">
+            <Link to={`/profile/${myUsername}`} className="p-3">
               Profile
             </Link>
             <a href="" className="p-3">
