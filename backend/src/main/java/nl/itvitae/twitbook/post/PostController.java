@@ -101,11 +101,19 @@ public class PostController {
     Optional<Post> originalPost = postRepository.findById(postId);
     if(originalPost.isEmpty()) return ResponseEntity.notFound().build();
 
-    // Create post and save to database
+    // If we have reposted already, remove repost
+    Optional<Post> repostCheck = postRepository.findByTypeAndLinkedPostAndAuthor_UsernameIgnoreCase(
+        Post.PostType.REPOST, originalPost.get(), author.getUsername());
+
+    if(repostCheck.isPresent()) {
+      postRepository.delete(repostCheck.get());
+      return ResponseEntity.noContent().build();
+    }
+
+    // Otherwise, create and save repost
     Post newPost = new Post(null, author, originalPost.get());
     postRepository.save(newPost);
 
-    // Return post uri
     var uri = uriBuilder.path("/posts/{id}")
         .buildAndExpand(newPost.getId())
         .toUri();
