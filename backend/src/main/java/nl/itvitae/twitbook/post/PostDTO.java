@@ -7,14 +7,19 @@ public record PostDTO(
     String content,
     LocalDateTime postedDate,
     String username,
-    int type) {
-  public PostDTO(Post post) {
+    int type,
+    boolean hasReposted,
+    boolean hasLiked
+) {
+  public PostDTO(Post post, boolean hasLiked, boolean hasReposted) {
     this(
         post.getId(),
         post.getContent(),
         post.getPostedDate(),
         post.getAuthor().getUsername(),
-        post.getType().ordinal()
+        post.getType().ordinal(),
+        hasReposted,
+        hasLiked
     );
   }
 }

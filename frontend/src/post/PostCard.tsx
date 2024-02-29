@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import Post, { PostType } from "./post";
 import { format } from "date-fns";
 import { deletePost, repost } from "./post-service";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useGlobalContext } from "../auth/GlobalContext";
 import { Globals } from "../globals";
 import ReplyComponent from "./ReplyComponent";
@@ -11,11 +11,17 @@ interface PostCardProps {
   post: Post;
 }
 
-const PostCard: React.FC<PostCardProps> = ({ post }) => {
+const PostCard: React.FC<PostCardProps> = ({ post: postProp }) => {
+  const [post, setPost] = useState<Post>(postProp);
+  const [linkedPost, setLinkedPost] = useState<Post | undefined>(
+    postProp.linkedPost
+  );
   const [deleted, setDeleted] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState("");
   const { loggedIn, myUsername, roles, postReplying, setPostReplying } =
     useGlobalContext();
+
+  useEffect(() => {}, [post]);
 
   const authFail = (text: string) => {
     if (!loggedIn) alert(text);
@@ -39,11 +45,13 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
     setPostReplying(post);
   };
 
-  const handleRepost = async (postId: number) => {
+  const handleRepost = async (post: Post) => {
     if (authFail("You must be logged in to repost")) return;
 
     try {
-      await repost(postId);
+      await repost(post.id);
+      setPost((old) => ({ ...old, hasReposted: !old.hasReposted }));
+      setLinkedPost((old) => old && { ...old, hasReposted: !old.hasReposted });
     } catch (err) {
       setErrorMessage("Unable to repost");
     }
@@ -69,7 +77,7 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
     </>
   );
 
-  const getPostContent = (post: Post) => {
+  const getPostContent = () => {
     switch (post.type) {
       // Post
       case PostType.POST:
@@ -83,16 +91,16 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
 
       // Repost
       case PostType.REPOST:
-        if (!post.linkedPost) return <div>Error: original post not found</div>;
+        if (!linkedPost) return <div>Error: original post not found</div>;
 
         return (
           <>
-            {getUserInfo(post.linkedPost.username)}
+            {getUserInfo(linkedPost.username)}
             <span className="ml-2 text-light italic">
               • 🔁 by {post.username}
             </span>
-            {getText(post.linkedPost.content)}
-            {getBottomButtons(post.linkedPost)}
+            {getText(linkedPost.content)}
+            {getBottomButtons(linkedPost)}
           </>
         );
 
@@ -103,12 +111,12 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
             {getUserInfo(post.username)}
             {getText(post.content)}
             <div className="rounded-lg border-2 border-gray-500 p-2 mt-1">
-              {!post.linkedPost ? (
+              {!linkedPost ? (
                 <span className="text-light">Not found</span>
               ) : (
                 <>
-                  {getUserInfo(post.linkedPost.username, true)}
-                  {getText(post.linkedPost.content)}
+                  {getUserInfo(linkedPost.username, true)}
+                  {getText(linkedPost.content)}
                 </>
               )}
             </div>
@@ -125,7 +133,11 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
   const getBottomButtons = (post: Post) => (
     <>
       <div className="flex flex-wrap gap-2 mt-1 text-left">
-        <button className="btn-icon w-16" type="button" title="Like">
+        <button
+          className={"btn-icon w-16" + (post.hasLiked ? " activated" : "")}
+          type="button"
+          title="Like"
+        >
           👍1k
         </button>
         <button
@@ -137,10 +149,10 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
           ↪️1k
         </button>
         <button
-          className="btn-icon w-16"
+          className={"btn-icon w-16" + (post.hasReposted ? " activated" : "")}
           type="button"
           title="Repost"
-          onClick={() => handleRepost(post.id)}
+          onClick={() => handleRepost(post)}
         >
           🔁1k
         </button>
@@ -170,9 +182,7 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
     );
 
   return (
-    <div className="py-2 pl-20 pr-4 glass rounded-lg">
-      {getPostContent(post)}
-    </div>
+    <div className="py-2 pl-20 pr-4 glass rounded-lg">{getPostContent()}</div>
   );
 };
 

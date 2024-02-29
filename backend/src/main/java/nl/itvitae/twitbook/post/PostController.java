@@ -33,42 +33,51 @@ public class PostController {
   private final UserRepository userRepository;
 
   // Returns the proper DTO based on post type
-  private Object getPostDTO(Post post) {
-    return post.getLinkedPost() == null ? new PostDTO(post) : new RepostDTO(post);
+  private Object getPostDTO(Post post, User user) {
+    Post postInQuestion = post.getType() == Post.PostType.REPOST ? post.getLinkedPost() : post;
+
+    boolean hasReposted = false;
+    boolean hasLiked = false;
+
+    if(user != null) {
+      hasReposted = postRepository.existsByTypeAndLinkedPostAndAuthor(Post.PostType.REPOST, postInQuestion, user);
+    }
+
+    return post.getLinkedPost() == null ? new PostDTO(post, hasLiked, hasReposted) : new RepostDTO(post, hasLiked, hasReposted);
   }
 
   @GetMapping
-  public List<?> getAll() {
-    return postRepository.findAll().stream().map(this::getPostDTO).toList();
+  public List<?> getAll(@AuthenticationPrincipal User user) {
+    return postRepository.findAll().stream().map(p -> getPostDTO(p, user)).toList();
   }
 
   @GetMapping("{id}")
-  public ResponseEntity<?> getById(@PathVariable Long id) {
+  public ResponseEntity<?> getById(@PathVariable Long id, @AuthenticationPrincipal User user) {
     Optional<Post> post = postRepository.findById(id);
 
     if (post.isEmpty()) {
       return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
     }
 
-    return new ResponseEntity<>(getPostDTO(post.get()), HttpStatus.OK);
+    return new ResponseEntity<>(getPostDTO(post.get(), user), HttpStatus.OK);
   }
 
   @GetMapping("by-username/{username}")
-  public ResponseEntity<?> getAllByUsername(@PathVariable String username) {
-    Optional<User> user = userRepository.findByUsernameIgnoreCase(username);
-    if (user.isEmpty()) {
+  public ResponseEntity<?> getAllByUsername(@PathVariable String username, @AuthenticationPrincipal User user) {
+    Optional<User> findUser = userRepository.findByUsernameIgnoreCase(username);
+    if (findUser.isEmpty()) {
       return ResponseEntity.notFound().build();
     }
 
-    List<Post> posts = postRepository.findByAuthor_UsernameIgnoreCase(user.get().getUsername());
-    return ResponseEntity.ok(posts.stream().map(this::getPostDTO).toList());
+    List<Post> posts = postRepository.findByAuthor_UsernameIgnoreCase(findUser.get().getUsername());
+    return ResponseEntity.ok(posts.stream().map(p -> getPostDTO(p, user)).toList());
   }
 
   @PostMapping
-  public ResponseEntity<?> createPost(@RequestBody PostModel model, UriComponentsBuilder uriBuilder, @AuthenticationPrincipal User author) {
+  public ResponseEntity<?> createPost(@RequestBody PostModel model, UriComponentsBuilder uriBuilder, @AuthenticationPrincipal User user) {
 
     // Create post and save to database
-    Post newPost = new Post(model.content(), author);
+    Post newPost = new Post(model.content(), user);
     postRepository.save(newPost);
 
     // Return post uri
@@ -76,16 +85,16 @@ public class PostController {
         .buildAndExpand(newPost.getId())
         .toUri();
 
-    return ResponseEntity.created(uri).body(getPostDTO(newPost));
+    return ResponseEntity.created(uri).body(getPostDTO(newPost, user));
   }
 
   @PostMapping("reply/{postId}")
-  public ResponseEntity<?> replyToPost(@PathVariable long postId, @RequestBody PostModel model, UriComponentsBuilder uriBuilder, @AuthenticationPrincipal User author) {
+  public ResponseEntity<?> replyToPost(@PathVariable long postId, @RequestBody PostModel model, UriComponentsBuilder uriBuilder, @AuthenticationPrincipal User user) {
     Optional<Post> originalPost = postRepository.findById(postId);
     if(originalPost.isEmpty()) return ResponseEntity.notFound().build();
 
     // Create post and save to database
-    Post newPost = new Post(model.content(), author, originalPost.get());
+    Post newPost = new Post(model.content(), user, originalPost.get());
     postRepository.save(newPost);
 
     // Return post uri
@@ -93,17 +102,17 @@ public class PostController {
         .buildAndExpand(newPost.getId())
         .toUri();
 
-    return ResponseEntity.created(uri).body(getPostDTO(newPost));
+    return ResponseEntity.created(uri).body(getPostDTO(newPost, user));
   }
 
   @PostMapping("repost/{postId}")
-  public ResponseEntity<?> repostPost(@PathVariable long postId, UriComponentsBuilder uriBuilder, @AuthenticationPrincipal User author) {
+  public ResponseEntity<?> repostPost(@PathVariable long postId, UriComponentsBuilder uriBuilder, @AuthenticationPrincipal User user) {
     Optional<Post> originalPost = postRepository.findById(postId);
     if(originalPost.isEmpty()) return ResponseEntity.notFound().build();
 
     // If we have reposted already, remove repost
     Optional<Post> repostCheck = postRepository.findByTypeAndLinkedPostAndAuthor_UsernameIgnoreCase(
-        Post.PostType.REPOST, originalPost.get(), author.getUsername());
+        Post.PostType.REPOST, originalPost.get(), user.getUsername());
 
     if(repostCheck.isPresent()) {
       postRepository.delete(repostCheck.get());
@@ -111,14 +120,14 @@ public class PostController {
     }
 
     // Otherwise, create and save repost
-    Post newPost = new Post(null, author, originalPost.get());
+    Post newPost = new Post(null, user, originalPost.get());
     postRepository.save(newPost);
 
     var uri = uriBuilder.path("/posts/{id}")
         .buildAndExpand(newPost.getId())
         .toUri();
 
-    return ResponseEntity.created(uri).body(getPostDTO(newPost));
+    return ResponseEntity.created(uri).body(getPostDTO(newPost, user));
   }
 
   @DeleteMapping("{id}")

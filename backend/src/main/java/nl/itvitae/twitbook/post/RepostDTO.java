@@ -8,15 +8,20 @@ public record RepostDTO(
     LocalDateTime postedDate,
     String username,
     PostDTO linkedPost,
-    int type) {
-  public RepostDTO(Post post) {
+    int type,
+    boolean hasLiked,
+    boolean hasReposted
+) {
+  public RepostDTO(Post post, boolean hasLiked, boolean hasReposted) {
     this(
         post.getId(),
         post.getContent(),
         post.getPostedDate(),
         post.getAuthor().getUsername(),
-        new PostDTO(post.getLinkedPost()),
-        post.getType().ordinal()
+        new PostDTO(post.getLinkedPost(), hasLiked, hasReposted),
+        post.getType().ordinal(),
+        hasLiked,
+        hasReposted
     );
   }
 }
