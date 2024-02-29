@@ -5,6 +5,7 @@ import { deletePost } from "./post-service";
 import { useState } from "react";
 import { useGlobalContext } from "../auth/GlobalContext";
 import { Globals } from "../globals";
+import ReplyComponent from "./ReplyComponent";
 
 interface PostCardProps {
   post: Post;
@@ -13,7 +14,8 @@ interface PostCardProps {
 const PostCard: React.FC<PostCardProps> = ({ post }) => {
   const [deleted, setDeleted] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState("");
-  const { loggedIn, myUsername, roles } = useGlobalContext();
+  const { loggedIn, myUsername, roles, postReplyingId, setPostReplyingId } =
+    useGlobalContext();
 
   const handleDelete = async () => {
     try {
@@ -24,12 +26,7 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
     }
   };
 
-  interface UserInfoProps {
-    username: string;
-    small?: boolean;
-  }
-
-  const UserInfo: React.FC<UserInfoProps> = ({ username, small }) => (
+  const getUserInfo = (username: string, small?: boolean) => (
     <>
       <Link to={`/profile/${username}`}>
         <img
@@ -49,34 +46,90 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
     </>
   );
 
-  const BottomButtons: React.FC<PostCardProps> = ({ post }) => (
-    <div className="flex flex-wrap gap-2 mt-1">
-      <button className="btn-icon w-16 text-left" type="button" title="Like">
-        👍1k
-      </button>
-      <button className="btn-icon w-16 text-left" type="button" title="Reply">
-        ↪️1k
-      </button>
-      <button className="btn-icon w-16 text-left" type="button" title="Repost">
-        🔁1k
-      </button>
-      {loggedIn &&
-        (myUsername === post.username ||
-          roles.includes(Globals.ROLE_ADMIN)) && (
-          <button
-            className="btn-icon text-left"
-            type="button"
-            onClick={handleDelete}
-          >
-            🗑 Delete Post
-          </button>
-        )}
-      <p className="error-message">{errorMessage}</p>
-    </div>
+  const getPostContent = (post: Post) => {
+    switch (post.type) {
+      // Post
+      case PostType.POST:
+        return (
+          <>
+            {getUserInfo(post.username)}
+            {getText(post.content)}
+            {getBottomButtons(post)}
+          </>
+        );
+
+      // Repost
+      case PostType.REPOST:
+        if (!post.linkedPost) return <div>Error: original post not found</div>;
+
+        return (
+          <>
+            {getUserInfo(post.linkedPost.username)}
+            <span className="ml-2 text-light italic">
+              • 🔁 by {post.username}
+            </span>
+            {getText(post.linkedPost.content)}
+            {getBottomButtons(post.linkedPost)}
+          </>
+        );
+
+      // Reply
+      case PostType.REPLY:
+        return (
+          <>
+            {getUserInfo(post.username)}
+            {getText(post.content)}
+            <div className="rounded-lg border-2 border-gray-500 p-2 mt-1">
+              {!post.linkedPost ? (
+                <span className="text-light">Not found</span>
+              ) : (
+                <>
+                  {getUserInfo(post.linkedPost.username, true)}
+                  {getText(post.linkedPost.content)}
+                </>
+              )}
+            </div>
+            {getBottomButtons(post)}
+          </>
+        );
+    }
+  };
+
+  const getText = (content: string) => (
+    <p className="w-full break-words hyphens-auto">{content}</p>
   );
 
-  const PostContent: React.FC<PostCardProps> = ({ post }) => (
-    <p className="w-full break-words hyphens-auto">{post.content}</p>
+  const getBottomButtons = (post: Post) => (
+    <>
+      <div className="flex flex-wrap gap-2 mt-1 text-left">
+        <button className="btn-icon w-16" type="button" title="Like">
+          👍1k
+        </button>
+        <button
+          className="btn-icon w-16"
+          type="button"
+          title="Reply"
+          onClick={() => setPostReplyingId(post.id)}
+        >
+          ↪️1k
+        </button>
+        <button className="btn-icon w-16" type="button" title="Repost">
+          🔁1k
+        </button>
+        {loggedIn &&
+          (myUsername === post.username ||
+            roles.includes(Globals.ROLE_ADMIN)) && (
+            <button
+              className="btn-icon text-left"
+              type="button"
+              onClick={handleDelete}
+            >
+              🗑 Delete Post
+            </button>
+          )}
+        <p className="error-message">{errorMessage}</p>
+      </div>
+    </>
   );
 
   // If deleted...
@@ -85,60 +138,14 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
       <p className="py-2 px-4 glass rounded-lg text-light">Post deleted</p>
     );
 
-  switch (post.type) {
-    // Post
-    case PostType.POST:
-      return (
-        <div className="py-2 pl-20 pr-4 glass rounded-lg">
-          <>
-            <UserInfo username={post.username} />
-            <PostContent post={post} />
-            <BottomButtons post={post} />
-          </>
-        </div>
-      );
-
-    // Repost
-    case PostType.REPOST:
-      if (!post.linkedPost) return <div>Error: original post not found</div>;
-
-      return (
-        <div className="py-2 pl-20 pr-4 glass rounded-lg">
-          <>
-            <UserInfo username={post.linkedPost.username} />
-            <span className="ml-2 text-light italic">
-              • 🔁 by {post.username}
-            </span>
-            <PostContent post={post.linkedPost} />
-            <BottomButtons post={post.linkedPost} />
-          </>
-        </div>
-      );
-
-    // Reply
-    case PostType.REPLY:
-      return (
-        <div className="py-2 pl-20 pr-4 glass rounded-lg">
-          <>
-            <UserInfo username={post.username} />
-            <PostContent post={post} />
-
-            <div className="rounded-lg border-2 border-gray-500 p-2 mt-1">
-              {!post.linkedPost ? (
-                <span className="text-light">Not found</span>
-              ) : (
-                <>
-                  <UserInfo username={post.linkedPost.username} small={true} />
-                  <PostContent post={post.linkedPost} />
-                </>
-              )}
-            </div>
-
-            <BottomButtons post={post} />
-          </>
-        </div>
-      );
-  }
+  return (
+    <div className="py-2 pl-20 pr-4 glass rounded-lg">
+      {getPostContent(post)}
+      {postReplyingId == post.id && loggedIn && (
+        <ReplyComponent onSubmit={() => console.log("hi")} />
+      )}
+    </div>
+  );
 };
 
 export default PostCard;

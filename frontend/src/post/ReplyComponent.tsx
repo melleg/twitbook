@@ -1,17 +1,21 @@
 import { useState } from "react";
+import { replyToPost } from "./post-service";
+import { useGlobalContext } from "../auth/GlobalContext";
 import PostModel from "./post-model";
-import { createPost } from "./post-service";
 
-interface CreatePostProps {
+interface ReplyComponentProps {
   onSubmit: () => void;
 }
 
-const CreatePostComponent: React.FC<CreatePostProps> = ({ onSubmit }) => {
+const ReplyComponent: React.FC<ReplyComponentProps> = ({ onSubmit }) => {
   const [content, setContent] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const { postReplyingId } = useGlobalContext();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!postReplyingId) return;
 
     if (!content || content.length === 0) {
       setErrorMessage("Please enter a twit");
@@ -23,7 +27,7 @@ const CreatePostComponent: React.FC<CreatePostProps> = ({ onSubmit }) => {
     };
 
     try {
-      await createPost(model);
+      await replyToPost(model, postReplyingId);
       onSubmit();
       setContent("");
     } catch (err) {
@@ -36,15 +40,14 @@ const CreatePostComponent: React.FC<CreatePostProps> = ({ onSubmit }) => {
       <span className="error-message">{errorMessage}</span>
       <textarea
         className="p-2 glass rounded-lg w-5/6 border-solid border-gray-600"
-        placeholder="What're you twitting about?"
         value={content}
         onChange={(e) => setContent(e.target.value)}
       />
       <button type="submit" className="btn-action ml-4">
-        Post
+        Reply
       </button>
     </form>
   );
 };
 
-export default CreatePostComponent;
+export default ReplyComponent;

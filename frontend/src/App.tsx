@@ -7,6 +7,7 @@ function App() {
   const [loggedIn, setLoggedIn] = useState<boolean>(false);
   const [myUsername, setMyUsername] = useState<string>("");
   const [roles, setRoles] = useState<string[]>([]);
+  const [postReplyingId, setPostReplyingId] = useState<number | null>(null);
 
   return (
     <MyGlobalContext.Provider
@@ -17,6 +18,8 @@ function App() {
         setMyUsername,
         roles,
         setRoles,
+        postReplyingId,
+        setPostReplyingId,
       }}
     >
       <NavBar />

@@ -17,7 +17,11 @@ export const getPostsByUser = async (username: string) => {
 };
 
 export const createPost = async (model: PostModel) => {
-  return (await api.post(`${uri}`, model));
+  return await api.post(`${uri}`, model);
+};
+
+export const replyToPost = async (model: PostModel, replyPostId: number) => {
+  return await api.post(`${uri}/reply/${replyPostId}`, model);
 };
 
 const mapPost = (p: Post) => {
@@ -26,5 +30,5 @@ const mapPost = (p: Post) => {
 };
 
 export const deletePost = async (postId: number) => {
-  return (await api.delete(`${uri}/${postId}`));
+  return await api.delete(`${uri}/${postId}`);
 };
