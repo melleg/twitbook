@@ -33,6 +33,6 @@ public class FollowController {
       return ResponseEntity.noContent().build();
     }
     Follow follow = followRepository.save(new Follow(follower.get(), following.get()));
-    return ResponseEntity.created(null).body(follow);
+    return ResponseEntity.created(null).body(new FollowDTO(follow));
   }
 }
