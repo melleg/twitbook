@@ -3,5 +3,13 @@ export default interface Post {
     content: string;
     postedDate: Date;
     username: string;
+    type: PostType;
     linkedPost?: Post;
+}
+
+
+export enum PostType {
+    POST = 0,
+    REPOST = 1,
+    REPLY = 2,
 }

@@ -54,7 +54,7 @@ public class Post {
 
   public enum PostType {
     POST,
+    REPOST,
     REPLY,
-    REPOST
   }
 }
