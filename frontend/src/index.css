@@ -81,6 +81,12 @@ input {
   }
 }
 
+.btn-icon-nohover {
+  background-color: transparent;
+  color: white;
+  font-size: 1rem;
+}
+
 a:hover {
   text-decoration: underline;
   text-underline-offset: 3px;
@@ -100,5 +106,5 @@ a:hover {
 }
 
 :user-invalid {
-  border-color: red
+  border-color: red;
 }
