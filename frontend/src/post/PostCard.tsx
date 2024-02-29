@@ -11,10 +11,10 @@ interface PostCardProps {
   post: Post;
 }
 
-const PostCard: React.FC<PostCardProps> = ({ post }) => {
+const PostCard: React.FC<PostCardProps> = ({ post: postProp }) => {
   const [deleted, setDeleted] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState("");
-  const [dispLike, setDispLike] = useState<number>();
+  const [post, setPost] = useState<Post>(postProp);
   const { loggedIn, myUsername, roles } = useGlobalContext();
 
   const handleDelete = async () => {
@@ -28,13 +28,14 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
 
   const handleLike = async () => {
     await likePost(post.id, myUsername);
+    if (post.hasLiked) {
+      setPost((old) => ({ ...old, likes: old.likes - 1, hasLiked: false }));
+    } else {
+      setPost((old) => ({ ...old, likes: old.likes + 1, hasLiked: true }));
+    }
   };
 
-  useEffect(() => {
-    console.log("pre " + dispLike);
-    setDispLike(post.likes);
-    console.log("post " + dispLike, post.id);
-  }, [handleLike]);
+  useEffect(() => {}, [post]);
 
   return (
     <div className="py-2 pl-20 pr-4 glass rounded-lg items-start gap-2">

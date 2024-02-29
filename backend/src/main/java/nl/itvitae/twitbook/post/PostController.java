@@ -100,7 +100,7 @@ public class PostController {
   }
 
   @PostMapping("/like")
-  public ResponseEntity<LikeDTO> likePost(@RequestBody LikeModel likeModel,
+  public ResponseEntity<?> likePost(@RequestBody LikeModel likeModel,
       UriComponentsBuilder ucb) {
     Optional<Post> post = postRepository.findById(likeModel.postId());
     Optional<User> user = userRepository.findByUsernameIgnoreCase(likeModel.username());
@@ -114,7 +114,6 @@ public class PostController {
     }
 
     Like like = likeRepository.save(new Like(post.get(), user.get()));
-    return ResponseEntity.created(null).body(new LikeDTO(like));
-
+    return ResponseEntity.created(null).build();
   }
 }

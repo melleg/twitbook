@@ -35,5 +35,5 @@ export const likePost = async (postId: number, username: string) => {
       postId: postId,
       username: username,
     })
-  ).data;
+  );
 };
