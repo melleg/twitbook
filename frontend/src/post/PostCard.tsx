@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import Post, { PostType } from "./post";
 import { format } from "date-fns";
-import { deletePost } from "./post-service";
+import { deletePost, repost } from "./post-service";
 import { useState } from "react";
 import { useGlobalContext } from "../auth/GlobalContext";
 import { Globals } from "../globals";
@@ -17,12 +17,35 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
   const { loggedIn, myUsername, roles, postReplying, setPostReplying } =
     useGlobalContext();
 
+  const authFail = (text: string) => {
+    if (!loggedIn) alert(text);
+    return !loggedIn;
+  };
+
   const handleDelete = async () => {
+    if (authFail("You must be logged in to delete")) return;
+
     try {
       await deletePost(post.id);
       setDeleted(true);
     } catch (error) {
       setErrorMessage("Post could not be deleted");
+    }
+  };
+
+  const handleReply = (post: Post) => {
+    if (authFail("You must be logged in to reply")) return;
+
+    setPostReplying(post);
+  };
+
+  const handleRepost = async (postId: number) => {
+    if (authFail("You must be logged in to repost")) return;
+
+    try {
+      await repost(postId);
+    } catch (err) {
+      setErrorMessage("Unable to repost");
     }
   };
 
@@ -102,20 +125,14 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
   const getBottomButtons = (post: Post) => (
     <>
       <div className="flex flex-wrap gap-2 mt-1 text-left">
-        <button
-          className="btn-icon w-16"
-          type="button"
-          title="Like"
-          disabled={!loggedIn}
-        >
+        <button className="btn-icon w-16" type="button" title="Like">
           👍1k
         </button>
         <button
           className="btn-icon w-16"
           type="button"
           title="Reply"
-          onClick={() => setPostReplying(post)}
-          disabled={!loggedIn}
+          onClick={() => handleReply(post)}
         >
           ↪️1k
         </button>
@@ -123,7 +140,7 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
           className="btn-icon w-16"
           type="button"
           title="Repost"
-          disabled={!loggedIn}
+          onClick={() => handleRepost(post.id)}
         >
           🔁1k
         </button>
@@ -134,7 +151,6 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
               className="btn-icon text-left"
               type="button"
               onClick={handleDelete}
-              disabled={!loggedIn}
             >
               🗑 Delete Post
             </button>

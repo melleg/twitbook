@@ -49,7 +49,7 @@ public class Post {
   public Post(String content, User author, Post linkedPost) {
     this(content, author);
     this.linkedPost = linkedPost;
-    this.type = content.isEmpty() ? PostType.REPOST : PostType.REPLY;
+    this.type = (content == null || content.isBlank()) ? PostType.REPOST : PostType.REPLY;
   }
 
   public enum PostType {

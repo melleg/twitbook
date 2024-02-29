@@ -96,6 +96,23 @@ public class PostController {
     return ResponseEntity.created(uri).body(getPostDTO(newPost));
   }
 
+  @PostMapping("repost/{postId}")
+  public ResponseEntity<?> repostPost(@PathVariable long postId, UriComponentsBuilder uriBuilder, @AuthenticationPrincipal User author) {
+    Optional<Post> originalPost = postRepository.findById(postId);
+    if(originalPost.isEmpty()) return ResponseEntity.notFound().build();
+
+    // Create post and save to database
+    Post newPost = new Post(null, author, originalPost.get());
+    postRepository.save(newPost);
+
+    // Return post uri
+    var uri = uriBuilder.path("/posts/{id}")
+        .buildAndExpand(newPost.getId())
+        .toUri();
+
+    return ResponseEntity.created(uri).body(getPostDTO(newPost));
+  }
+
   @DeleteMapping("{id}")
   public ResponseEntity<?> deletePost(@PathVariable long id, @AuthenticationPrincipal User user) {
     Optional<Post> post = postRepository.findById(id);

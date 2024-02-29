@@ -24,6 +24,10 @@ export const replyToPost = async (model: PostModel, replyPostId: number) => {
   return await api.post(`${uri}/reply/${replyPostId}`, model);
 };
 
+export const repost = async (postId: number) => {
+  return await api.post(`${uri}/repost/${postId}`, null);
+};
+
 const mapPost = (p: Post) => {
   p.postedDate = new Date(p.postedDate);
   return p;
