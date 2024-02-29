@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
 import User from "./user";
 import { useParams } from "react-router-dom";
-import { getUserByUsername } from "./user-service";
+import { followUser, getUserByUsername } from "./user-service";
 import Feed from "../feed/Feed";
 import { getPostsByUser } from "../post/post-service";
 import { format } from "date-fns";
 import CreatePostComponent from "../post/CreatePostComponent";
 import { useGlobalContext } from "../auth/GlobalContext";
+import FollowModel from "./follow-model";
 
 function Profile() {
   const { username } = useParams();
@@ -32,6 +33,19 @@ function Profile() {
     setLoading(false);
   };
 
+  const model: FollowModel = {
+    followerUsername: myUsername,
+    followingUsername: username ? username : "",
+  };
+
+  const handleFollow = async () => {
+    try {
+      await followUser(model);
+    } catch (error: any) {
+      console.log("Could not follow user");
+    }
+  };
+
   return (
     <>
       {loading ? (
@@ -55,7 +69,11 @@ function Profile() {
                     className="h-40 -mt-32 rounded-md aspect-square border-solid border-4 border-white"
                     src="https://picsum.photos/200"
                   ></img>
-                  <button type="button" className="btn-action">
+                  <button
+                    type="button"
+                    className="btn-action"
+                    onClick={() => handleFollow()}
+                  >
                     Follow
                   </button>
                 </div>
