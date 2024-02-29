@@ -26,8 +26,9 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
   };
 
   const handleLike = () => {
-    likePost(post.id, "nol"); {/* should change later to username from logged in account*/}
+    likePost(post.id, myUsername); 
   };
+
   return (
     <div className="py-2 pl-20 pr-4 glass rounded-lg items-start gap-2">
       {deleted ? (
