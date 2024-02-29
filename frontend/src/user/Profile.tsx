@@ -16,6 +16,7 @@ function Profile() {
   const [loading, setLoading] = useState<boolean>(true);
   const [user, setUser] = useState<User | null>(null);
   const [refresh, setRefresh] = useState<number>(0);
+  const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
     loadUser();
@@ -42,7 +43,7 @@ function Profile() {
     try {
       await followUser(model);
     } catch (error: any) {
-      console.log("Could not follow user");
+      setErrorMessage("Could not follow user");
     }
   };
 
@@ -70,13 +71,16 @@ function Profile() {
                     src="https://picsum.photos/200"
                   ></img>
                   {username !== myUsername && (
-                    <button
-                      type="button"
-                      className="btn-action"
-                      onClick={() => handleFollow()}
-                    >
-                      Follow
-                    </button>
+                    <div>
+                      <p className="error-message">{errorMessage}</p>
+                      <button
+                        type="button"
+                        className="btn-action"
+                        onClick={() => handleFollow()}
+                      >
+                        Follow
+                      </button>
+                    </div>
                   )}
                 </div>
                 {/* Additional profile info */}
