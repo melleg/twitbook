@@ -78,7 +78,7 @@ function Profile() {
                         className="btn-action"
                         onClick={() => handleFollow()}
                       >
-                        Follow
+                        {true ? "Follow" : "Unfollow"}
                       </button>
                     </div>
                   )}
