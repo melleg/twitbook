@@ -9,6 +9,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import nl.itvitae.twitbook.user.User;
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 @Getter
 @Setter
@@ -28,6 +31,7 @@ public class Post {
   private User author;
 
   @ManyToOne
+  @OnDelete(action = OnDeleteAction.SET_NULL) // If linkedPost is deleted, set this property to null
   private Post linkedPost;
 
   public Post(String content, User author) {
