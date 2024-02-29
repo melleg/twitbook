@@ -12,6 +12,7 @@ import nl.itvitae.twitbook.user.UserRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -68,6 +69,23 @@ public class PostController {
 
     // Create post and save to database
     Post newPost = new Post(model.content(), author);
+    postRepository.save(newPost);
+
+    // Return post uri
+    var uri = uriBuilder.path("/posts/{id}")
+        .buildAndExpand(newPost.getId())
+        .toUri();
+
+    return ResponseEntity.created(uri).body(getPostDTO(newPost));
+  }
+
+  @PostMapping("reply/{postId}")
+  public ResponseEntity<?> replyToPost(@PathVariable long postId, @RequestBody PostModel model, UriComponentsBuilder uriBuilder, @AuthenticationPrincipal User author) {
+    Optional<Post> originalPost = postRepository.findById(postId);
+    if(originalPost.isEmpty()) return ResponseEntity.notFound().build();
+
+    // Create post and save to database
+    Post newPost = new Post(model.content(), author, originalPost.get());
     postRepository.save(newPost);
 
     // Return post uri
