@@ -28,7 +28,12 @@ public class Post {
   private LocalDateTime postedDate;
 
   @ManyToOne
+  @OnDelete(action = OnDeleteAction.CASCADE) // If user is removed, this post is removed. Or it's empty...?
   private User author;
+
+  // Enum property
+  @Enumerated(EnumType.ORDINAL)
+  private PostType type;
 
   @ManyToOne
   @OnDelete(action = OnDeleteAction.SET_NULL) // If linkedPost is deleted, set this property to null
@@ -38,10 +43,18 @@ public class Post {
     this.content = content;
     this.author = author;
     postedDate = LocalDateTime.now();
+    this.type = PostType.POST;
   }
 
   public Post(String content, User author, Post linkedPost) {
     this(content, author);
     this.linkedPost = linkedPost;
+    this.type = content.isEmpty() ? PostType.REPOST : PostType.REPLY;
+  }
+
+  public enum PostType {
+    POST,
+    REPLY,
+    REPOST
   }
 }
