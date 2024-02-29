@@ -1,11 +1,11 @@
 package nl.itvitae.twitbook.follow;
 
 import java.util.Optional;
+import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface FollowRepository extends JpaRepository<Follow, Long> {
 
-  boolean existsFollowByFollowerUsernameAndFollowingUsername(String followerUsername,
-      String followingUsername);
+  Optional<Follow> findFollowByFollowerIdAndFollowingId(UUID followerId, UUID followingId);
 
 }

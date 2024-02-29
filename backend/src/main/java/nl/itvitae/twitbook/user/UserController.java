@@ -53,9 +53,14 @@ public class UserController {
     if (follower.isEmpty() || following.isEmpty()) {
       return ResponseEntity.noContent().build();
     }
-    if (followRepository.existsFollowByFollowerUsernameAndFollowingUsername(
-        follower.get().getUsername(), following.get().getUsername()) || user.getUsername()
-        .equals(following.get().getUsername())) {
+
+    Optional<Follow> optionalFollow = followRepository.findFollowByFollowerIdAndFollowingId(
+        follower.get().getId(), following.get().getId());
+    if (optionalFollow.isPresent()) {
+      followRepository.delete(optionalFollow.get());
+      return ResponseEntity.noContent().build();
+    }
+    if (user.getUsername().equals(following.get().getUsername())) {
       return ResponseEntity.status(409).build();
     }
     Follow follow = followRepository.save(new Follow(follower.get(), following.get()));
