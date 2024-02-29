@@ -141,6 +141,9 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
           )}
         <p className="error-message">{errorMessage}</p>
       </div>
+      {postReplyingId == post.id && loggedIn && (
+        <ReplyComponent onSubmit={() => {}} />
+      )}
     </>
   );
 
@@ -153,9 +156,6 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
   return (
     <div className="py-2 pl-20 pr-4 glass rounded-lg">
       {getPostContent(post)}
-      {postReplyingId == post.id && loggedIn && (
-        <ReplyComponent onSubmit={() => console.log("hi")} />
-      )}
     </div>
   );
 };
