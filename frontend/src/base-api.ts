@@ -10,7 +10,7 @@ const setJwtHeader = (jwtToken: string) => {
   api.defaults.headers.common.Authorization = `Bearer ${jwtToken}`;
 };
 
-const jwt = localStorage.getItem("token");
-if (jwt) setJwtHeader(jwt);
+// const jwt = localStorage.getItem("token");
+// if (jwt) setJwtHeader(jwt);
 
 export { api, setJwtHeader };

@@ -4,9 +4,10 @@ import PostCard from "../post/PostCard";
 
 interface FeedProps {
   getFunction: Promise<Post[]>;
+  refresh: number;
 }
 
-const Feed: React.FC<FeedProps> = ({ getFunction }) => {
+const Feed: React.FC<FeedProps> = ({ getFunction, refresh }) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [posts, setPosts] = useState<Post[]>([]);
 
@@ -18,7 +19,7 @@ const Feed: React.FC<FeedProps> = ({ getFunction }) => {
     };
 
     fetchData();
-  }, []);
+  }, [refresh]);
 
   return (
     <div className="flex flex-col gap-2 pt-2">
@@ -30,9 +31,11 @@ const Feed: React.FC<FeedProps> = ({ getFunction }) => {
             <div className="glass rounded-lg p-4">No posts found</div>
           ) : (
             <>
-              {posts.map((post) => (
-                <PostCard key={post.id} post={post} />
-              ))}
+              {posts
+                .sort((a, b) => b.postedDate.getTime() - a.postedDate.getTime())
+                .map((post) => (
+                  <PostCard key={post.id} post={post} />
+                ))}
             </>
           )}
         </>

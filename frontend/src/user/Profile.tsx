@@ -5,11 +5,16 @@ import { getUserByUsername } from "./user-service";
 import Feed from "../feed/Feed";
 import { getPostsByUser } from "../post/post-service";
 import { format } from "date-fns";
+import CreatePostComponent from "../post/CreatePostComponent";
+import { useGlobalContext } from "../auth/GlobalContext";
 
 function Profile() {
   const { username } = useParams();
+  const { myUsername } = useGlobalContext();
+
   const [loading, setLoading] = useState<boolean>(true);
   const [user, setUser] = useState<User | null>(null);
+  const [refresh, setRefresh] = useState<number>(0);
 
   useEffect(() => {
     loadUser();
@@ -62,7 +67,15 @@ function Profile() {
                   </p>
                 </div>
               </div>
-              <Feed getFunction={getPostsByUser(user.username)} />
+
+              {username === myUsername && (
+                <CreatePostComponent onSubmit={() => setRefresh(refresh + 1)} />
+              )}
+
+              <Feed
+                getFunction={getPostsByUser(user.username)}
+                refresh={refresh}
+              />
             </>
           ) : (
             <div>User not found</div>
