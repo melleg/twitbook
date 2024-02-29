@@ -1,5 +1,7 @@
 package nl.itvitae.twitbook.security;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -30,29 +32,47 @@ public class AuthController {
   private final AuthenticationManager authenticationManager;
   private final JWTService jwtService;
   private final PasswordEncoder passwordEncoder;
+  private static final int MIN_USERNAME_LENGTH = 3;
+  private static final int MAX_USERNAME_LENGTH = 25;
 
   @PostMapping("login")
   public ResponseEntity<?> login(@RequestBody LoginModel loginModel) {
     try {
       Authentication authentication = authenticationManager.authenticate(
-        new UsernamePasswordAuthenticationToken(loginModel.username(), loginModel.password()));
+          new UsernamePasswordAuthenticationToken(loginModel.username(), loginModel.password()));
 
-      if (!authentication.isAuthenticated())
+      if (!authentication.isAuthenticated()) {
         return new ResponseEntity<>("Invalid user credentials", HttpStatus.UNAUTHORIZED);
+      }
 
       return new ResponseEntity<>(jwtService.generateUserJWT(loginModel.username()), HttpStatus.OK);
-    }
-    catch(AuthenticationException exc) {
+    } catch (AuthenticationException exc) {
       return new ResponseEntity<>("Invalid user credentials", HttpStatus.UNAUTHORIZED);
     }
   }
 
   @PostMapping("register")
-  public ResponseEntity<?> createUser(@RequestBody RegisterModel model, UriComponentsBuilder uriBuilder) {
-    if (userRepository.findByUsernameIgnoreCase(model.username()).isPresent())
-      return new ResponseEntity<>("Username already exists", HttpStatus.CONFLICT);
+  public ResponseEntity<?> createUser(@RequestBody RegisterModel model,
+      UriComponentsBuilder uriBuilder) {
 
-    User newUser = new User(model.username(), passwordEncoder.encode(model.password()), Role.ROLE_USER);
+    final Pattern pattern = Pattern.compile(
+        String.format("[\\w\\d_]{%d,%d}", MIN_USERNAME_LENGTH, MAX_USERNAME_LENGTH),
+        Pattern.CASE_INSENSITIVE);
+    final Matcher matcher = pattern.matcher(model.username());
+
+    if (!matcher.matches()) {
+      return ResponseEntity.badRequest().body(
+          String.format(
+              "Username should be between %d and %d characters long and only include letters, numbers or underscores",
+              MIN_USERNAME_LENGTH, MAX_USERNAME_LENGTH));
+    }
+
+    if (userRepository.findByUsernameIgnoreCase(model.username()).isPresent()) {
+      return new ResponseEntity<>("Username already exists", HttpStatus.CONFLICT);
+    }
+
+    User newUser = new User(model.username(), passwordEncoder.encode(model.password()),
+        Role.ROLE_USER);
     userRepository.save(newUser);
 
     var uri = uriBuilder.path("/profile/{id}")

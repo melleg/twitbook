@@ -2,6 +2,7 @@ import { useState } from "react";
 import { register } from "./auth-service";
 import RegisterModel from "./register-model";
 import { useNavigate } from "react-router-dom";
+import { Globals } from "../globals";
 
 const RegisterComponent = () => {
   const [username, setUsername] = useState("");
@@ -9,6 +10,10 @@ const RegisterComponent = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const [checkPassword, setCheckPassword] = useState("");
   const navigate = useNavigate();
+
+  const handleUsernameChange = (s: string) => {
+    setUsername(s.replace(Globals.USERNAME_PATTERN, ""));
+  }
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
@@ -49,7 +54,8 @@ const RegisterComponent = () => {
           className="block border-2 border-black"
           type="text"
           placeholder="username"
-          onChange={(e) => setUsername(e.target.value)}
+          pattern={Globals.USERNAME_PATTERN} 
+          onChange={(e) => handleUsernameChange(e.target.value)}
         />
       </label>
       <label>
