@@ -7,6 +7,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import nl.itvitae.twitbook.user.User;
@@ -28,8 +29,11 @@ public class Follow {
   @JoinColumn(name = "following_id", referencedColumnName = "id")
   private User following;
 
+  private LocalDateTime followDate;
+
   public Follow(User follower, User following) {
     this.follower = follower;
     this.following = following;
+    followDate = LocalDateTime.now();
   }
 }
