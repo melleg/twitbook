@@ -10,6 +10,7 @@ interface ReplyComponentProps {
 const ReplyComponent: React.FC<ReplyComponentProps> = ({ onSubmit }) => {
   const [content, setContent] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const [submitted, setSubmitted] = useState<boolean>(false);
   const { postReplyingId } = useGlobalContext();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -18,7 +19,7 @@ const ReplyComponent: React.FC<ReplyComponentProps> = ({ onSubmit }) => {
     if (!postReplyingId) return;
 
     if (!content || content.length === 0) {
-      setErrorMessage("Please enter a twit");
+      setErrorMessage("Please enter a reply");
       return;
     }
 
@@ -29,24 +30,32 @@ const ReplyComponent: React.FC<ReplyComponentProps> = ({ onSubmit }) => {
     try {
       await replyToPost(model, postReplyingId);
       onSubmit();
-      setContent("");
+      setSubmitted(true);
     } catch (err) {
-      setErrorMessage("Unable to post");
+      setErrorMessage("Unable to reply");
     }
   };
 
   return (
-    <form className="p-4 glass rounded-lg gap-2 mt-2" onSubmit={handleSubmit}>
-      <span className="error-message">{errorMessage}</span>
-      <textarea
-        className="p-2 glass rounded-lg w-5/6 border-solid border-gray-600"
-        value={content}
-        onChange={(e) => setContent(e.target.value)}
-      />
-      <button type="submit" className="btn-action ml-4">
-        Reply
-      </button>
-    </form>
+    <>
+      {submitted ? (
+        <div className="rounded-lg border-2 border-gray-500 p-2 mt-1">
+          You replied "{content}"
+        </div>
+      ) : (
+        <form className="gap-2 mt-2 flex flex-col" onSubmit={handleSubmit}>
+          <span className="error-message">{errorMessage}</span>
+          <textarea
+            className="p-2 glass rounded-lg w-full border-solid border-gray-600"
+            value={content}
+            onChange={(e) => setContent(e.target.value)}
+          />
+          <button type="submit" className="btn-action ml-auto">
+            Reply
+          </button>
+        </form>
+      )}
+    </>
   );
 };
 

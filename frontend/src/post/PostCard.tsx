@@ -102,7 +102,12 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
   const getBottomButtons = (post: Post) => (
     <>
       <div className="flex flex-wrap gap-2 mt-1 text-left">
-        <button className="btn-icon w-16" type="button" title="Like">
+        <button
+          className="btn-icon w-16"
+          type="button"
+          title="Like"
+          disabled={!loggedIn}
+        >
           👍1k
         </button>
         <button
@@ -110,10 +115,16 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
           type="button"
           title="Reply"
           onClick={() => setPostReplyingId(post.id)}
+          disabled={!loggedIn}
         >
           ↪️1k
         </button>
-        <button className="btn-icon w-16" type="button" title="Repost">
+        <button
+          className="btn-icon w-16"
+          type="button"
+          title="Repost"
+          disabled={!loggedIn}
+        >
           🔁1k
         </button>
         {loggedIn &&
@@ -123,6 +134,7 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
               className="btn-icon text-left"
               type="button"
               onClick={handleDelete}
+              disabled={!loggedIn}
             >
               🗑 Delete Post
             </button>
