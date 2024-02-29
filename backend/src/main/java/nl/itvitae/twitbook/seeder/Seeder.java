@@ -2,6 +2,8 @@ package nl.itvitae.twitbook.seeder;
 
 import lombok.AllArgsConstructor;
 
+import nl.itvitae.twitbook.follow.Follow;
+import nl.itvitae.twitbook.follow.FollowRepository;
 import nl.itvitae.twitbook.post.Post;
 import nl.itvitae.twitbook.post.PostRepository;
 import nl.itvitae.twitbook.user.User;
@@ -17,6 +19,7 @@ import org.springframework.stereotype.Component;
 public class Seeder implements CommandLineRunner {
   private final PostRepository postRepository;
   private final UserRepository userRepository;
+  private final FollowRepository followRepository;
   private final PasswordEncoder passwordEncoder;
 
   @Override
@@ -30,6 +33,9 @@ public class Seeder implements CommandLineRunner {
     savePost("Melle en Raafi zijn chads", sjaakie);
     savePost("this post should be deleted", melle);
     savePost("this is a post", raafi);
+
+    followUser(sjaakie, nol);
+    followUser(sjaakie, raafi);
   }
 
   private Post savePost(String content, User author) {
@@ -42,5 +48,11 @@ public class Seeder implements CommandLineRunner {
     User user = new User(username, passwordEncoder.encode(password), roles);
     userRepository.save(user);
     return user;
+  }
+
+  private Follow followUser(User follower, User following) {
+    Follow follow = new Follow(follower, following);
+    followRepository.save(follow);
+    return follow;
   }
 }
