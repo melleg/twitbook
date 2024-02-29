@@ -11,6 +11,7 @@ import nl.itvitae.twitbook.follow.FollowModel;
 import nl.itvitae.twitbook.follow.FollowRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,18 +36,27 @@ public class UserController {
   public ResponseEntity<?> findByUsername(@PathVariable String username) {
     Optional<User> user = userRepository.findByUsernameIgnoreCase(username);
 
-    if(user.isEmpty())
+    if (user.isEmpty()) {
       return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+    }
 
     return new ResponseEntity<>(new UserDTO(user.get()), HttpStatus.OK);
   }
 
   @PostMapping("/follow")
-  public ResponseEntity<?> followUser(@RequestBody FollowModel followModel){
-    Optional<User> follower = userRepository.findByUsernameIgnoreCase(followModel.followerUsername());
-    Optional<User> following = userRepository.findByUsernameIgnoreCase(followModel.followingUsername());
+  public ResponseEntity<?> followUser(@RequestBody FollowModel followModel,
+      @AuthenticationPrincipal User user) {
+    Optional<User> follower = userRepository.findByUsernameIgnoreCase(
+        followModel.followerUsername());
+    Optional<User> following = userRepository.findByUsernameIgnoreCase(
+        followModel.followingUsername());
     if (follower.isEmpty() || following.isEmpty()) {
       return ResponseEntity.noContent().build();
+    }
+    if (followRepository.existsFollowByFollowerUsernameAndFollowingUsername(
+        follower.get().getUsername(), following.get().getUsername()) || user.getUsername()
+        .equals(following.get().getUsername())) {
+      return ResponseEntity.status(409).build();
     }
     Follow follow = followRepository.save(new Follow(follower.get(), following.get()));
     return ResponseEntity.created(null).body(new FollowDTO(follow));
