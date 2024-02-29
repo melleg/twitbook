@@ -11,12 +11,12 @@ const ReplyComponent: React.FC<ReplyComponentProps> = ({ onSubmit }) => {
   const [content, setContent] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [submitted, setSubmitted] = useState<boolean>(false);
-  const { postReplyingId } = useGlobalContext();
+  const { postReplying } = useGlobalContext();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!postReplyingId) return;
+    if (!postReplying) return;
 
     if (!content || content.length === 0) {
       setErrorMessage("Please enter a reply");
@@ -28,7 +28,7 @@ const ReplyComponent: React.FC<ReplyComponentProps> = ({ onSubmit }) => {
     };
 
     try {
-      await replyToPost(model, postReplyingId);
+      await replyToPost(model, postReplying.id);
       onSubmit();
       setSubmitted(true);
     } catch (err) {

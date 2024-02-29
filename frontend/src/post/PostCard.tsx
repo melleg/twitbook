@@ -14,7 +14,7 @@ interface PostCardProps {
 const PostCard: React.FC<PostCardProps> = ({ post }) => {
   const [deleted, setDeleted] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState("");
-  const { loggedIn, myUsername, roles, postReplyingId, setPostReplyingId } =
+  const { loggedIn, myUsername, roles, postReplying, setPostReplying } =
     useGlobalContext();
 
   const handleDelete = async () => {
@@ -114,7 +114,7 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
           className="btn-icon w-16"
           type="button"
           title="Reply"
-          onClick={() => setPostReplyingId(post.id)}
+          onClick={() => setPostReplying(post)}
           disabled={!loggedIn}
         >
           ↪️1k
@@ -141,7 +141,7 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
           )}
         <p className="error-message">{errorMessage}</p>
       </div>
-      {postReplyingId == post.id && loggedIn && (
+      {postReplying == post && loggedIn && (
         <ReplyComponent onSubmit={() => {}} />
       )}
     </>
