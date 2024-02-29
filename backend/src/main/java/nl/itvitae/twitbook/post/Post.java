@@ -41,9 +41,7 @@ public class Post {
   private Set<Like> likes = new HashSet<>();
 
   public Post(PostModel model, User author) {
-    this.content = model.content();
-    this.author = author;
-    postedDate = LocalDateTime.now();
+    this(model.content(), author);
   }
 
   public Post(String content, User author) {

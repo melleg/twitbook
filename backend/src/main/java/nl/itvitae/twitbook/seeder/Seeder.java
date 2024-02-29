@@ -11,6 +11,7 @@ import nl.itvitae.twitbook.user.User.Role;
 import nl.itvitae.twitbook.user.UserRepository;
 
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -19,6 +20,7 @@ public class Seeder implements CommandLineRunner {
   private final PostRepository postRepository;
   private final UserRepository userRepository;
   private final LikeRepository likeRepository;
+  private final PasswordEncoder passwordEncoder;
 
   @Override
   public void run(String... args) {
@@ -29,6 +31,8 @@ public class Seeder implements CommandLineRunner {
 
     var post1 = savePost("Bingleblong", nol);
     savePost("Melle en Raafi zijn chads", sjaakie);
+    savePost("this post should be deleted", melle);
+    savePost("this is a post", raafi);
 
     likePost(post1, melle);
   }
@@ -39,9 +43,10 @@ public class Seeder implements CommandLineRunner {
   }
 
   private User saveUser(String username, String password, Role... roles) {
-    User user = new User(username, password, roles);
-    return userRepository.save(user);
-}
+    User user = new User(username, passwordEncoder.encode(password), roles);
+    userRepository.save(user);
+    return user;
+  }
 
   private void likePost(Post post, User user) {
     likeRepository.save(new Like(post, user));

@@ -10,11 +10,14 @@ import nl.itvitae.twitbook.like.LikeDTO;
 import nl.itvitae.twitbook.like.LikeModel;
 import nl.itvitae.twitbook.like.LikeRepository;
 import nl.itvitae.twitbook.user.User;
+import nl.itvitae.twitbook.user.User.Role;
 import nl.itvitae.twitbook.user.UserRepository;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,13 +27,12 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
 @RestController
-@CrossOrigin
+@CrossOrigin("http://localhost:5173")
 @AllArgsConstructor
 @RequestMapping("api/v1/posts")
 public class PostController {
 
   private final PostRepository postRepository;
-
   private final UserRepository userRepository;
 
   private final LikeRepository likeRepository;
@@ -63,18 +65,10 @@ public class PostController {
   }
 
   @PostMapping
-  public ResponseEntity<?> createPost(@RequestBody PostModel model,
-      UriComponentsBuilder uriBuilder) {
-
-    // TODO: replace with get user from auth
-    List<User> allUsers = userRepository.findAll();
-    if (allUsers.isEmpty()) {
-      return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
-    }
-    User author = allUsers.getFirst();
+  public ResponseEntity<?> createPost(@RequestBody PostModel model, UriComponentsBuilder uriBuilder, @AuthenticationPrincipal User user) {
 
     // Create post and save to database
-    Post newPost = new Post(model, author);
+    Post newPost = new Post(model, user);
     postRepository.save(newPost);
 
     // Return post uri
@@ -85,6 +79,24 @@ public class PostController {
     PostDTO newPostDTO = new PostDTO(newPost);
 
     return ResponseEntity.created(uri).body(newPostDTO);
+  }
+
+  @DeleteMapping("{id}")
+  public ResponseEntity<?> deletePost(@PathVariable long id, @AuthenticationPrincipal User user) {
+    Optional<Post> post = postRepository.findById(id);
+    if (post.isEmpty()) {
+      return ResponseEntity.badRequest().build();
+    }
+
+    var userRoles = List.of(user.getRoles());
+
+    if (userRoles.contains(Role.ROLE_ADMIN) || (userRoles.contains(Role.ROLE_USER) && post.get()
+        .getAuthor().getId().equals(user.getId()))) {
+      postRepository.delete(post.get());
+      return ResponseEntity.noContent().build();
+    }
+
+    return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
   }
 
   @PostMapping("/like")
