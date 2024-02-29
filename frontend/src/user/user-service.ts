@@ -13,5 +13,5 @@ export const getUserByUsername = async (username: string) => {
 };
 
 export const followUser = async (model: FollowModel) => {
-  return (await api.post(`follows`, model));
+  return (await api.post(`${uri}/follow`, model));
 };

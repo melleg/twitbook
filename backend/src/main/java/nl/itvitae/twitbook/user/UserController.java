@@ -5,6 +5,10 @@ import java.util.Optional;
 
 import lombok.AllArgsConstructor;
 
+import nl.itvitae.twitbook.follow.Follow;
+import nl.itvitae.twitbook.follow.FollowDTO;
+import nl.itvitae.twitbook.follow.FollowModel;
+import nl.itvitae.twitbook.follow.FollowRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController {
 
   private final UserRepository userRepository;
+  private final FollowRepository followRepository;
 
   @GetMapping
   public List<UserDTO> getAll() {
@@ -34,5 +39,16 @@ public class UserController {
       return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
 
     return new ResponseEntity<>(new UserDTO(user.get()), HttpStatus.OK);
+  }
+
+  @PostMapping("/follow")
+  public ResponseEntity<?> followUser(@RequestBody FollowModel followModel){
+    Optional<User> follower = userRepository.findByUsernameIgnoreCase(followModel.followerUsername());
+    Optional<User> following = userRepository.findByUsernameIgnoreCase(followModel.followingUsername());
+    if (follower.isEmpty() || following.isEmpty()) {
+      return ResponseEntity.noContent().build();
+    }
+    Follow follow = followRepository.save(new Follow(follower.get(), following.get()));
+    return ResponseEntity.created(null).body(new FollowDTO(follow));
   }
 }

@@ -24,15 +24,4 @@ public class FollowController {
   public Iterable<FollowDTO> getAll() {
     return followRepository.findAll().stream().map(FollowDTO::new).toList();
   }
-
-  @PostMapping
-  public ResponseEntity<?> followUser(@RequestBody FollowModel followModel){
-    Optional<User> follower = userRepository.findByUsernameIgnoreCase(followModel.followerUsername());
-    Optional<User> following = userRepository.findByUsernameIgnoreCase(followModel.followingUsername());
-    if (follower.isEmpty() || following.isEmpty()) {
-      return ResponseEntity.noContent().build();
-    }
-    Follow follow = followRepository.save(new Follow(follower.get(), following.get()));
-    return ResponseEntity.created(null).body(new FollowDTO(follow));
-  }
 }
