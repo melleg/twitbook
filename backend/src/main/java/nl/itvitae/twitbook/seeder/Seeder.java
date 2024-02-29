@@ -28,7 +28,9 @@ public class Seeder implements CommandLineRunner {
 
     Post post1 = savePost("Bingleblong", nol);
     Post post2 = savePost("Melle en Raafi zijn chads", sjaakie);
-    Post post3 = saveRepost("Mee eens", nol, post2);
+    Post reply = saveRepost("Mee eens", nol, post2);
+
+    Post repost = saveRepost("", sjaakie, post1);
   }
 
   private Post savePost(String content, User author) {
