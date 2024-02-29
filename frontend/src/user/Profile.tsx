@@ -16,7 +16,7 @@ function Profile() {
   const [loading, setLoading] = useState<boolean>(true);
   const [user, setUser] = useState<User | null>(null);
   const [refresh, setRefresh] = useState<number>(0);
-  const [errorMessage, setErrorMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState<string>("");
 
   useEffect(() => {
     loadUser();
@@ -30,7 +30,6 @@ function Profile() {
     } catch {
       setUser(null);
     }
-
     setLoading(false);
   };
 
@@ -42,6 +41,7 @@ function Profile() {
   const handleFollow = async () => {
     try {
       await followUser(model);
+      loadUser();
     } catch (error: any) {
       setErrorMessage("Could not follow user");
     }
@@ -78,7 +78,7 @@ function Profile() {
                         className="btn-action"
                         onClick={() => handleFollow()}
                       >
-                        {true ? "Follow" : "Unfollow"}
+                        {user.hasFollowed ? "Unfollow" : "Follow"}
                       </button>
                     </div>
                   )}
