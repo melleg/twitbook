@@ -36,6 +36,8 @@ const PostCard = (props: { post: Post }) => {
   };
 
   const handleLike = async (post: Post) => {
+    if (authFail("You must be logged in to like")) return;
+
     await likePost(post.id);
     const diff = post.hasLiked ? -1 : 1;
 
