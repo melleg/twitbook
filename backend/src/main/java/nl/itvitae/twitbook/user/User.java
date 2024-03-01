@@ -39,9 +39,6 @@ public class User implements UserDetails {
 
   private Role[] roles;
 
-  @OneToMany(mappedBy = "user")
-  private Set<Like> likes = new HashSet<>();
-  
   private LocalDateTime registerDate;
 
   public User(String username, String password, Role... roles) {
