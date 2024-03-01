@@ -6,7 +6,6 @@ import java.util.Optional;
 import lombok.AllArgsConstructor;
 
 import nl.itvitae.twitbook.like.Like;
-import nl.itvitae.twitbook.like.LikeDTO;
 import nl.itvitae.twitbook.like.LikeModel;
 import nl.itvitae.twitbook.like.LikeRepository;
 import nl.itvitae.twitbook.user.User;
@@ -31,15 +30,16 @@ import org.springframework.web.util.UriComponentsBuilder;
 @AllArgsConstructor
 @RequestMapping("api/v1/posts")
 public class PostController {
-
   private final PostRepository postRepository;
   private final UserRepository userRepository;
-
   private final LikeRepository likeRepository;
 
   @GetMapping
-  public List<PostDTO> getAll() {
-    return postRepository.findAll().stream().map(PostDTO::new).toList();
+  public List<PostDTO> getAll(@AuthenticationPrincipal User user) {
+    return postRepository.findAll().stream().map(p -> new PostDTO(p, p
+        .getLikes().stream()
+        .anyMatch(l -> l.getUser().getId().equals(user.getId()))))
+        .toList();
   }
 
   @GetMapping("{id}")
@@ -102,11 +102,13 @@ public class PostController {
   @PostMapping("/like")
   public ResponseEntity<?> likePost(@RequestBody LikeModel likeModel,
       UriComponentsBuilder ucb) {
+
     Optional<Post> post = postRepository.findById(likeModel.postId());
     Optional<User> user = userRepository.findByUsernameIgnoreCase(likeModel.username());
     if (post.isEmpty() || user.isEmpty()) {
       return ResponseEntity.badRequest().build();
     }
+
     Optional<Like> optionalLike = likeRepository.findLikeByUserIdAndPostId(user.get().getId(), post.get().getId());
     if (optionalLike.isPresent()) {
       likeRepository.delete(optionalLike.get());
