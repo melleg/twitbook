@@ -3,4 +3,6 @@ export default interface Post {
     content: string;
     postedDate: Date;
     username: string;
+    likes: number;
+    hasLiked: boolean;
 }

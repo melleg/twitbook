@@ -1,18 +1,19 @@
 import { Link } from "react-router-dom";
 import Post from "./post";
 import { format } from "date-fns";
-import { deletePost } from "./post-service";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useGlobalContext } from "../auth/GlobalContext";
 import { Globals } from "../globals";
+import { likePost, deletePost } from "./post-service";
 
 interface PostCardProps {
   post: Post;
 }
 
-const PostCard: React.FC<PostCardProps> = ({ post }) => {
+const PostCard: React.FC<PostCardProps> = ({ post: postProp }) => {
   const [deleted, setDeleted] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [post, setPost] = useState<Post>(postProp);
   const { loggedIn, myUsername, roles } = useGlobalContext();
 
   const handleDelete = async () => {
@@ -23,6 +24,18 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
       setErrorMessage("Post could not be deleted");
     }
   };
+
+  const handleLike = async () => {
+    await likePost(post.id, myUsername);
+    if (post.hasLiked) {
+      setPost((old) => ({ ...old, likes: old.likes - 1, hasLiked: false }));
+    } else {
+      setPost((old) => ({ ...old, likes: old.likes + 1, hasLiked: true }));
+    }
+  };
+
+  useEffect(() => {}, [post]);
+
   return (
     <div className="py-2 pl-20 pr-4 glass rounded-lg items-start gap-2">
       {deleted ? (
@@ -47,19 +60,31 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
             {post.content}
           </p>
           <div className="flex flex-wrap gap-2 mt-1">
-            <button className="btn-icon w-16 text-left" type="button">
-              👍1k
-            </button>
+            {loggedIn ? (
+              <button
+                className="btn-icon w-16 text-left"
+                type="button"
+                onClick={handleLike}
+              >
+                👍{post.likes}
+              </button>
+            ) : (
+              <p className="btn-icon-nohover w-16 text-left">👍{post.likes}</p>
+            )}
             <button className="btn-icon w-16 text-left" type="button">
               🔁1k
             </button>
-            {(loggedIn && (myUsername === post.username || roles.includes(Globals.ROLE_ADMIN)))&& (<button
-              className="btn-icon text-left"
-              type="button"
-              onClick={handleDelete}
-            >
-              🗑 Delete Post
-            </button>)}
+            {loggedIn &&
+              (myUsername === post.username ||
+                roles.includes(Globals.ROLE_ADMIN)) && (
+                <button
+                  className="btn-icon text-left"
+                  type="button"
+                  onClick={handleDelete}
+                >
+                  🗑 Delete Post
+                </button>
+              )}
             <p className="error-message">{errorMessage}</p>
           </div>
         </>
