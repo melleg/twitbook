@@ -7,7 +7,6 @@ import { getPostsByUser } from "../post/post-service";
 import { format } from "date-fns";
 import CreatePostComponent from "../post/CreatePostComponent";
 import { useGlobalContext } from "../auth/GlobalContext";
-import FollowModel from "./follow-model";
 
 function Profile() {
   const { username } = useParams();
@@ -26,24 +25,21 @@ function Profile() {
   const loadUser = async () => {
     setLoading(true);
 
+    
     try {
       const userResponse = await getUserByUsername(username!)
       setUser(userResponse);
       setHasFollowed(userResponse.hasFollowed)
+      setErrorMessage("");
     } catch {
       setUser(null);
     }
     setLoading(false);
   };
 
-  const model: FollowModel = {
-    followerUsername: myUsername,
-    followingUsername: username ? username : "",
-  };
-
   const handleFollow = async () => {
     try {
-      await followUser(model);      
+      await followUser(username!);      
       setHasFollowed(!hasFollowed);   
     } catch (error: any) {
       setErrorMessage("Could not follow user");

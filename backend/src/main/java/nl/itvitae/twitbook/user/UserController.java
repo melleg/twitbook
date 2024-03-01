@@ -7,7 +7,6 @@ import lombok.AllArgsConstructor;
 
 import nl.itvitae.twitbook.follow.Follow;
 import nl.itvitae.twitbook.follow.FollowDTO;
-import nl.itvitae.twitbook.follow.FollowModel;
 import nl.itvitae.twitbook.follow.FollowRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -46,27 +45,25 @@ public class UserController {
     return new ResponseEntity<>(new UserDTO(user.get(), followRepository.existsFollowByFollowerIdAndFollowingId(authUser.getId(), user.get().getId())), HttpStatus.OK);
   }
 
-  @PostMapping("/follow")
-  public ResponseEntity<?> followUser(@RequestBody FollowModel followModel,
+  @PostMapping("/follow/{followingUsername}")
+  public ResponseEntity<?> followUser(@PathVariable String followingUsername,
       @AuthenticationPrincipal User user) {
-    Optional<User> follower = userRepository.findByUsernameIgnoreCase(
-        followModel.followerUsername());
     Optional<User> following = userRepository.findByUsernameIgnoreCase(
-        followModel.followingUsername());
-    if (follower.isEmpty() || following.isEmpty()) {
-      return ResponseEntity.noContent().build();
+        followingUsername);
+    if (following.isEmpty()) {
+      return ResponseEntity.notFound().build();
     }
 
+    if (user.getUsername().equals(followingUsername)) {
+      return new ResponseEntity<>(null, HttpStatus.CONFLICT);
+    }
     Optional<Follow> optionalFollow = followRepository.findFollowByFollowerIdAndFollowingId(
-        follower.get().getId(), following.get().getId());
+        user.getId(), following.get().getId());
     if (optionalFollow.isPresent()) {
       followRepository.delete(optionalFollow.get());
       return ResponseEntity.noContent().build();
     }
-    if (user.getUsername().equals(following.get().getUsername())) {
-      return ResponseEntity.status(409).build();
-    }
-    Follow follow = followRepository.save(new Follow(follower.get(), following.get()));
+    Follow follow = followRepository.save(new Follow(user, following.get()));
     return ResponseEntity.created(null).body(new FollowDTO(follow));
   }
 }

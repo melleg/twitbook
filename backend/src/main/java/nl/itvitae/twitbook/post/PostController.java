@@ -92,4 +92,15 @@ public class PostController {
 
     return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
   }
+
+  @GetMapping("by-following/{username}")
+  public ResponseEntity<?> getAllByFollowing(@PathVariable String username) {
+    Optional<User> user = userRepository.findByUsernameIgnoreCase(username);
+    if (user.isEmpty()) {
+      return ResponseEntity.notFound().build();
+    }
+
+    List<Post> posts = postRepository.findByAuthor_UsernameIgnoreCase(user.get().getUsername());
+    return ResponseEntity.ok(posts.stream().map(PostDTO::new).toList());
+  }
 }
