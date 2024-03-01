@@ -1,10 +1,13 @@
 package nl.itvitae.twitbook.post;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import lombok.AllArgsConstructor;
 
+import nl.itvitae.twitbook.follow.Follow;
+import nl.itvitae.twitbook.follow.FollowRepository;
 import nl.itvitae.twitbook.user.User;
 import nl.itvitae.twitbook.user.User.Role;
 import nl.itvitae.twitbook.user.UserRepository;
@@ -30,6 +33,7 @@ public class PostController {
 
   private final PostRepository postRepository;
   private final UserRepository userRepository;
+  private final FollowRepository followRepository;
 
   @GetMapping
   public List<PostDTO> getAll() {
@@ -93,14 +97,21 @@ public class PostController {
     return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
   }
 
-  @GetMapping("by-following/{username}")
-  public ResponseEntity<?> getAllByFollowing(@PathVariable String username) {
-    Optional<User> user = userRepository.findByUsernameIgnoreCase(username);
-    if (user.isEmpty()) {
+  @GetMapping("by-following")
+  public ResponseEntity<?> getAllByFollowing(@AuthenticationPrincipal User user) {
+    if (user == null) {
       return ResponseEntity.notFound().build();
     }
 
-    List<Post> posts = postRepository.findByAuthor_UsernameIgnoreCase(user.get().getUsername());
+    List<Follow> follows = followRepository.findAllByFollowerId(user.getId());
+
+    List<Post> posts = new ArrayList<>();
+    for (Follow follow: follows) {
+      posts.addAll(postRepository.findByAuthor_UsernameIgnoreCase(follow.getFollowing().getUsername()));
+    }
+
+    posts.addAll(postRepository.findByAuthor_UsernameIgnoreCase(user.getUsername()));
+
     return ResponseEntity.ok(posts.stream().map(PostDTO::new).toList());
   }
 }

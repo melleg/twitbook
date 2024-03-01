@@ -16,6 +16,14 @@ export const getPostsByUser = async (username: string) => {
   return posts;
 };
 
+
+export const getPostsByFollowing = async () => {
+  const posts = (await api.get<Post[]>(`${uri}/by-following`)).data;
+  posts.forEach((p) => mapPost(p));
+  return posts;
+};
+
+
 export const createPost = async (model: PostModel) => {
   return (await api.post(`${uri}`, model));
 };
