@@ -17,7 +17,7 @@ const PostCard = (props: { post: Post }) => {
   const { loggedIn, myUsername, roles, postReplying, setPostReplying } =
     useGlobalContext();
 
-  useEffect(() => {}, [post]);
+  useEffect(() => {}, [post, setPostReplying]);
 
   const authFail = (text: string) => {
     if (!loggedIn) alert(text);
@@ -38,18 +38,22 @@ const PostCard = (props: { post: Post }) => {
   const handleLike = async (post: Post) => {
     if (authFail("You must be logged in to like")) return;
 
-    await likePost(post.id);
-    const diff = post.hasLiked ? -1 : 1;
+    try {
+      await likePost(post.id);
+      const diff = post.hasLiked ? -1 : 1;
 
-    setPost((old) => ({
-      ...old,
-      likes: old.likes + diff,
-      hasLiked: !old.hasLiked,
-    }));
-    setLinkedPost(
-      (old) =>
-        old && { ...old, likes: old.likes + diff, hasLiked: !old.hasLiked }
-    );
+      setPost((old) => ({
+        ...old,
+        likes: old.likes + diff,
+        hasLiked: !old.hasLiked,
+      }));
+      setLinkedPost(
+        (old) =>
+          old && { ...old, likes: old.likes + diff, hasLiked: !old.hasLiked }
+      );
+    } catch {
+      setErrorMessage("Unable to like post");
+    }
   };
 
   const handleReply = (post: Post) => {
@@ -58,13 +62,40 @@ const PostCard = (props: { post: Post }) => {
     setPostReplying(post);
   };
 
+  const handleReplySuccess = () => {
+    setPost((old) => ({
+      ...old,
+      replies: old.replies + 1,
+    }));
+    setLinkedPost(
+      (old) =>
+        old && {
+          ...old,
+          replies: old.replies + 1,
+        }
+    );
+    setPostReplying(post);
+  };
+
   const handleRepost = async (post: Post) => {
     if (authFail("You must be logged in to repost")) return;
 
     try {
       await repost(post.id);
-      setPost((old) => ({ ...old, hasReposted: !old.hasReposted }));
-      setLinkedPost((old) => old && { ...old, hasReposted: !old.hasReposted });
+      setLinkedPost(
+        (old) =>
+          old && {
+            ...old,
+            reposts: old.reposts + (post.hasReposted ? -1 : 1),
+            hasReposted: !old.hasReposted,
+          }
+      );
+
+      setPost((old) => ({
+        ...old,
+        reposts: old.reposts + (post.hasReposted ? -1 : 1),
+        hasReposted: !old.hasReposted,
+      }));
     } catch (err) {
       setErrorMessage("Unable to repost");
     }
@@ -188,7 +219,7 @@ const PostCard = (props: { post: Post }) => {
         <p className="error-message">{errorMessage}</p>
       </div>
       {postReplying == props.post && loggedIn && (
-        <ReplyComponent onSubmit={() => {}} />
+        <ReplyComponent onSubmit={handleReplySuccess} />
       )}
     </>
   );
