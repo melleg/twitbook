@@ -5,6 +5,9 @@ import java.util.Optional;
 
 import lombok.AllArgsConstructor;
 
+import nl.itvitae.twitbook.like.Like;
+import nl.itvitae.twitbook.like.LikeModel;
+import nl.itvitae.twitbook.like.LikeRepository;
 import nl.itvitae.twitbook.user.User;
 import nl.itvitae.twitbook.user.User.Role;
 import nl.itvitae.twitbook.user.UserRepository;
@@ -28,22 +31,13 @@ import org.springframework.web.util.UriComponentsBuilder;
 @AllArgsConstructor
 @RequestMapping("api/v1/posts")
 public class PostController {
-
   private final PostRepository postRepository;
   private final UserRepository userRepository;
+  private final LikeRepository likeRepository;
 
   // Returns the proper DTO based on post type
-  private Object getPostDTO(Post post, User user) {
-    Post postInQuestion = post.getType() == Post.PostType.REPOST ? post.getLinkedPost() : post;
-
-    boolean hasReposted = false;
-    boolean hasLiked = false;
-
-    if(user != null) {
-      hasReposted = postRepository.existsByTypeAndLinkedPostAndAuthor(Post.PostType.REPOST, postInQuestion, user);
-    }
-
-    return post.getLinkedPost() == null ? new PostDTO(post, hasLiked, hasReposted) : new RepostDTO(post, hasLiked, hasReposted);
+  private Object getPostDTO(Post post, User userRequesting) {
+    return post.getLinkedPost() == null ? new PostDTO(post, userRequesting) : new RepostDTO(post, userRequesting);
   }
 
   @GetMapping
@@ -106,7 +100,7 @@ public class PostController {
   }
 
   @PostMapping("repost/{postId}")
-  public ResponseEntity<?> repostPost(@PathVariable long postId, UriComponentsBuilder uriBuilder, @AuthenticationPrincipal User user) {
+  public ResponseEntity<?> repostPost(@PathVariable long postId, @AuthenticationPrincipal User user, UriComponentsBuilder uriBuilder) {
     Optional<Post> originalPost = postRepository.findById(postId);
     if(originalPost.isEmpty()) return ResponseEntity.notFound().build();
 
@@ -146,5 +140,22 @@ public class PostController {
     }
 
     return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
+  }
+
+  @PostMapping("/like/{postId}")
+  public ResponseEntity<?> likePost(@PathVariable long postId, @AuthenticationPrincipal User user, UriComponentsBuilder ucb) {
+    Optional<Post> post = postRepository.findById(postId);
+    if (post.isEmpty()) {
+      return ResponseEntity.notFound().build();
+    }
+
+    Optional<Like> optionalLike = likeRepository.findLikeByUserIdAndPostId(user.getId(), postId);
+    if (optionalLike.isPresent()) {
+      likeRepository.delete(optionalLike.get());
+      return ResponseEntity.noContent().build();
+    }
+
+    likeRepository.save(new Like(post.get(), user));
+    return ResponseEntity.created(null).build();
   }
 }

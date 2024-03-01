@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import Post, { PostType } from "./post";
 import { format } from "date-fns";
-import { deletePost, repost } from "./post-service";
+import { deletePost, likePost, repost } from "./post-service";
 import { useEffect, useState } from "react";
 import { useGlobalContext } from "../auth/GlobalContext";
 import { Globals } from "../globals";
@@ -24,7 +24,7 @@ const PostCard = (props: { post: Post }) => {
     return !loggedIn;
   };
 
-  const handleDelete = async () => {
+  const handleDelete = async (post: Post) => {
     if (authFail("You must be logged in to delete")) return;
 
     try {
@@ -33,6 +33,21 @@ const PostCard = (props: { post: Post }) => {
     } catch (error) {
       setErrorMessage("Post could not be deleted");
     }
+  };
+
+  const handleLike = async (post: Post) => {
+    await likePost(post.id);
+    const diff = post.hasLiked ? -1 : 1;
+
+    setPost((old) => ({
+      ...old,
+      likes: old.likes + diff,
+      hasLiked: !old.hasLiked,
+    }));
+    setLinkedPost(
+      (old) =>
+        old && { ...old, likes: old.likes + diff, hasLiked: !old.hasLiked }
+    );
   };
 
   const handleReply = (post: Post) => {
@@ -135,8 +150,9 @@ const PostCard = (props: { post: Post }) => {
           }
           type="button"
           title="Like"
+          onClick={() => handleLike(props.post)}
         >
-          👍1k
+          👍{props.post.likes}
         </button>
         <button
           className="btn-icon w-16"
@@ -144,7 +160,7 @@ const PostCard = (props: { post: Post }) => {
           title="Reply"
           onClick={() => handleReply(props.post)}
         >
-          ↪️1k
+          ↪️{props.post.replies}
         </button>
         <button
           className={
@@ -154,7 +170,7 @@ const PostCard = (props: { post: Post }) => {
           title="Repost"
           onClick={() => handleRepost(props.post)}
         >
-          🔁1k
+          🔁{props.post.reposts}
         </button>
         {loggedIn &&
           (myUsername === props.post.username ||
@@ -162,7 +178,7 @@ const PostCard = (props: { post: Post }) => {
             <button
               className="btn-icon text-left"
               type="button"
-              onClick={handleDelete}
+              onClick={() => handleDelete(props.post)}
             >
               🗑 Delete Post
             </button>

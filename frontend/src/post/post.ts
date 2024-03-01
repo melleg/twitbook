@@ -4,9 +4,12 @@ export default interface Post {
   postedDate: Date;
   username: string;
   type: PostType;
-  linkedPost?: Post;
-  hasReposted: boolean;
+  likes: number;
+  reposts: number;
+  replies: number;
   hasLiked: boolean;
+  hasReposted: boolean;
+  linkedPost?: Post;
 }
 
 export enum PostType {
