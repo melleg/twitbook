@@ -36,6 +36,9 @@ public class PostController {
 
   @GetMapping
   public List<PostDTO> getAll(@AuthenticationPrincipal User user) {
+    if(user == null)
+      return postRepository.findAll().stream().map(p -> new PostDTO(p, false)).toList();
+
     return postRepository.findAll().stream().map(p -> new PostDTO(p, p
         .getLikes().stream()
         .anyMatch(l -> l.getUser().getId().equals(user.getId()))))
