@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 
 import nl.itvitae.twitbook.follow.Follow;
 import nl.itvitae.twitbook.follow.FollowRepository;
+import nl.itvitae.twitbook.like.Like;
+import nl.itvitae.twitbook.like.LikeRepository;
 import nl.itvitae.twitbook.post.Post;
 import nl.itvitae.twitbook.post.PostRepository;
 import nl.itvitae.twitbook.user.User;
@@ -20,6 +22,7 @@ public class Seeder implements CommandLineRunner {
   private final PostRepository postRepository;
   private final UserRepository userRepository;
   private final FollowRepository followRepository;
+  private final LikeRepository likeRepository;
   private final PasswordEncoder passwordEncoder;
 
   @Override
@@ -29,19 +32,20 @@ public class Seeder implements CommandLineRunner {
     User nol = saveUser("Nol", "Password", Role.ROLE_ADMIN);
     User sjaakie = saveUser("sjaakie", "Password", Role.ROLE_USER);
 
-    savePost("Bingleblong", nol);
+    var post1 = savePost("Bingleblong", nol);
     savePost("Melle en Raafi zijn chads", sjaakie);
     savePost("this post should be deleted", melle);
     savePost("this is a post", raafi);
 
     followUser(sjaakie, nol);
     followUser(sjaakie, raafi);
+    
+    likePost(post1, melle);
   }
 
   private Post savePost(String content, User author) {
     Post post = new Post(content, author);
-    postRepository.save(post);
-    return post;
+    return postRepository.save(post);
   }
 
   private User saveUser(String username, String password, Role... roles) {
@@ -54,5 +58,9 @@ public class Seeder implements CommandLineRunner {
     Follow follow = new Follow(follower, following);
     followRepository.save(follow);
     return follow;
+  }
+  
+  private void likePost(Post post, User user) {
+    likeRepository.save(new Like(post, user));
   }
 }

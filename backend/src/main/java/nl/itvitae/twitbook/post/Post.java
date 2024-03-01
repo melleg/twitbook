@@ -5,13 +5,16 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.ManyToOne;
-
+import jakarta.persistence.OneToMany;
 import java.time.LocalDateTime;
 
+import java.util.HashSet;
+import java.util.Set;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import nl.itvitae.twitbook.like.Like;
 import nl.itvitae.twitbook.user.User;
 
 @Getter
@@ -30,6 +33,9 @@ public class Post {
 
   @ManyToOne
   private User author;
+
+  @OneToMany(mappedBy = "post", orphanRemoval = true)
+  private Set<Like> likes = new HashSet<>();
 
   public Post(PostModel model, User author) {
     this(model.content(), author);
