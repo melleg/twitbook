@@ -1,11 +1,10 @@
 import { Link } from "react-router-dom";
 import Post from "./post";
 import { format } from "date-fns";
-import { deletePost } from "./post-service";
 import { useEffect, useState } from "react";
 import { useGlobalContext } from "../auth/GlobalContext";
 import { Globals } from "../globals";
-import { likePost } from "./post-service";
+import { likePost, deletePost } from "./post-service";
 
 interface PostCardProps {
   post: Post;
