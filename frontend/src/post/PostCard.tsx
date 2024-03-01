@@ -7,14 +7,10 @@ import { useGlobalContext } from "../auth/GlobalContext";
 import { Globals } from "../globals";
 import ReplyComponent from "./ReplyComponent";
 
-interface PostCardProps {
-  post: Post;
-}
-
-const PostCard: React.FC<PostCardProps> = ({ post: postProp }) => {
-  const [post, setPost] = useState<Post>(postProp);
+const PostCard = (props: { post: Post }) => {
+  const [post, setPost] = useState<Post>(props.post);
   const [linkedPost, setLinkedPost] = useState<Post | undefined>(
-    postProp.linkedPost
+    props.post.linkedPost
   );
   const [deleted, setDeleted] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState("");
@@ -57,19 +53,19 @@ const PostCard: React.FC<PostCardProps> = ({ post: postProp }) => {
     }
   };
 
-  const getUserInfo = (username: string, small?: boolean) => (
+  const UserInfo = (props: { username: string; small?: boolean }) => (
     <>
-      <Link to={`/profile/${username}`}>
+      <Link to={`/profile/${props.username}`}>
         <img
           className={
             "inline-block rounded-full aspect-square " +
-            (small ? "w-6 mr-1" : "w-14 absolute left-3 top-3")
+            (props.small ? "w-6 mr-1" : "w-14 absolute left-3 top-3")
           }
           src="https://picsum.photos/50"
         ></img>
       </Link>
-      <Link to={`/profile/${username}`} className="h4 mr-1">
-        @{username}
+      <Link to={`/profile/${props.username}`} className="h4 mr-1">
+        @{props.username}
       </Link>
       <span className="text-light">
         • {format(post.postedDate, "dd MMMM yyyy")}
@@ -77,15 +73,15 @@ const PostCard: React.FC<PostCardProps> = ({ post: postProp }) => {
     </>
   );
 
-  const getPostContent = () => {
+  const PostContent = () => {
     switch (post.type) {
       // Post
       case PostType.POST:
         return (
           <>
-            {getUserInfo(post.username)}
-            {getText(post.content)}
-            {getBottomButtons(post)}
+            <UserInfo username={post.username} />
+            <PostBody content={post.content} />
+            <BottomButtons post={post} />
           </>
         );
 
@@ -95,12 +91,12 @@ const PostCard: React.FC<PostCardProps> = ({ post: postProp }) => {
 
         return (
           <>
-            {getUserInfo(linkedPost.username)}
+            <UserInfo username={linkedPost.username} />
             <span className="ml-2 text-light italic">
               • 🔁 by {post.username}
             </span>
-            {getText(linkedPost.content)}
-            {getBottomButtons(linkedPost)}
+            <PostBody content={linkedPost.content} />
+            <BottomButtons post={linkedPost} />
           </>
         );
 
@@ -108,33 +104,35 @@ const PostCard: React.FC<PostCardProps> = ({ post: postProp }) => {
       case PostType.REPLY:
         return (
           <>
-            {getUserInfo(post.username)}
-            {getText(post.content)}
+            <UserInfo username={post.username} />
+            <PostBody content={post.content} />
             <div className="rounded-lg border-2 border-gray-500 p-2 mt-1">
               {!linkedPost ? (
                 <span className="text-light">Not found</span>
               ) : (
                 <>
-                  {getUserInfo(linkedPost.username, true)}
-                  {getText(linkedPost.content)}
+                  <UserInfo username={linkedPost.username} small={true} />
+                  <PostBody content={linkedPost.content} />
                 </>
               )}
             </div>
-            {getBottomButtons(post)}
+            <BottomButtons post={post} />
           </>
         );
     }
   };
 
-  const getText = (content: string) => (
-    <p className="w-full break-words hyphens-auto">{content}</p>
+  const PostBody = (props: { content: string }) => (
+    <p className="w-full break-words hyphens-auto">{props.content}</p>
   );
 
-  const getBottomButtons = (post: Post) => (
+  const BottomButtons = (props: { post: Post }) => (
     <>
       <div className="flex flex-wrap gap-2 mt-1 text-left">
         <button
-          className={"btn-icon w-16" + (post.hasLiked ? " activated" : "")}
+          className={
+            "btn-icon w-16" + (props.post.hasLiked ? " activated" : "")
+          }
           type="button"
           title="Like"
         >
@@ -144,20 +142,22 @@ const PostCard: React.FC<PostCardProps> = ({ post: postProp }) => {
           className="btn-icon w-16"
           type="button"
           title="Reply"
-          onClick={() => handleReply(post)}
+          onClick={() => handleReply(props.post)}
         >
           ↪️1k
         </button>
         <button
-          className={"btn-icon w-16" + (post.hasReposted ? " activated" : "")}
+          className={
+            "btn-icon w-16" + (props.post.hasReposted ? " activated" : "")
+          }
           type="button"
           title="Repost"
-          onClick={() => handleRepost(post)}
+          onClick={() => handleRepost(props.post)}
         >
           🔁1k
         </button>
         {loggedIn &&
-          (myUsername === post.username ||
+          (myUsername === props.post.username ||
             roles.includes(Globals.ROLE_ADMIN)) && (
             <button
               className="btn-icon text-left"
@@ -169,7 +169,7 @@ const PostCard: React.FC<PostCardProps> = ({ post: postProp }) => {
           )}
         <p className="error-message">{errorMessage}</p>
       </div>
-      {postReplying == post && loggedIn && (
+      {postReplying == props.post && loggedIn && (
         <ReplyComponent onSubmit={() => {}} />
       )}
     </>
@@ -182,7 +182,7 @@ const PostCard: React.FC<PostCardProps> = ({ post: postProp }) => {
     );
 
   return (
-    <div className="py-2 pl-20 pr-4 glass rounded-lg">{getPostContent()}</div>
+    <div className="py-2 pl-20 pr-4 glass rounded-lg">{<PostContent />}</div>
   );
 };
 
