@@ -20,24 +20,38 @@ const Feed: React.FC<FeedProps> = ({ getFunction }) => {
     };
 
     fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [refresh]);
 
-  if (loading) return <span>Loading</span>;
+  const Body: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+    return <div className="flex flex-col gap-2 pt-2">{children}</div>;
+  };
 
-  return (
-    <div className="flex flex-col gap-2 pt-2">
-      {posts.length === 0 ? (
+  // Loading
+  if (loading)
+    return (
+      <Body>
+        <span>Loading</span>
+      </Body>
+    );
+
+  // No posts found
+  if (posts.length === 0)
+    return (
+      <Body>
         <div className="glass rounded-lg p-4">No posts found</div>
-      ) : (
-        <>
-          {posts
-            .sort((a, b) => b.postedDate.getTime() - a.postedDate.getTime())
-            .map((post) => (
-              <PostCard key={post.id} post={post} />
-            ))}
-        </>
-      )}
-    </div>
+      </Body>
+    );
+
+  // Posts
+  return (
+    <Body>
+      {posts
+        .sort((a, b) => b.postedDate.getTime() - a.postedDate.getTime())
+        .map((post) => (
+          <PostCard key={post.id} post={post} />
+        ))}
+    </Body>
   );
 };
 
