@@ -1,15 +1,16 @@
 import { useEffect, useState } from "react";
 import Post from "../post/post";
 import PostCard from "../post/PostCard";
+import { useGlobalContext } from "../auth/GlobalContext";
 
 interface FeedProps {
   getFunction: Promise<Post[]>;
-  refresh: number;
 }
 
-const Feed: React.FC<FeedProps> = ({ getFunction, refresh }) => {
+const Feed: React.FC<FeedProps> = ({ getFunction }) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [posts, setPosts] = useState<Post[]>([]);
+  const { refresh } = useGlobalContext();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -19,28 +20,38 @@ const Feed: React.FC<FeedProps> = ({ getFunction, refresh }) => {
     };
 
     fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [refresh]);
 
-  return (
-    <div className="flex flex-col gap-2 pt-2">
-      {loading ? (
+  const Body: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+    return <div className="flex flex-col gap-2 pt-2">{children}</div>;
+  };
+
+  // Loading
+  if (loading)
+    return (
+      <Body>
         <span>Loading</span>
-      ) : (
-        <>
-          {posts.length === 0 ? (
-            <div className="glass rounded-lg p-4">No posts found</div>
-          ) : (
-            <>
-              {posts
-                .sort((a, b) => b.postedDate.getTime() - a.postedDate.getTime())
-                .map((post) => (
-                  <PostCard key={post.id} post={post} />
-                ))}
-            </>
-          )}
-        </>
-      )}
-    </div>
+      </Body>
+    );
+
+  // No posts found
+  if (posts.length === 0)
+    return (
+      <Body>
+        <div className="glass rounded-lg p-4">No posts found</div>
+      </Body>
+    );
+
+  // Posts
+  return (
+    <Body>
+      {posts
+        .sort((a, b) => b.postedDate.getTime() - a.postedDate.getTime())
+        .map((post) => (
+          <PostCard key={post.id} post={post} />
+        ))}
+    </Body>
   );
 };
 

@@ -4,7 +4,7 @@ import nl.itvitae.twitbook.user.User;
 
 import java.time.LocalDateTime;
 
-public class PostDTO {
+public class RepostDTO {
   public Long id;
   public String content;
   public LocalDateTime postedDate;
@@ -16,8 +16,9 @@ public class PostDTO {
   public boolean hasLiked;
   public boolean hasReposted;
   public boolean hasReplied;
+  public PostDTO linkedPost;
 
-  public PostDTO(Post post, User userRequesting) {
+  public RepostDTO(Post post, User userRequesting) {
     Post postInQuestion = (post.getType() == Post.PostType.REPOST) ? post.getLinkedPost() : post;
 
     this.id = post.getId();
@@ -28,6 +29,8 @@ public class PostDTO {
     this.likes = post.getLikes().size();
     this.reposts = postInQuestion.getLinkedPosts().stream().filter(p -> p.getType().equals(Post.PostType.REPOST)).count();
     this.replies = postInQuestion.getLinkedPosts().stream().filter(p -> p.getType().equals(Post.PostType.REPLY)).count();
+    this.linkedPost = new PostDTO(post.getLinkedPost(), userRequesting);
+
     if(userRequesting != null) {
       this.hasLiked = postInQuestion.getLikes().stream().anyMatch(l -> l.getUser().getId().equals(userRequesting.getId()));
       this.hasReposted = postInQuestion.getLinkedPosts().stream().anyMatch(p -> p.getType().equals(Post.PostType.REPOST) && p.getAuthor().getId().equals(userRequesting.getId()));

@@ -5,9 +5,9 @@ import { getPosts, getPostsByFollowing } from "../post/post-service";
 import { useGlobalContext } from "../auth/GlobalContext";
 
 function Home() {
-  const [refresh, setRefresh] = useState<number>(0);
   const { loggedIn } = useGlobalContext();
   const [viewAll, setViewAll] = useState<boolean>(false);
+  const { refresh, setRefresh } = useGlobalContext();
 
   const handleToggle = (value: boolean) => {
     if (value !== viewAll) {
@@ -24,14 +24,14 @@ function Home() {
         <button className="btn-action my-4" onClick={() => handleToggle(false)}>View all posts</button>
         <button className="btn-action my-4" onClick={() => handleToggle(true)}>View followers only</button>
         </div>
-        <CreatePostComponent onSubmit={() => setRefresh(refresh + 1)} />
+        <CreatePostComponent />
         </>
       )}
 
       {viewAll ? (
-        <Feed getFunction={getPostsByFollowing()} refresh={refresh} />
+        <Feed getFunction={getPostsByFollowing()} />
       ) : (
-        <Feed getFunction={getPosts()} refresh={refresh} />
+        <Feed getFunction={getPosts()}/>
       )}
     </>
   );

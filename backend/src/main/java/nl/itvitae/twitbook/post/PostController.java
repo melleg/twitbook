@@ -18,6 +18,7 @@ import nl.itvitae.twitbook.user.UserRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -38,44 +39,43 @@ public class PostController {
   private final FollowRepository followRepository;
   private final LikeRepository likeRepository;
 
-  @GetMapping
-  public List<PostDTO> getAll(@AuthenticationPrincipal User user) {
-    if(user == null)
-      return postRepository.findAll().stream().map(p -> new PostDTO(p, false)).toList();
+  // Returns the proper DTO based on post type
+  private Object getPostDTO(Post post, User userRequesting) {
+    return post.getLinkedPost() == null ? new PostDTO(post, userRequesting) : new RepostDTO(post, userRequesting);
+  }
 
-    return postRepository.findAll().stream().map(p -> new PostDTO(p, p
-        .getLikes().stream()
-        .anyMatch(l -> l.getUser().getId().equals(user.getId()))))
-        .toList();
+  @GetMapping
+  public List<?> getAll(@AuthenticationPrincipal User user) {
+    return postRepository.findAll().stream().map(p -> getPostDTO(p, user)).toList();
   }
 
   @GetMapping("{id}")
-  public ResponseEntity<?> getById(@PathVariable Long id) {
+  public ResponseEntity<?> getById(@PathVariable Long id, @AuthenticationPrincipal User user) {
     Optional<Post> post = postRepository.findById(id);
 
     if (post.isEmpty()) {
       return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
     }
 
-    return new ResponseEntity<>(new PostDTO(post.get()), HttpStatus.OK);
+    return new ResponseEntity<>(getPostDTO(post.get(), user), HttpStatus.OK);
   }
 
   @GetMapping("by-username/{username}")
-  public ResponseEntity<?> getAllByUsername(@PathVariable String username) {
-    Optional<User> user = userRepository.findByUsernameIgnoreCase(username);
-    if (user.isEmpty()) {
+  public ResponseEntity<?> getAllByUsername(@PathVariable String username, @AuthenticationPrincipal User user) {
+    Optional<User> findUser = userRepository.findByUsernameIgnoreCase(username);
+    if (findUser.isEmpty()) {
       return ResponseEntity.notFound().build();
     }
 
-    List<Post> posts = postRepository.findByAuthor_UsernameIgnoreCase(user.get().getUsername());
-    return ResponseEntity.ok(posts.stream().map(PostDTO::new).toList());
+    List<Post> posts = postRepository.findByAuthor_UsernameIgnoreCase(findUser.get().getUsername());
+    return ResponseEntity.ok(posts.stream().map(p -> getPostDTO(p, user)).toList());
   }
 
   @PostMapping
   public ResponseEntity<?> createPost(@RequestBody PostModel model, UriComponentsBuilder uriBuilder, @AuthenticationPrincipal User user) {
 
     // Create post and save to database
-    Post newPost = new Post(model, user);
+    Post newPost = new Post(model.content(), user);
     postRepository.save(newPost);
 
     // Return post uri
@@ -83,16 +83,56 @@ public class PostController {
         .buildAndExpand(newPost.getId())
         .toUri();
 
-    PostDTO newPostDTO = new PostDTO(newPost);
+    return ResponseEntity.created(uri).body(getPostDTO(newPost, user));
+  }
 
-    return ResponseEntity.created(uri).body(newPostDTO);
+  @PostMapping("reply/{postId}")
+  public ResponseEntity<?> replyToPost(@PathVariable long postId, @RequestBody PostModel model, UriComponentsBuilder uriBuilder, @AuthenticationPrincipal User user) {
+    Optional<Post> originalPost = postRepository.findById(postId);
+    if(originalPost.isEmpty()) return ResponseEntity.notFound().build();
+
+    // Create post and save to database
+    Post newPost = new Post(model.content(), user, originalPost.get());
+    postRepository.save(newPost);
+
+    // Return post uri
+    var uri = uriBuilder.path("/posts/{id}")
+        .buildAndExpand(newPost.getId())
+        .toUri();
+
+    return ResponseEntity.created(uri).body(getPostDTO(newPost, user));
+  }
+
+  @PostMapping("repost/{postId}")
+  public ResponseEntity<?> repostPost(@PathVariable long postId, @AuthenticationPrincipal User user, UriComponentsBuilder uriBuilder) {
+    Optional<Post> originalPost = postRepository.findById(postId);
+    if(originalPost.isEmpty()) return ResponseEntity.notFound().build();
+
+    // If we have reposted already, remove repost
+    Optional<Post> repostCheck = postRepository.findByTypeAndLinkedPostAndAuthor_UsernameIgnoreCase(
+        Post.PostType.REPOST, originalPost.get(), user.getUsername());
+
+    if(repostCheck.isPresent()) {
+      postRepository.delete(repostCheck.get());
+      return ResponseEntity.noContent().build();
+    }
+
+    // Otherwise, create and save repost
+    Post newPost = new Post(null, user, originalPost.get());
+    postRepository.save(newPost);
+
+    var uri = uriBuilder.path("/posts/{id}")
+        .buildAndExpand(newPost.getId())
+        .toUri();
+
+    return ResponseEntity.created(uri).body(getPostDTO(newPost, user));
   }
 
   @DeleteMapping("{id}")
   public ResponseEntity<?> deletePost(@PathVariable long id, @AuthenticationPrincipal User user) {
     Optional<Post> post = postRepository.findById(id);
     if (post.isEmpty()) {
-      return ResponseEntity.badRequest().build();
+      return ResponseEntity.notFound().build();
     }
 
     var userRoles = List.of(user.getRoles());
@@ -122,26 +162,24 @@ public class PostController {
 
     posts.addAll(postRepository.findByAuthor_UsernameIgnoreCase(user.getUsername()));
 
-    return ResponseEntity.ok(posts.stream().map(PostDTO::new).toList());
+
+    return ResponseEntity.ok(posts.stream().map(p -> getPostDTO(p, user)).toList());
   }
   
-  @PostMapping("/like")
-  public ResponseEntity<?> likePost(@RequestBody LikeModel likeModel,
-      UriComponentsBuilder ucb) {
 
-    Optional<Post> post = postRepository.findById(likeModel.postId());
-    Optional<User> user = userRepository.findByUsernameIgnoreCase(likeModel.username());
-    if (post.isEmpty() || user.isEmpty()) {
-      return ResponseEntity.badRequest().build();
+  public ResponseEntity<?> likePost(@PathVariable long postId, @AuthenticationPrincipal User user, UriComponentsBuilder ucb) {
+    Optional<Post> post = postRepository.findById(postId);
+    if (post.isEmpty()) {
+      return ResponseEntity.notFound().build();
     }
 
-    Optional<Like> optionalLike = likeRepository.findLikeByUserIdAndPostId(user.get().getId(), post.get().getId());
+    Optional<Like> optionalLike = likeRepository.findLikeByUserIdAndPostId(user.getId(), postId);
     if (optionalLike.isPresent()) {
       likeRepository.delete(optionalLike.get());
       return ResponseEntity.noContent().build();
     }
 
-    Like like = likeRepository.save(new Like(post.get(), user.get()));
+    likeRepository.save(new Like(post.get(), user));
     return ResponseEntity.created(null).build();
   }
 }
