@@ -17,6 +17,7 @@ function Profile() {
   const [refresh, setRefresh] = useState<number>(0);
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [hasFollowed, setHasFollowed] = useState<boolean>(false);
+  const [unfollow, setUnfollow] = useState<string>("Following")
 
   useEffect(() => {
     loadUser();
@@ -77,7 +78,7 @@ function Profile() {
                         className="btn-action"
                         onClick={() => handleFollow()}
                       >
-                        {hasFollowed ? "Unfollow" : "Follow"}
+                        {hasFollowed ? <div onMouseEnter={() => setUnfollow("Unfollow")} onMouseLeave={() => setUnfollow("Following")}>{unfollow}</div> : "Follow"}
                       </button>
                     </div>
                   )}
