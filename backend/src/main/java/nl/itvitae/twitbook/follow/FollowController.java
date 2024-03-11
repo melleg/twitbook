@@ -41,10 +41,10 @@ public class FollowController {
     }
 
     // check if follow already exists, if it does, delete the follow (unfollow)
-    Optional<Follow> optionalFollow = followRepository.findFollowByFollowerIdAndFollowingId(
+    Optional<Follow> existingFollow = followRepository.findFollowByFollowerIdAndFollowingId(
         user.getId(), following.get().getId());
-    if (optionalFollow.isPresent()) {
-      followRepository.delete(optionalFollow.get());
+    if (existingFollow.isPresent()) {
+      followRepository.delete(existingFollow.get());
       return ResponseEntity.noContent().build();
     }
     Follow follow = followRepository.save(new Follow(user, following.get()));

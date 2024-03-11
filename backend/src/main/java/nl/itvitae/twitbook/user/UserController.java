@@ -32,16 +32,16 @@ public class UserController {
   }
 
   @GetMapping("by-username/{username}")
-  public ResponseEntity<?> findByUsername(@PathVariable String username,  @AuthenticationPrincipal User authUser) {
-    Optional<User> user = userRepository.findByUsernameIgnoreCase(username);
+  public ResponseEntity<?> findByUsername(@PathVariable String username,  @AuthenticationPrincipal User user) {
+    Optional<User> targetUser = userRepository.findByUsernameIgnoreCase(username);
 
-    if (user.isEmpty()) {
+    if (targetUser.isEmpty()) {
       return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
     }
 
-    if (authUser == null) {
-      return new ResponseEntity<>(new UserDTO(user.get()), HttpStatus.OK);
+    if (user == null) {
+      return new ResponseEntity<>(new UserDTO(targetUser.get()), HttpStatus.OK);
     }
-    return new ResponseEntity<>(new UserDTO(user.get(), followRepository.existsFollowByFollowerIdAndFollowingId(authUser.getId(), user.get().getId())), HttpStatus.OK);
+    return new ResponseEntity<>(new UserDTO(targetUser.get(), followRepository.existsFollowByFollowerIdAndFollowingId(user.getId(), targetUser.get().getId())), HttpStatus.OK);
   }
 }

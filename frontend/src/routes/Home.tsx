@@ -9,7 +9,7 @@ function Home() {
   const [viewAll, setViewAll] = useState<boolean>(false);
   const { refresh, setRefresh } = useGlobalContext();
 
-  const handleToggle = (value: boolean) => {
+  const showFollowingOnly = (value: boolean) => {
     if (value !== viewAll) {
       setViewAll(value);
       setRefresh(refresh + 1);
@@ -20,18 +20,28 @@ function Home() {
     <>
       {loggedIn && (
         <>
-        <div className="flex justify-around justiy-stretch">
-        <button className="btn-action my-4" onClick={() => handleToggle(false)}>View all posts</button>
-        <button className="btn-action my-4" onClick={() => handleToggle(true)}>View followers only</button>
-        </div>
-        <CreatePostComponent />
+          <div className="flex justify-around justiy-stretch">
+            <button
+              className="btn-action my-4"
+              onClick={() => showFollowingOnly(true)}
+            >
+              View all posts
+            </button>
+            <button
+              className="btn-action my-4"
+              onClick={() => showFollowingOnly(false)}
+            >
+              View followers only
+            </button>
+          </div>
+          <CreatePostComponent />
         </>
       )}
 
       {viewAll ? (
-        <Feed getFunction={getPostsByFollowing()} />
+        <Feed getFunction={getPosts()} />
       ) : (
-        <Feed getFunction={getPosts()}/>
+        <Feed getFunction={getPostsByFollowing()} />
       )}
     </>
   );
