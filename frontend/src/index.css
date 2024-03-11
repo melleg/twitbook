@@ -124,9 +124,9 @@ a:hover {
 }
 
 .unfollow:hover::before {
-  content: "unfollow";
+  content: "Unfollow";
 }
 
 .unfollow::before {
-  content: "following ";
+  content: "Following ";
 }
