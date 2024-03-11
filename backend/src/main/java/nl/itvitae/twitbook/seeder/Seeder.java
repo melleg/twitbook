@@ -29,8 +29,8 @@ public class Seeder implements CommandLineRunner {
     User nol = saveUser("Nol", "Password", Role.ROLE_ADMIN);
     User sjaakie = saveUser("sjaakie", "Password", Role.ROLE_USER);
 
-    Post post1 = savePost("Bingleblong", nol);
-    Post post2 = savePost("Melle en Raafi zijn chads", sjaakie);
+    Post post1 = savePost("#Bingleblong", nol);
+    Post post2 = savePost("Melle en Raafi zijn #chads", sjaakie);
 
     Post repost = saveRepost(sjaakie, post1);
     Post reply = saveReply("Mee eens", nol, post2);
