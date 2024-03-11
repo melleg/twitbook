@@ -10,3 +10,7 @@ export const getUsers = async () => {
 export const getUserByUsername = async (username: string) => {
   return (await api.get<User>(`${uri}/by-username/${username}`)).data;
 };
+
+export const followUser = async (followUsername: string) => {
+  return (await api.post(`follows/user/${followUsername}`));
+};
