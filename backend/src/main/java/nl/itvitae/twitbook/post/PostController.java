@@ -34,6 +34,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 @AllArgsConstructor
 @RequestMapping("api/v1/posts")
 public class PostController {
+
   private final PostRepository postRepository;
   private final UserRepository userRepository;
   private final FollowRepository followRepository;
@@ -41,7 +42,8 @@ public class PostController {
 
   // Returns the proper DTO based on post type
   private Object getPostDTO(Post post, User userRequesting) {
-    return post.getLinkedPost() == null ? new PostDTO(post, userRequesting) : new RepostDTO(post, userRequesting);
+    return post.getLinkedPost() == null ? new PostDTO(post, userRequesting)
+        : new RepostDTO(post, userRequesting);
   }
 
   @GetMapping
@@ -61,7 +63,8 @@ public class PostController {
   }
 
   @GetMapping("by-username/{username}")
-  public ResponseEntity<?> getAllByUsername(@PathVariable String username, @AuthenticationPrincipal User user) {
+  public ResponseEntity<?> getAllByUsername(@PathVariable String username,
+      @AuthenticationPrincipal User user) {
     Optional<User> findUser = userRepository.findByUsernameIgnoreCase(username);
     if (findUser.isEmpty()) {
       return ResponseEntity.notFound().build();
@@ -72,7 +75,8 @@ public class PostController {
   }
 
   @PostMapping
-  public ResponseEntity<?> createPost(@RequestBody PostModel model, UriComponentsBuilder uriBuilder, @AuthenticationPrincipal User user) {
+  public ResponseEntity<?> createPost(@RequestBody PostModel model, UriComponentsBuilder uriBuilder,
+      @AuthenticationPrincipal User user) {
 
     // Create post and save to database
     Post newPost = new Post(model.content(), user);
@@ -87,9 +91,12 @@ public class PostController {
   }
 
   @PostMapping("reply/{postId}")
-  public ResponseEntity<?> replyToPost(@PathVariable long postId, @RequestBody PostModel model, UriComponentsBuilder uriBuilder, @AuthenticationPrincipal User user) {
+  public ResponseEntity<?> replyToPost(@PathVariable long postId, @RequestBody PostModel model,
+      UriComponentsBuilder uriBuilder, @AuthenticationPrincipal User user) {
     Optional<Post> originalPost = postRepository.findById(postId);
-    if(originalPost.isEmpty()) return ResponseEntity.notFound().build();
+    if (originalPost.isEmpty()) {
+      return ResponseEntity.notFound().build();
+    }
 
     // Create post and save to database
     Post newPost = new Post(model.content(), user, originalPost.get());
@@ -104,15 +111,18 @@ public class PostController {
   }
 
   @PostMapping("repost/{postId}")
-  public ResponseEntity<?> repostPost(@PathVariable long postId, @AuthenticationPrincipal User user, UriComponentsBuilder uriBuilder) {
+  public ResponseEntity<?> repostPost(@PathVariable long postId, @AuthenticationPrincipal User user,
+      UriComponentsBuilder uriBuilder) {
     Optional<Post> originalPost = postRepository.findById(postId);
-    if(originalPost.isEmpty()) return ResponseEntity.notFound().build();
+    if (originalPost.isEmpty()) {
+      return ResponseEntity.notFound().build();
+    }
 
     // If we have reposted already, remove repost
     Optional<Post> repostCheck = postRepository.findByTypeAndLinkedPostAndAuthor_UsernameIgnoreCase(
         Post.PostType.REPOST, originalPost.get(), user.getUsername());
 
-    if(repostCheck.isPresent()) {
+    if (repostCheck.isPresent()) {
       postRepository.delete(repostCheck.get());
       return ResponseEntity.noContent().build();
     }
@@ -162,12 +172,12 @@ public class PostController {
 
     posts.addAll(postRepository.findByAuthor_UsernameIgnoreCase(user.getUsername()));
 
-
     return ResponseEntity.ok(posts.stream().map(p -> getPostDTO(p, user)).toList());
   }
-  
 
-  public ResponseEntity<?> likePost(@PathVariable long postId, @AuthenticationPrincipal User user, UriComponentsBuilder ucb) {
+  @PostMapping("/like/{postId}")
+  public ResponseEntity<?> likePost(@PathVariable long postId, @AuthenticationPrincipal User user,
+      UriComponentsBuilder ucb) {
     Optional<Post> post = postRepository.findById(postId);
     if (post.isEmpty()) {
       return ResponseEntity.notFound().build();
