@@ -9,6 +9,7 @@ export default interface Post {
   replies: number;
   hasLiked: boolean;
   hasReposted: boolean;
+  hasReplied: boolean;
   linkedPost?: Post;
 }
 

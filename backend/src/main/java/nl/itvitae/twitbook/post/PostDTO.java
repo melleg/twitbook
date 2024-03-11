@@ -15,6 +15,7 @@ public class PostDTO {
   public long replies;
   public boolean hasLiked;
   public boolean hasReposted;
+  public boolean hasReplied;
 
   public PostDTO(Post post, User userRequesting) {
     Post postInQuestion = (post.getType() == Post.PostType.REPOST) ? post.getLinkedPost() : post;
@@ -27,7 +28,10 @@ public class PostDTO {
     this.likes = post.getLikes().size();
     this.reposts = postInQuestion.getLinkedPosts().stream().filter(p -> p.getType().equals(Post.PostType.REPOST)).count();
     this.replies = postInQuestion.getLinkedPosts().stream().filter(p -> p.getType().equals(Post.PostType.REPLY)).count();
-    this.hasLiked = userRequesting != null && postInQuestion.getLikes().stream().anyMatch(l -> l.getUser().getId().equals(userRequesting.getId()));
-    this.hasReposted = userRequesting != null && postInQuestion.getLinkedPosts().stream().anyMatch(p -> p.getAuthor().getId().equals(userRequesting.getId()));
+    if(userRequesting != null) {
+      this.hasLiked = postInQuestion.getLikes().stream().anyMatch(l -> l.getUser().getId().equals(userRequesting.getId()));
+      this.hasReposted = postInQuestion.getLinkedPosts().stream().anyMatch(p -> p.getType().equals(Post.PostType.REPOST) && p.getAuthor().getId().equals(userRequesting.getId()));
+      this.hasReplied = postInQuestion.getLinkedPosts().stream().anyMatch(p -> p.getType().equals(Post.PostType.REPLY) && p.getAuthor().getId().equals(userRequesting.getId()));
+    }
   }
 }

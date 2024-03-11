@@ -20,20 +20,15 @@ const PostCard: React.FC<PostCardProps> = ({ post: postProp }) => {
 
   const { loggedIn, myUsername, roles, postReplying, setPostReplying } =
     useGlobalContext();
-  const [deleted, setDeleted] = useState<boolean>(false);
+  const [deleted, setDeleted] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
-  const [replies, setReplies] = useState<number>(getPost()?.replies ?? 0);
-  const [likes, setLikes] = useState<number>(getPost()?.likes ?? 0);
-  const [reposts, setReposts] = useState<number>(getPost()?.reposts ?? 0);
-
-  const [hasReposted, setHasReposted] = useState<boolean>(
-    getPost()?.hasReposted ?? false
-  );
-
-  const [hasLiked, setHasLiked] = useState<boolean>(
-    getPost()?.hasLiked ?? false
-  );
+  const [replies, setReplies] = useState(getPost()?.replies ?? 0);
+  const [likes, setLikes] = useState(getPost()?.likes ?? 0);
+  const [reposts, setReposts] = useState(getPost()?.reposts ?? 0);
+  const [hasLiked, setHasLiked] = useState(!!getPost()?.hasLiked);
+  const [hasReposted, setHasReposted] = useState(!!getPost()?.hasReposted);
+  const [hasReplied] = useState(!!getPost()?.hasReplied);
 
   useEffect(() => {}, [post, setPostReplying]);
 
@@ -169,6 +164,7 @@ const PostCard: React.FC<PostCardProps> = ({ post: postProp }) => {
   const BottomButtons = (props: { post: Post }) => (
     <>
       <div className="flex flex-wrap gap-2 mt-1 text-left">
+        {/* Likes */}
         <button
           className={"btn-icon w-16" + (hasLiked ? " activated" : "")}
           type="button"
@@ -177,14 +173,16 @@ const PostCard: React.FC<PostCardProps> = ({ post: postProp }) => {
         >
           👍{likes}
         </button>
+        {/* Replies */}
         <button
-          className="btn-icon w-16"
+          className={"btn-icon w-16" + (hasReplied ? " activated" : "")}
           type="button"
           title="Reply"
           onClick={() => handleReply(props.post)}
         >
           ↪️{replies}
         </button>
+        {/* Reposts */}
         <button
           className={"btn-icon w-16" + (hasReposted ? " activated" : "")}
           type="button"
@@ -193,6 +191,7 @@ const PostCard: React.FC<PostCardProps> = ({ post: postProp }) => {
         >
           🔁{reposts}
         </button>
+        {/* Reply input */}
         {loggedIn &&
           (myUsername === props.post.username ||
             roles.includes(Globals.ROLE_ADMIN)) && (
