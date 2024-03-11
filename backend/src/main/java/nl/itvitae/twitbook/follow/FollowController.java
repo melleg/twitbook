@@ -27,7 +27,7 @@ public class FollowController {
     return followRepository.findAll().stream().map(FollowDTO::new).toList();
   }
 
-  @PostMapping("/{followingUsername}")
+  @PostMapping("user/{followingUsername}")
   public ResponseEntity<?> followUser(@PathVariable String followingUsername,
       @AuthenticationPrincipal User user) {
     Optional<User> following = userRepository.findByUsernameIgnoreCase(

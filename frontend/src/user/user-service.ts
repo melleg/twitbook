@@ -12,5 +12,5 @@ export const getUserByUsername = async (username: string) => {
 };
 
 export const followUser = async (followUsername: string) => {
-  return (await api.post(`follows/${followUsername}`));
+  return (await api.post(`follows/user/${followUsername}`));
 };
