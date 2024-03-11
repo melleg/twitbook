@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import nl.itvitae.twitbook.like.Like;
 import nl.itvitae.twitbook.like.LikeRepository;
 import nl.itvitae.twitbook.post.Post;
-import nl.itvitae.twitbook.post.PostRepository;
+import nl.itvitae.twitbook.post.PostService;
 import nl.itvitae.twitbook.user.User;
 import nl.itvitae.twitbook.user.User.Role;
 import nl.itvitae.twitbook.user.UserRepository;
@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
 @Component
 @AllArgsConstructor
 public class Seeder implements CommandLineRunner {
-  private final PostRepository postRepository;
+  private final PostService postService;
   private final UserRepository userRepository;
   private final LikeRepository likeRepository;
   private final PasswordEncoder passwordEncoder;
@@ -31,21 +31,23 @@ public class Seeder implements CommandLineRunner {
 
     Post post1 = savePost("Bingleblong", nol);
     Post post2 = savePost("Melle en Raafi zijn chads", sjaakie);
-    Post reply = saveRepost("Mee eens", nol, post2);
 
-    Post repost = saveRepost("", sjaakie, post1);
+    Post repost = saveRepost(sjaakie, post1);
+    Post reply = saveReply("Mee eens", nol, post2);
 
     likePost(post1, melle);
   }
 
   private Post savePost(String content, User author) {
-    Post post = new Post(content, author);
-    return postRepository.save(post);
+    return postService.addPost(content, author);
   }
 
-  private Post saveRepost(String content, User author, Post linkedPost) {
-    Post post = new Post(content, author, linkedPost);
-    return postRepository.save(post);
+  private Post saveRepost(User author, Post linkedPost) {
+    return postService.addRepost(author, linkedPost);
+  }
+
+  private Post saveReply(String content, User author, Post linkedPost) {
+    return postService.addReply(content, author, linkedPost);
   }
 
   private User saveUser(String username, String password, Role... roles) {
