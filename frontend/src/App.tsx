@@ -9,6 +9,7 @@ function App() {
   const [myUsername, setMyUsername] = useState<string>("");
   const [roles, setRoles] = useState<string[]>([]);
   const [postReplying, setPostReplying] = useState<Post | null>(null);
+  const [refresh, setRefresh] = useState<number>(0);
 
   return (
     <MyGlobalContext.Provider
@@ -21,6 +22,8 @@ function App() {
         setRoles,
         postReplying,
         setPostReplying,
+        refresh,
+        setRefresh,
       }}
     >
       <NavBar />

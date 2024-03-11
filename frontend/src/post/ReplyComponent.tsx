@@ -11,7 +11,7 @@ const ReplyComponent: React.FC<ReplyComponentProps> = ({ onSubmit }) => {
   const [content, setContent] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [submitted, setSubmitted] = useState<boolean>(false);
-  const { postReplying } = useGlobalContext();
+  const { postReplying, setRefresh, refresh } = useGlobalContext();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -31,6 +31,7 @@ const ReplyComponent: React.FC<ReplyComponentProps> = ({ onSubmit }) => {
       await replyToPost(model, postReplying.id);
       onSubmit();
       setSubmitted(true);
+      setRefresh(refresh + 1);
     } catch (err) {
       setErrorMessage("Unable to reply");
     }

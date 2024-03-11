@@ -1,14 +1,12 @@
 import { useState } from "react";
 import PostModel from "./post-model";
 import { createPost } from "./post-service";
+import { useGlobalContext } from "../auth/GlobalContext";
 
-interface CreatePostProps {
-  onSubmit: () => void;
-}
-
-const CreatePostComponent: React.FC<CreatePostProps> = ({ onSubmit }) => {
+const CreatePostComponent: React.FC = () => {
   const [content, setContent] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const { refresh, setRefresh } = useGlobalContext();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -24,8 +22,8 @@ const CreatePostComponent: React.FC<CreatePostProps> = ({ onSubmit }) => {
 
     try {
       await createPost(model);
-      onSubmit();
       setContent("");
+      setRefresh(refresh + 1); // Global refresh event
     } catch (err) {
       setErrorMessage("Unable to post");
     }

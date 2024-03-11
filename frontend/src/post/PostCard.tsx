@@ -7,15 +7,33 @@ import { useGlobalContext } from "../auth/GlobalContext";
 import { Globals } from "../globals";
 import ReplyComponent from "./ReplyComponent";
 
-const PostCard = (props: { post: Post }) => {
-  const [post, setPost] = useState<Post>(props.post);
-  const [linkedPost, setLinkedPost] = useState<Post | undefined>(
-    props.post.linkedPost
-  );
-  const [deleted, setDeleted] = useState<boolean>(false);
-  const [errorMessage, setErrorMessage] = useState("");
+interface PostCardProps {
+  post: Post;
+}
+
+const PostCard: React.FC<PostCardProps> = ({ post: postProp }) => {
+  const [post] = useState<Post>(postProp);
+  const [linkedPost] = useState<Post | undefined>(postProp.linkedPost);
+
+  const getPost = () =>
+    postProp.type == PostType.REPOST ? postProp.linkedPost : postProp;
+
   const { loggedIn, myUsername, roles, postReplying, setPostReplying } =
     useGlobalContext();
+  const [deleted, setDeleted] = useState<boolean>(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
+  const [replies, setReplies] = useState<number>(getPost()?.replies ?? 0);
+  const [likes, setLikes] = useState<number>(getPost()?.likes ?? 0);
+  const [reposts, setReposts] = useState<number>(getPost()?.reposts ?? 0);
+
+  const [hasReposted, setHasReposted] = useState<boolean>(
+    getPost()?.hasReposted ?? false
+  );
+
+  const [hasLiked, setHasLiked] = useState<boolean>(
+    getPost()?.hasLiked ?? false
+  );
 
   useEffect(() => {}, [post, setPostReplying]);
 
@@ -40,17 +58,8 @@ const PostCard = (props: { post: Post }) => {
 
     try {
       await likePost(post.id);
-      const diff = post.hasLiked ? -1 : 1;
-
-      setPost((old) => ({
-        ...old,
-        likes: old.likes + diff,
-        hasLiked: !old.hasLiked,
-      }));
-      setLinkedPost(
-        (old) =>
-          old && { ...old, likes: old.likes + diff, hasLiked: !old.hasLiked }
-      );
+      setLikes((old) => old + (hasLiked ? -1 : 1));
+      setHasLiked((old) => !old);
     } catch {
       setErrorMessage("Unable to like post");
     }
@@ -58,23 +67,14 @@ const PostCard = (props: { post: Post }) => {
 
   const handleReply = (post: Post) => {
     if (authFail("You must be logged in to reply")) return;
-
-    setPostReplying(post);
+    setPostReplying(postReplying != post ? post : null);
   };
 
   const handleReplySuccess = () => {
-    setPost((old) => ({
-      ...old,
-      replies: old.replies + 1,
-    }));
-    setLinkedPost(
-      (old) =>
-        old && {
-          ...old,
-          replies: old.replies + 1,
-        }
-    );
-    setPostReplying(post);
+    setReplies((old) => old + 1);
+    setPostReplying(null);
+    setErrorMessage("");
+    setSuccessMessage("You replied.");
   };
 
   const handleRepost = async (post: Post) => {
@@ -82,45 +82,14 @@ const PostCard = (props: { post: Post }) => {
 
     try {
       await repost(post.id);
-      setLinkedPost(
-        (old) =>
-          old && {
-            ...old,
-            reposts: old.reposts + (post.hasReposted ? -1 : 1),
-            hasReposted: !old.hasReposted,
-          }
-      );
-
-      setPost((old) => ({
-        ...old,
-        reposts: old.reposts + (post.hasReposted ? -1 : 1),
-        hasReposted: !old.hasReposted,
-      }));
+      setReposts((old) => old + (hasReposted ? -1 : 1));
+      setHasReposted((old) => !old);
     } catch (err) {
       setErrorMessage("Unable to repost");
     }
   };
 
-  const UserInfo = (props: { username: string; small?: boolean }) => (
-    <>
-      <Link to={`/profile/${props.username}`}>
-        <img
-          className={
-            "inline-block rounded-full aspect-square " +
-            (props.small ? "w-6 mr-1" : "w-14 absolute left-3 top-3")
-          }
-          src="https://picsum.photos/50"
-        ></img>
-      </Link>
-      <Link to={`/profile/${props.username}`} className="h4 mr-1">
-        @{props.username}
-      </Link>
-      <span className="text-light">
-        • {format(post.postedDate, "dd MMMM yyyy")}
-      </span>
-    </>
-  );
-
+  // Post html
   const PostContent = () => {
     switch (post.type) {
       // Post
@@ -170,22 +139,43 @@ const PostCard = (props: { post: Post }) => {
     }
   };
 
+  // Post top info
+  const UserInfo = (props: { username: string; small?: boolean }) => (
+    <>
+      <Link to={`/profile/${props.username}`}>
+        <img
+          className={
+            "inline-block rounded-full aspect-square " +
+            (props.small ? "w-6 mr-1" : "w-14 absolute left-3 top-3")
+          }
+          src="https://picsum.photos/50"
+        ></img>
+      </Link>
+      <Link to={`/profile/${props.username}`} className="h4 mr-1">
+        @{props.username}
+      </Link>
+      <span className="text-light">
+        • {format(post.postedDate, "dd MMMM yyyy")}
+      </span>
+    </>
+  );
+
+  // Post text content
   const PostBody = (props: { content: string }) => (
     <p className="w-full break-words hyphens-auto">{props.content}</p>
   );
 
+  // Post bottom buttons
   const BottomButtons = (props: { post: Post }) => (
     <>
       <div className="flex flex-wrap gap-2 mt-1 text-left">
         <button
-          className={
-            "btn-icon w-16" + (props.post.hasLiked ? " activated" : "")
-          }
+          className={"btn-icon w-16" + (hasLiked ? " activated" : "")}
           type="button"
           title="Like"
           onClick={() => handleLike(props.post)}
         >
-          👍{props.post.likes}
+          👍{likes}
         </button>
         <button
           className="btn-icon w-16"
@@ -193,17 +183,15 @@ const PostCard = (props: { post: Post }) => {
           title="Reply"
           onClick={() => handleReply(props.post)}
         >
-          ↪️{props.post.replies}
+          ↪️{replies}
         </button>
         <button
-          className={
-            "btn-icon w-16" + (props.post.hasReposted ? " activated" : "")
-          }
+          className={"btn-icon w-16" + (hasReposted ? " activated" : "")}
           type="button"
           title="Repost"
           onClick={() => handleRepost(props.post)}
         >
-          🔁{props.post.reposts}
+          🔁{reposts}
         </button>
         {loggedIn &&
           (myUsername === props.post.username ||
@@ -218,6 +206,7 @@ const PostCard = (props: { post: Post }) => {
           )}
         <p className="error-message">{errorMessage}</p>
       </div>
+      <p className="italic text-light">{successMessage}</p>
       {postReplying == props.post && loggedIn && (
         <ReplyComponent onSubmit={handleReplySuccess} />
       )}
@@ -231,7 +220,9 @@ const PostCard = (props: { post: Post }) => {
     );
 
   return (
-    <div className="py-2 pl-20 pr-4 glass rounded-lg">{<PostContent />}</div>
+    <div className="py-2 pl-20 pr-4 glass rounded-lg">
+      <PostContent />
+    </div>
   );
 };
 
