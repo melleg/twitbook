@@ -58,6 +58,10 @@ input {
   border-radius: 0.25rem;
 }
 
+.nav-bg {
+  background-image: linear-gradient(90deg, green, #0ae002);
+}
+
 .btn-action {
   padding: 0.35rem 0.95rem;
   font-weight: bold;
