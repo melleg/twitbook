@@ -29,16 +29,22 @@ public class Seeder implements CommandLineRunner {
     User nol = saveUser("Nol", "Password", Role.ROLE_ADMIN);
     User sjaakie = saveUser("sjaakie", "Password", Role.ROLE_USER);
 
-    var post1 = savePost("Bingleblong", nol);
-    savePost("Melle en Raafi zijn chads", sjaakie);
-    savePost("this post should be deleted", melle);
-    savePost("this is a post", raafi);
+    Post post1 = savePost("Bingleblong", nol);
+    Post post2 = savePost("Melle en Raafi zijn chads", sjaakie);
+    Post reply = saveRepost("Mee eens", nol, post2);
+
+    Post repost = saveRepost("", sjaakie, post1);
 
     likePost(post1, melle);
   }
 
   private Post savePost(String content, User author) {
     Post post = new Post(content, author);
+    return postRepository.save(post);
+  }
+
+  private Post saveRepost(String content, User author, Post linkedPost) {
+    Post post = new Post(content, author, linkedPost);
     return postRepository.save(post);
   }
 

@@ -25,11 +25,16 @@ export const createPost = async (model: PostModel) => {
   return await api.post(`${uri}`, model);
 };
 
-export const likePost = async (postId: number, username: string) => {
-  return await api.post<number>(`${uri}/like`, {
-    postId: postId,
-    username: username,
-  });
+export const likePost = async (postId: number) => {
+  return await api.post<number>(`${uri}/like/${postId}`);
+};
+
+export const replyToPost = async (model: PostModel, replyPostId: number) => {
+  return await api.post(`${uri}/reply/${replyPostId}`, model);
+};
+
+export const repost = async (postId: number) => {
+  return await api.post(`${uri}/repost/${postId}`, null);
 };
 
 export const deletePost = async (postId: number) => {
