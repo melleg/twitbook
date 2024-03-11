@@ -44,26 +44,4 @@ public class UserController {
     }
     return new ResponseEntity<>(new UserDTO(user.get(), followRepository.existsFollowByFollowerIdAndFollowingId(authUser.getId(), user.get().getId())), HttpStatus.OK);
   }
-
-  @PostMapping("/follow/{followingUsername}")
-  public ResponseEntity<?> followUser(@PathVariable String followingUsername,
-      @AuthenticationPrincipal User user) {
-    Optional<User> following = userRepository.findByUsernameIgnoreCase(
-        followingUsername);
-    if (following.isEmpty()) {
-      return ResponseEntity.notFound().build();
-    }
-
-    if (user.getUsername().equals(followingUsername)) {
-      return new ResponseEntity<>(null, HttpStatus.CONFLICT);
-    }
-    Optional<Follow> optionalFollow = followRepository.findFollowByFollowerIdAndFollowingId(
-        user.getId(), following.get().getId());
-    if (optionalFollow.isPresent()) {
-      followRepository.delete(optionalFollow.get());
-      return ResponseEntity.noContent().build();
-    }
-    Follow follow = followRepository.save(new Follow(user, following.get()));
-    return ResponseEntity.created(null).body(new FollowDTO(follow));
-  }
 }
