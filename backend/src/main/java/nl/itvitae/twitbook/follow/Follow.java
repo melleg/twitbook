@@ -27,7 +27,6 @@ public class Follow {
   @ManyToOne
   private User following;
 
-  // datetimeformatter
   private ZonedDateTime dateCreated;
 
   public Follow(User follower, User following) {

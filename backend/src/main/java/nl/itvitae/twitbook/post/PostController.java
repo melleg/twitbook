@@ -115,8 +115,9 @@ public class PostController {
     List<Follow> follows = followRepository.findAllByFollowerId(user.getId());
 
     List<Post> posts = new ArrayList<>();
-    for (Follow follow: follows) {
-      posts.addAll(postRepository.findByAuthor_UsernameIgnoreCase(follow.getFollowing().getUsername()));
+    for (Follow follow : follows) {
+      posts.addAll(
+          postRepository.findByAuthor_UsernameIgnoreCase(follow.getFollowing().getUsername()));
     }
 
     posts.addAll(postRepository.findByAuthor_UsernameIgnoreCase(user.getUsername()));
