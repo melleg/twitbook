@@ -18,8 +18,15 @@ const PostCard: React.FC<PostCardProps> = ({ post: postProp }) => {
   const getPost = () =>
     postProp.type == PostType.REPOST ? postProp.linkedPost : postProp;
 
-  const { loggedIn, myUsername, roles, postReplying, setPostReplying } =
-    useGlobalContext();
+  const {
+    loggedIn,
+    myUsername,
+    roles,
+    postReplying,
+    setPostReplying,
+    refresh,
+    setRefresh,
+  } = useGlobalContext();
   const [deleted, setDeleted] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
@@ -79,6 +86,7 @@ const PostCard: React.FC<PostCardProps> = ({ post: postProp }) => {
       await repost(post.id);
       setReposts((old) => old + (hasReposted ? -1 : 1));
       setHasReposted((old) => !old);
+      setRefresh(refresh + 1);
     } catch (err) {
       setErrorMessage("Unable to repost");
     }
