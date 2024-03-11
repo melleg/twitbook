@@ -2,12 +2,12 @@ package nl.itvitae.twitbook.user;
 
 import java.time.LocalDateTime;
 
-public record UserDTO(String username, LocalDateTime registerDate, boolean hasFollowed) {
+public record UserDTO(String username, LocalDateTime registerDate, boolean hasFollowed, int followers, int following) {
 
   public UserDTO(User user) {
-    this(user.getUsername(), user.getRegisterDate(), false);
+    this(user.getUsername(), user.getRegisterDate(), false, user.getFollowers().size(), user.getFollowing().size());
   }
   public UserDTO(User user, boolean hasFollowed) {
-    this(user.getUsername(), user.getRegisterDate(), hasFollowed);
+    this(user.getUsername(), user.getRegisterDate(), hasFollowed, user.getFollowers().size(), user.getFollowing().size());
   }
 }
