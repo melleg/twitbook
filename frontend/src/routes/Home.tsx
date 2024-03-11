@@ -9,17 +9,22 @@ function Home() {
   const { loggedIn } = useGlobalContext();
   const [viewAll, setViewAll] = useState<boolean>(false);
 
-  const handleToggle = () => {
-    setViewAll(!viewAll);
-    setRefresh(refresh + 1);
+  const handleToggle = (value: boolean) => {
+    if (value !== viewAll) {
+      setViewAll(value);
+      setRefresh(refresh + 1);
+    }
   };
 
   return (
     <>
       {loggedIn && (
         <>
+        <div className="flex justify-around justiy-stretch">
+        <button className="btn-action my-4" onClick={() => handleToggle(false)}>View all posts</button>
+        <button className="btn-action my-4" onClick={() => handleToggle(true)}>View followers only</button>
+        </div>
         <CreatePostComponent onSubmit={() => setRefresh(refresh + 1)} />
-        <button className="btn-action my-4" onClick={() => handleToggle()}>{viewAll ? "View all posts" : "View followers only"}</button>
         </>
       )}
 
