@@ -50,6 +50,7 @@ const PostCard: React.FC<PostCardProps> = ({ post: postProp }) => {
     try {
       await deletePost(post.id);
       setDeleted(true);
+      setRefresh(refresh + 1);
     } catch (error) {
       setErrorMessage("Post could not be deleted");
     }
