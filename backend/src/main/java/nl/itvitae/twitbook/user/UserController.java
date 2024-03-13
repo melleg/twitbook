@@ -53,8 +53,11 @@ public class UserController {
 
   }
 
-  @PutMapping("username")
+  @PatchMapping("username")
   public ResponseEntity<?> editUsername(@RequestBody UserUsernameOnly userUsernameOnly) {
+    if (userRepository.existsByUsernameIgnoreCase(userUsernameOnly.newUsername())){
+      return new ResponseEntity<>("Username already in use", HttpStatus.CONFLICT);
+    }
     Optional<User> user = userRepository.findById(userUsernameOnly.id());
     if (user.isPresent()) {
       User newUser = user.get();
