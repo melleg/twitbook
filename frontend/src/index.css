@@ -20,7 +20,7 @@
 }
 
 .replyBorder {
-  border: solid var(--green-dark);
+  border: 1px solid var(--green-dark);
 }
 
 body {
