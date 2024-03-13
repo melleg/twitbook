@@ -3,7 +3,9 @@ import { updateProfile } from "./user-service";
 import ProfileModel from "./profile-model";
 
 const EditProfile = (props: any) => {
-  const [newDisplayName, setNewDisplayName] = useState<string>(props.displayName);
+  const [newDisplayName, setNewDisplayName] = useState<string>(
+    props.displayName
+  );
   const [newBio, setNewBio] = useState<string>(props.bio ? props.bio : "");
   const [errorMessage, setErrorMessage] = useState("");
 
@@ -28,7 +30,7 @@ const EditProfile = (props: any) => {
       <h1>Edit profile</h1>
       <form onSubmit={(e) => handleSubmit(e)}>
         <label>
-          Display Name: 
+          Display Name:
           <input
             className="block border-2 border-black"
             type="text"
@@ -37,7 +39,6 @@ const EditProfile = (props: any) => {
             onChange={(e) => setNewDisplayName(e.target.value)}
           />
         </label>
-
         <label>
           Bio
           <input
@@ -48,7 +49,7 @@ const EditProfile = (props: any) => {
             onChange={(e) => setNewBio(e.target.value)}
           />
         </label>
-        <button className="btn-action" type="submit">
+        <button className="btn-action mt-1" type="submit">
           Submit
         </button>
         <p>{errorMessage}</p>
