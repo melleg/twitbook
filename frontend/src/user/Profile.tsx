@@ -10,7 +10,7 @@ import { useGlobalContext } from "../auth/GlobalContext";
 
 function Profile() {
   const { username } = useParams();
-  const { myUsername } = useGlobalContext();
+  const { loggedIn, myUsername } = useGlobalContext();
 
   const [loading, setLoading] = useState<boolean>(true);
   const [user, setUser] = useState<User | null>(null);
@@ -22,10 +22,10 @@ function Profile() {
       setLoading(true);
 
       try {
-        const userResponse = await getUserByUsername(username!)
+        const userResponse = await getUserByUsername(username!);
         setUser(userResponse);
         setHasFollowed(userResponse.hasFollowed);
-        setErrorMessage("");;
+        setErrorMessage("");
       } catch {
         setUser(null);
       }
@@ -35,16 +35,18 @@ function Profile() {
 
     loadUser();
   }, [username]);
-  
-  const handleFollow = async () => {
 
+  const handleFollow = async () => {
+    if (!loggedIn) {
+      alert("You must be logged in to follow");
+      return;
+    }
     try {
-      await followUser(username!);      
-      setHasFollowed(!hasFollowed);   
+      await followUser(username!);
+      setHasFollowed(!hasFollowed);
     } catch (error: any) {
       setErrorMessage("Could not follow user");
     }
-
   };
 
   // Loading
