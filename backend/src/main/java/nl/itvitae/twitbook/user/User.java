@@ -39,6 +39,8 @@ public class User implements UserDetails {
 
   private String password;
 
+  private String bio;
+
   private Role[] roles;
 
   private LocalDateTime registerDate;

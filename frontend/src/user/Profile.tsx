@@ -103,6 +103,7 @@ function Profile() {
           <p className="text-light">
             User since: {format(user.registerDate, "dd MMMM yyyy")}
           </p>
+          <p>{user.bio}</p>
           <p>Followers: {user.numberOfFollowers}</p>
           <p>Following: {user.numberOfFollowing}</p>
         </div>

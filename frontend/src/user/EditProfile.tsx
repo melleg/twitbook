@@ -1,12 +1,14 @@
 import { useState } from "react";
 import { useGlobalContext } from "../auth/GlobalContext";
-import { updateUsername } from "./user-service";
+import { updateBio, updateUsername } from "./user-service";
 import UsernameModel from "./username-model";
 import { useNavigate } from "react-router-dom";
+import BioModel from "./bio-model";
 
 const EditProfile = () => {
   const { myUsername } = useGlobalContext();
   const [newUsername, setUsernameInput] = useState<string>(myUsername);
+  const [newBio, setNewBio] = useState<string>("");
   const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
 
@@ -25,6 +27,16 @@ const EditProfile = () => {
     //   setErrorMessage("Unable to update profile");
     // }
 
+    const bioModel: BioModel = {
+        newBio,
+      };
+  
+      try {
+        await updateBio(bioModel);
+        navigate(`/`);
+      } catch (err) {
+        setErrorMessage("Unable to update profile");
+      }
   };
 
   return (
@@ -42,6 +54,15 @@ const EditProfile = () => {
           />
         </label> */}
 
+        <label>
+          Bio
+          <input
+            className="block border-2 border-black"
+            type="textarea"
+            placeholder="bio"
+            value={newBio}
+            onChange={(e) => setNewBio(e.target.value)}
+          />
         </label>
         <button className="btn-action" type="submit">
           Submit

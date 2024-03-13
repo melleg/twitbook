@@ -65,5 +65,16 @@ public class UserController {
     return ResponseEntity.ok().build();
   }
 
+
+  private record UserBioOnly(String newBio) {
+
+  }
+
+  @PatchMapping("bio")
+  public ResponseEntity<?> editUsername(@RequestBody UserBioOnly userBioOnly,
+      @AuthenticationPrincipal User user) {
+    user.setBio(userBioOnly.newBio());
+    userRepository.save(user);
+    return ResponseEntity.ok().build();
   }
 }

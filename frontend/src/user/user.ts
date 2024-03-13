@@ -4,4 +4,5 @@ export default interface User {
   hasFollowed: boolean;
   numberOfFollowers: number;
   numberOfFollowing: number;
+  bio: string;
 }
