@@ -8,16 +8,23 @@
   --text-light: #545454;
   --grey: rgb(196, 196, 196);
   --grey-light: #ebebeb;
-  --glass: #d2d2d287;
+  --green-light: #51f903;
+  --green-hover: #46d802;
+  --green-dark: #2f9102ce;
+  --glass: #3396052f;
   --red: red;
 }
 
 .border {
-  border: 1px solid var(--grey);
+  border: 2px solid var(--green-dark);
+}
+
+.replyBorder {
+  border: solid var(--green-dark);
 }
 
 body {
-  background-image: url(https://picsum.photos/1000);
+  background-image: url(../SkyV1.png);
   background-size: cover;
 }
 
@@ -76,12 +83,12 @@ input {
   padding: 0.35rem 0.95rem;
   font-weight: bold;
   color: white;
-  background-color: var(--action) !important;
+  background-color: var(--green-light) !important;
   border-radius: 0.9rem;
   text-align: center;
 
   &:hover {
-    background-color: var(--action-hover) !important;
+    background-color: var(--green-hover) !important;
   }
 }
 

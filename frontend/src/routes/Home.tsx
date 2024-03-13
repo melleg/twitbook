@@ -6,7 +6,7 @@ import { useGlobalContext } from "../auth/GlobalContext";
 
 function Home() {
   const { loggedIn } = useGlobalContext();
-  const [viewAll, setViewAll] = useState<boolean>(false);
+  const [viewAll, setViewAll] = useState<boolean>(true);
   const { refresh, setRefresh } = useGlobalContext();
 
   const showFollowingOnly = (value: boolean) => {
