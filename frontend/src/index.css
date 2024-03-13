@@ -13,6 +13,7 @@
   --green-dark: #2f9102ce;
   --glass: white;
   --red: red;
+  --purple: #c511ff;
 }
 
 .border-green {
@@ -116,7 +117,7 @@ a:hover {
 }
 
 .activated {
-  color: #c511ff;
+  color: var(--purple);
   font-weight: bold;
 }
 
@@ -133,5 +134,11 @@ a:hover {
 }
 
 textarea {
+  border: 2px solid #f2f2f2;
   background-color: #f2f2f2;
+}
+
+textarea:focus {
+  border-color: var(--green-dark);
+  outline: 0;
 }
