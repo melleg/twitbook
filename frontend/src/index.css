@@ -15,7 +15,7 @@
   --red: red;
 }
 
-.border {
+.border-green {
   border: 2px solid var(--green-dark);
 }
 

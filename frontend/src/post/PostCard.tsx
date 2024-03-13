@@ -227,7 +227,7 @@ const PostCard: React.FC<PostCardProps> = ({ post: postProp }) => {
     );
 
   return (
-    <div className="py-2 pl-20 pr-4 glass rounded-lg border">
+    <div className="py-2 pl-20 pr-4 glass rounded-lg border-green">
       <PostContent />
     </div>
   );

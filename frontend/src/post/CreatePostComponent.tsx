@@ -30,7 +30,7 @@ const CreatePostComponent: React.FC = () => {
   };
 
   return (
-    <form className="p-4 glass rounded-lg gap-2 mt-2" onSubmit={handleSubmit}>
+    <form className="p-4 glass rounded-lg gap-2 mt-2 border-green" onSubmit={handleSubmit}>
       <span className="error-message">{errorMessage}</span>
       <textarea
         className="p-2 glass rounded-lg w-5/6 border-solid border-gray-600"
