@@ -1,28 +1,23 @@
 import { useState } from "react";
-import { useGlobalContext } from "../auth/GlobalContext";
 import { updateProfile } from "./user-service";
-import { useNavigate } from "react-router-dom";
 import ProfileModel from "./profile-model";
 
 const EditProfile = (props: any) => {
-  const { myUsername } = useGlobalContext();
-  const [newUsername, setUsernameInput] = useState<string>(myUsername);
+  const [newDisplayName, setNewDisplayName] = useState<string>(props.displayName);
   const [newBio, setNewBio] = useState<string>(props.bio ? props.bio : "");
   const [errorMessage, setErrorMessage] = useState("");
-  const navigate = useNavigate();
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
 
     const model: ProfileModel = {
-      newUsername,
+      newDisplayName,
       newBio,
     };
 
     try {
       //wip, needs to generate a new jwt i think
       await updateProfile(model);
-      navigate(`/`);
     } catch (err) {
       setErrorMessage("Unable to update profile");
     }
@@ -33,13 +28,13 @@ const EditProfile = (props: any) => {
       <h1>Edit profile</h1>
       <form onSubmit={(e) => handleSubmit(e)}>
         <label>
-          Username
+          Display Name: 
           <input
             className="block border-2 border-black"
             type="text"
-            placeholder="username"
-            value={newUsername}
-            onChange={(e) => setUsernameInput(e.target.value)}
+            placeholder="display name"
+            value={newDisplayName}
+            onChange={(e) => setNewDisplayName(e.target.value)}
           />
         </label>
 

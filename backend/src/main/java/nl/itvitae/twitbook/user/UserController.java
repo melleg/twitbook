@@ -3,11 +3,8 @@ package nl.itvitae.twitbook.user;
 import java.util.List;
 import java.util.Optional;
 
-import java.util.UUID;
 import lombok.AllArgsConstructor;
 
-import nl.itvitae.twitbook.follow.Follow;
-import nl.itvitae.twitbook.follow.FollowDTO;
 import nl.itvitae.twitbook.follow.FollowRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -49,18 +46,14 @@ public class UserController {
             targetUser.get().getId())), HttpStatus.OK);
   }
 
-  private record UserUsernameBioOnly(String newUsername, String newBio) {
+  private record UserUsernameBioOnly(String newDisplayName, String newBio) {
 
   }
 
   @PatchMapping("profile")
-  public ResponseEntity<?> editUsername(@RequestBody UserUsernameBioOnly userUsernameBioOnly,
+  public ResponseEntity<?> editProfile(@RequestBody UserUsernameBioOnly userUsernameBioOnly,
       @AuthenticationPrincipal User user) {
-    if (userRepository.existsByUsernameIgnoreCase(userUsernameBioOnly.newUsername())) {
-      return new ResponseEntity<>("Username already in use", HttpStatus.CONFLICT);
-    }
-
-    user.setUsername(userUsernameBioOnly.newUsername());
+    user.setDisplayName(userUsernameBioOnly.newDisplayName());
     user.setBio(userUsernameBioOnly.newBio());
     userRepository.save(user);
     return ResponseEntity.ok().build();

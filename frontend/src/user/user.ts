@@ -5,4 +5,5 @@ export default interface User {
   numberOfFollowers: number;
   numberOfFollowing: number;
   bio: string;
+  displayName: string;
 }

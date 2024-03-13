@@ -13,7 +13,6 @@ import Popup from "reactjs-popup";
 function Profile() {
   const { username } = useParams();
   const { loggedIn, myUsername } = useGlobalContext();
-
   const [loading, setLoading] = useState<boolean>(true);
   const [user, setUser] = useState<User | null>(null);
   const [errorMessage, setErrorMessage] = useState<string>("");
@@ -90,19 +89,21 @@ function Profile() {
             <div>
               <Popup
                 trigger={<button className="btn-action">Edit profile</button>}
-                modal nested
+                modal
+                nested
               >
-                <EditProfile bio={user.bio} />
+                <EditProfile displayName={user.displayName} bio={user.bio} />
               </Popup>
             </div>
           )}
         </div>
         {/* Additional profile info */}
         <div className="px-4 pb-4">
-          <h3>@{user.username}</h3>
-          <p className="text-light">
-            User since: {format(user.registerDate, "dd MMMM yyyy")}
-          </p>
+          <h3>{user.displayName}</h3>
+          <div className="text-light">
+            <p>@{user.username}</p>
+            <p>User since: {format(user.registerDate, "dd MMMM yyyy")}</p>
+          </div>
           <p>{user.bio}</p>
           <p>Followers: {user.numberOfFollowers}</p>
           <p>Following: {user.numberOfFollowing}</p>

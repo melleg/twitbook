@@ -99,7 +99,7 @@ const PostCard: React.FC<PostCardProps> = ({ post: postProp }) => {
       case PostType.POST:
         return (
           <>
-            <UserInfo username={post.username} />
+            <UserInfo displayName={post.displayName} username={post.username} />
             <PostBody content={post.content} />
             <BottomButtons post={post} />
           </>
@@ -111,7 +111,7 @@ const PostCard: React.FC<PostCardProps> = ({ post: postProp }) => {
 
         return (
           <>
-            <UserInfo username={linkedPost.username} />
+            <UserInfo displayName={linkedPost.displayName} username={linkedPost.username} />
             <span className="ml-2 text-light italic">
               • 🔁 by {post.username}
             </span>
@@ -124,14 +124,14 @@ const PostCard: React.FC<PostCardProps> = ({ post: postProp }) => {
       case PostType.REPLY:
         return (
           <>
-            <UserInfo username={post.username} />
+            <UserInfo displayName={post.displayName} username={post.username} />
             <PostBody content={post.content} />
             <div className="rounded-lg border-2 border-gray-500 p-2 mt-1">
               {!linkedPost ? (
                 <span className="text-light">Not found</span>
               ) : (
                 <>
-                  <UserInfo username={linkedPost.username} small={true} />
+                  <UserInfo displayName={linkedPost.displayName} username={linkedPost.username} small={true} />
                   <PostBody content={linkedPost.content} />
                 </>
               )}
@@ -143,7 +143,7 @@ const PostCard: React.FC<PostCardProps> = ({ post: postProp }) => {
   };
 
   // Post top info
-  const UserInfo = (props: { username: string; small?: boolean }) => (
+  const UserInfo = (props: { displayName: string, username: string; small?: boolean }) => (
     <>
       <Link to={`/profile/${props.username}`}>
         <img
@@ -155,10 +155,10 @@ const PostCard: React.FC<PostCardProps> = ({ post: postProp }) => {
         ></img>
       </Link>
       <Link to={`/profile/${props.username}`} className="h4 mr-1">
-        @{props.username}
+        {props.displayName}
       </Link>
       <span className="text-light">
-        • {format(post.postedDate, "dd MMMM yyyy")}
+      @{props.username} • {format(post.postedDate, "dd MMMM yyyy")}
       </span>
     </>
   );

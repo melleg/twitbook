@@ -9,6 +9,8 @@ public class RepostDTO {
   public String content;
   public LocalDateTime postedDate;
   public String username;
+
+  public String displayName;
   public int type;
   public long likes;
   public long reposts;
@@ -25,6 +27,7 @@ public class RepostDTO {
     this.content = post.getContent();
     this.postedDate = post.getPostedDate();
     this.username = post.getAuthor().getUsername();
+    this.displayName = post.getAuthor().getDisplayName();
     this.type = post.getType().ordinal();
     this.likes = post.getLikes().size();
     this.reposts = postInQuestion.getLinkedPosts().stream().filter(p -> p.getType().equals(Post.PostType.REPOST)).count();
