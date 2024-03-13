@@ -1,7 +1,6 @@
 import { api } from "../base-api";
-import BioModel from "./bio-model";
 import User from "./user";
-import usernameModel from "./username-model";
+import ProfileModel from "./profile-model";
 
 const uri = "users";
 
@@ -17,10 +16,6 @@ export const followUser = async (followUsername: string) => {
   return (await api.post(`follows/user/${followUsername}`));
 };
 
-export const updateUsername = async (model: usernameModel) => {
-  return await api.patch(`${uri}/username`, model);
-};
-
-export const updateBio = async (model: BioModel) => {
-  return await api.patch(`${uri}/bio`, model);
+export const updateProfile = async (model: ProfileModel) => {
+  return await api.patch(`${uri}/profile`, model);
 };

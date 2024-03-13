@@ -49,31 +49,19 @@ public class UserController {
             targetUser.get().getId())), HttpStatus.OK);
   }
 
-  private record UserUsernameOnly(String newUsername) {
+  private record UserUsernameBioOnly(String newUsername, String newBio) {
 
   }
 
-  @PatchMapping("username")
-  public ResponseEntity<?> editUsername(@RequestBody UserUsernameOnly userUsernameOnly,
+  @PatchMapping("profile")
+  public ResponseEntity<?> editUsername(@RequestBody UserUsernameBioOnly userUsernameBioOnly,
       @AuthenticationPrincipal User user) {
-    if (userRepository.existsByUsernameIgnoreCase(userUsernameOnly.newUsername())) {
+    if (userRepository.existsByUsernameIgnoreCase(userUsernameBioOnly.newUsername())) {
       return new ResponseEntity<>("Username already in use", HttpStatus.CONFLICT);
     }
 
-    user.setUsername(userUsernameOnly.newUsername());
-    userRepository.save(user);
-    return ResponseEntity.ok().build();
-  }
-
-
-  private record UserBioOnly(String newBio) {
-
-  }
-
-  @PatchMapping("bio")
-  public ResponseEntity<?> editUsername(@RequestBody UserBioOnly userBioOnly,
-      @AuthenticationPrincipal User user) {
-    user.setBio(userBioOnly.newBio());
+    user.setUsername(userUsernameBioOnly.newUsername());
+    user.setBio(userUsernameBioOnly.newBio());
     userRepository.save(user);
     return ResponseEntity.ok().build();
   }

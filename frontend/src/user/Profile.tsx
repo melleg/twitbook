@@ -92,7 +92,7 @@ function Profile() {
                 trigger={<button className="btn-action">Edit profile</button>}
                 modal nested
               >
-                <EditProfile />
+                <EditProfile bio={user.bio} />
               </Popup>
             </div>
           )}
