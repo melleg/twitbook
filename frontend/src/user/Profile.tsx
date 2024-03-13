@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import User from "./user";
 import { useParams } from "react-router-dom";
-import { getUserByUsername } from "./user-service";
+import { followUser, getUserByUsername } from "./user-service";
 import Feed from "../feed/Feed";
 import { getPostsByUser } from "../post/post-service";
 import { format } from "date-fns";
@@ -14,13 +14,18 @@ function Profile() {
 
   const [loading, setLoading] = useState<boolean>(true);
   const [user, setUser] = useState<User | null>(null);
+  const [errorMessage, setErrorMessage] = useState<string>("");
+  const [hasFollowed, setHasFollowed] = useState<boolean>(false);
 
   useEffect(() => {
     const loadUser = async () => {
       setLoading(true);
 
       try {
-        setUser(await getUserByUsername(username!));
+        const userResponse = await getUserByUsername(username!)
+        setUser(userResponse);
+        setHasFollowed(userResponse.hasFollowed);
+        setErrorMessage("");;
       } catch {
         setUser(null);
       }
@@ -30,6 +35,17 @@ function Profile() {
 
     loadUser();
   }, [username]);
+  
+  const handleFollow = async () => {
+
+    try {
+      await followUser(username!);      
+      setHasFollowed(!hasFollowed);   
+    } catch (error: any) {
+      setErrorMessage("Could not follow user");
+    }
+
+  };
 
   // Loading
   if (loading) return <p>Loading {username}...</p>;
@@ -55,9 +71,19 @@ function Profile() {
             className="h-40 -mt-32 rounded-md aspect-square border-solid border-4 border-white"
             src="https://picsum.photos/200"
           ></img>
-          <button type="button" className="btn-action">
-            Follow
-          </button>
+          {username !== myUsername && (
+            <div>
+              <p className="error-message">{errorMessage}</p>
+
+              <button
+                type="button"
+                className="btn-action"
+                onClick={() => handleFollow()}
+              >
+                {hasFollowed ? <div className="unfollow"></div> : "Follow"}
+              </button>
+            </div>
+          )}
         </div>
         {/* Additional profile info */}
         <div className="px-4 pb-4">
@@ -65,6 +91,8 @@ function Profile() {
           <p className="text-light">
             User since: {format(user.registerDate, "dd MMMM yyyy")}
           </p>
+          <p>Followers: {user.numberOfFollowers}</p>
+          <p>Following: {user.numberOfFollowing}</p>
         </div>
       </div>
 

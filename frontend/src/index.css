@@ -126,3 +126,11 @@ a:hover {
 :user-invalid {
   border-color: red;
 }
+
+.unfollow:hover::before {
+  content: "Unfollow";
+}
+
+.unfollow::before {
+  content: "Following ";
+}
