@@ -7,6 +7,8 @@ import { getPostsByUser } from "../post/post-service";
 import { format } from "date-fns";
 import CreatePostComponent from "../post/CreatePostComponent";
 import { useGlobalContext } from "../auth/GlobalContext";
+import EditProfile from "./EditProfile";
+import Popup from "reactjs-popup";
 
 function Profile() {
   const { username } = useParams();
@@ -73,10 +75,9 @@ function Profile() {
             className="h-40 -mt-32 rounded-md aspect-square border-solid border-4 border-white"
             src="https://picsum.photos/200"
           ></img>
-          {username !== myUsername && (
+          {username !== myUsername ? (
             <div>
               <p className="error-message">{errorMessage}</p>
-
               <button
                 type="button"
                 className="btn-action"
@@ -84,6 +85,15 @@ function Profile() {
               >
                 {hasFollowed ? <div className="unfollow"></div> : "Follow"}
               </button>
+            </div>
+          ) : (
+            <div>
+              <Popup
+                trigger={<button className="btn-action">Edit profile</button>}
+                modal nested
+              >
+                <EditProfile />
+              </Popup>
             </div>
           )}
         </div>

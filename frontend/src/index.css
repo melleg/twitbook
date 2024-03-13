@@ -130,3 +130,7 @@ a:hover {
 .unfollow::before {
   content: "Following ";
 }
+
+.popup-overlay{
+  background:rgba(0,0,0,.5)
+}
