@@ -1,17 +1,22 @@
 import { useState } from "react";
 import { useGlobalContext } from "../auth/GlobalContext";
 import { updateUsername } from "./user-service";
+import UsernameModel from "./username-model";
 
 const EditProfile = () => {
   const { myUsername } = useGlobalContext();
-  const [usernameInput, setUsernameInput] = useState<string>(myUsername);
+  const [newUsername, setUsernameInput] = useState<string>(myUsername);
   const [errorMessage, setErrorMessage] = useState("");
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
 
+    const model: UsernameModel = {
+        newUsername,
+      };
+
     try {
-      await updateUsername(usernameInput);
+      await updateUsername(model);
     } catch (err) {
       setErrorMessage("Unable to update profile");
     }
@@ -27,7 +32,7 @@ const EditProfile = () => {
             className="block border-2 border-black"
             type="text"
             placeholder="username"
-            value={usernameInput}
+            value={newUsername}
             onChange={(e) => setUsernameInput(e.target.value)}
           />
         </label>
