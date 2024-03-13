@@ -3,6 +3,7 @@ package nl.itvitae.twitbook.user;
 import java.util.List;
 import java.util.Optional;
 
+import java.util.UUID;
 import lombok.AllArgsConstructor;
 
 import nl.itvitae.twitbook.follow.Follow;
@@ -32,7 +33,8 @@ public class UserController {
   }
 
   @GetMapping("by-username/{username}")
-  public ResponseEntity<?> findByUsername(@PathVariable String username,  @AuthenticationPrincipal User user) {
+  public ResponseEntity<?> findByUsername(@PathVariable String username,
+      @AuthenticationPrincipal User user) {
     Optional<User> targetUser = userRepository.findByUsernameIgnoreCase(username);
 
     if (targetUser.isEmpty()) {
@@ -42,6 +44,24 @@ public class UserController {
     if (user == null) {
       return new ResponseEntity<>(new UserDTO(targetUser.get()), HttpStatus.OK);
     }
-    return new ResponseEntity<>(new UserDTO(targetUser.get(), followRepository.existsFollowByFollowerIdAndFollowingId(user.getId(), targetUser.get().getId())), HttpStatus.OK);
+    return new ResponseEntity<>(new UserDTO(targetUser.get(),
+        followRepository.existsFollowByFollowerIdAndFollowingId(user.getId(),
+            targetUser.get().getId())), HttpStatus.OK);
+  }
+
+  private record UserUsernameOnly(UUID id, String newUsername) {
+
+  }
+
+  @PutMapping("username")
+  public ResponseEntity<?> editUsername(@RequestBody UserUsernameOnly userUsernameOnly) {
+    Optional<User> user = userRepository.findById(userUsernameOnly.id());
+    if (user.isPresent()) {
+      User newUser = user.get();
+      newUser.setUsername(userUsernameOnly.newUsername());
+      userRepository.save(newUser);
+      return ResponseEntity.ok().build();
+    }
+    return ResponseEntity.badRequest().build();
   }
 }
