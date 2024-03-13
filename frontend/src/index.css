@@ -11,17 +11,12 @@
   --green-light: #51f903;
   --green-hover: #46d802;
   --green-dark: #2f9102ce;
-  --glass: #3396052f;
+  --glass: white;
   --red: red;
 }
 
 .border-green {
   border: 2px solid var(--green-dark);
-}
-
-.replyBorder {
-  border: 1px solid var(--green-dark);
-  box-shadow: 1px 1px #2b8401b9;
 }
 
 body {
@@ -95,18 +90,12 @@ input {
 
 .btn-icon {
   background-color: transparent;
-  color: white;
+  color: #00ad29;
   font-size: 1rem;
 
   &:hover {
     font-weight: 700;
   }
-}
-
-.btn-icon-nohover {
-  background-color: transparent;
-  color: white;
-  font-size: 1rem;
 }
 
 a:hover {
@@ -120,7 +109,6 @@ a:hover {
 
 .glass {
   background-color: var(--glass);
-  backdrop-filter: blur(23px);
 }
 
 .error-message {
@@ -128,7 +116,8 @@ a:hover {
 }
 
 .activated {
-  color: yellow;
+  color: #c511ff;
+  font-weight: bold;
 }
 
 :user-invalid {
@@ -141,4 +130,8 @@ a:hover {
 
 .unfollow::before {
   content: "Following ";
+}
+
+textarea {
+  background-color: #f2f2f2;
 }
