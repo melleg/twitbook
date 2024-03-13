@@ -49,18 +49,18 @@ public class UserController {
             targetUser.get().getId())), HttpStatus.OK);
   }
 
-  private record UserUsernameOnly(UUID id, String newUsername) {
+  private record UserUsernameOnly(String newUsername) {
 
   }
 
   @PatchMapping("username")
-  public ResponseEntity<?> editUsername(@RequestBody UserUsernameOnly userUsernameOnly) {
+  public ResponseEntity<?> editUsername(@RequestBody UserUsernameOnly userUsernameOnly, @AuthenticationPrincipal User user) {
     if (userRepository.existsByUsernameIgnoreCase(userUsernameOnly.newUsername())){
       return new ResponseEntity<>("Username already in use", HttpStatus.CONFLICT);
     }
-    Optional<User> user = userRepository.findById(userUsernameOnly.id());
-    if (user.isPresent()) {
-      User newUser = user.get();
+    Optional<User> optionalUser = userRepository.findById(user.getId());
+    if (optionalUser.isPresent()) {
+      User newUser = optionalUser.get();
       newUser.setUsername(userUsernameOnly.newUsername());
       userRepository.save(newUser);
       return ResponseEntity.ok().build();

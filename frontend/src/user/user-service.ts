@@ -14,3 +14,7 @@ export const getUserByUsername = async (username: string) => {
 export const followUser = async (followUsername: string) => {
   return (await api.post(`follows/user/${followUsername}`));
 };
+
+export const updateUsername = async (newUsername: string) => {
+  return await api.patch(`${uri}/username`, {newUsername: newUsername});
+};
