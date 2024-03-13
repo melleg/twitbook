@@ -21,6 +21,7 @@
 
 .replyBorder {
   border: 1px solid var(--green-dark);
+  box-shadow: 1px 1px #2b8401b9;
 }
 
 body {
