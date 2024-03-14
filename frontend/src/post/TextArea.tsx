@@ -1,3 +1,6 @@
+import { Globals } from "../globals";
+import RenderText from "./RenderText";
+
 interface TextAreaProps {
   value: string;
   placeholder: string;
@@ -10,14 +13,19 @@ const TextArea: React.FC<TextAreaProps> = ({
   onChange,
 }) => {
   return (
-    <div className="relative">
+    <div className="relative w-full rounded-lg">
       <textarea
         placeholder={placeholder}
-        className="p-2 glass rounded-lg w-5/6"
+        maxLength={Globals.POST_MAX_LENGTH}
+        className="p-2 glass w-full margin-0 text-red-700 resize-none overflow-hidden h-32"
         value={value}
         onChange={onChange}
       />
-      {/* <div>{value}</div> */}
+
+      <RenderText
+        content={value}
+        className="p-2 absolute inset-0 pointer-events-none"
+      />
     </div>
   );
 };

@@ -107,7 +107,11 @@ a:hover {
   text-underline-offset: 3px;
 }
 
-.post-body a {
+.text-rendered > * {
+  white-space: pre-wrap;
+}
+
+.text-rendered a {
   color: var(--purple);
 }
 
