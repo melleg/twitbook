@@ -165,7 +165,7 @@ const PostCard: React.FC<PostCardProps> = ({ post: postProp }) => {
 
   // Post text content
   const PostBody = (props: { content: string }) => (
-    <p className="w-full break-words hyphens-auto whitespace-pre">{props.content}</p>
+    <p className="w-full hyphens-auto whitespace-pre-line">{props.content}</p>
   );
 
   // Post bottom buttons

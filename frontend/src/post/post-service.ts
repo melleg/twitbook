@@ -15,8 +15,8 @@ export const getPosts = async (page: number) => {
   return posts;
 };
 
-export const getPostsByUser = async (username: string) => {
-  const posts = (await api.get<Post[]>(`${uri}/by-username/${username}`)).data;
+export const getPostsByUser = async (username: string, page: number) => {
+  const posts = (await api.get<Post[]>(`${uri}/by-username/${username}?page=${page}`)).data;
   posts.forEach((p) => mapPost(p));
   return posts;
 };

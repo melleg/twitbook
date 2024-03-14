@@ -10,7 +10,7 @@ interface FeedProps {
 const Feed: React.FC<FeedProps> = ({ getFunction }) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [posts, setPosts] = useState<Post[]>([]);
-  const { refresh } = useGlobalContext();
+  const { refresh, setRefresh, page, setPage } = useGlobalContext();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -45,13 +45,37 @@ const Feed: React.FC<FeedProps> = ({ getFunction }) => {
 
   // Posts
   return (
-    <Body>
-      {posts
-        .sort((a, b) => b.postedDate.getTime() - a.postedDate.getTime())
-        .map((post) => (
-          <PostCard key={post.id} post={post} />
-        ))}
-    </Body>
+    <>
+      <Body>
+        {posts
+          .sort((a, b) => b.postedDate.getTime() - a.postedDate.getTime())
+          .map((post) => (
+            <PostCard key={post.id} post={post} />
+          ))}
+      </Body>
+      <div className="flex justify-around">
+        {page !== 0 && (
+          <button
+            className="btn-action"
+            onClick={() => {
+              setPage(page - 1);
+              setRefresh(refresh + 1);
+            }}
+          >
+            Previous
+          </button>
+        )}
+        <button
+          className="btn-action"
+          onClick={() => {
+            setPage(page + 1);
+            setRefresh(refresh + 1);
+          }}
+        >
+          Next
+        </button>
+      </div>
+    </>
   );
 };
 

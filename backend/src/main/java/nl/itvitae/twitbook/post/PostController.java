@@ -54,9 +54,10 @@ public class PostController {
   @GetMapping
   public List<?> getAll(@AuthenticationPrincipal User user, Pageable pageable) {
     return postRepository.findAll(PageRequest.of(
-        pageable.getPageNumber(),
-        Math.min(pageable.getPageSize(), 4),
-        pageable.getSortOr(Sort.by(Direction.DESC, "postedDate")))).stream().map(p -> getPostDTO(p, user)).toList();
+            pageable.getPageNumber(),
+            Math.min(pageable.getPageSize(), 4),
+            pageable.getSortOr(Sort.by(Direction.DESC, "postedDate")))).stream()
+        .map(p -> getPostDTO(p, user)).toList();
   }
 
   @GetMapping("{id}")
@@ -72,13 +73,17 @@ public class PostController {
 
   @GetMapping("by-username/{username}")
   public ResponseEntity<?> getAllByUsername(@PathVariable String username,
-      @AuthenticationPrincipal User user) {
+      @AuthenticationPrincipal User user, Pageable pageable) {
     Optional<User> findUser = userRepository.findByUsernameIgnoreCase(username);
     if (findUser.isEmpty()) {
       return ResponseEntity.notFound().build();
     }
 
-    List<Post> posts = postRepository.findByAuthor_UsernameIgnoreCase(findUser.get().getUsername());
+    List<Post> posts = postRepository.findByAuthor_UsernameIgnoreCase(findUser.get().getUsername(),
+        (PageRequest.of(
+            pageable.getPageNumber(),
+            Math.min(pageable.getPageSize(), 4),
+            pageable.getSortOr(Sort.by(Direction.DESC, "postedDate")))));
     return ResponseEntity.ok(posts.stream().map(p -> getPostDTO(p, user)).toList());
   }
 

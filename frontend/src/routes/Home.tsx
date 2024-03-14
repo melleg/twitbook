@@ -5,14 +5,14 @@ import { getPosts, getPostsByFollowing } from "../post/post-service";
 import { useGlobalContext } from "../auth/GlobalContext";
 
 function Home() {
-  const { loggedIn, refresh, setRefresh } = useGlobalContext();
+  const { loggedIn, refresh, setRefresh, page, setPage } = useGlobalContext();
   const [viewAll, setViewAll] = useState<boolean>(true);
-  const [page, setPage] = useState<number>(0);
 
   const showFollowingOnly = (value: boolean) => {
     if (value !== viewAll) {
       setViewAll(value);
       setRefresh(refresh + 1);
+      setPage(0);
     }
   };
 
@@ -20,7 +20,7 @@ function Home() {
     <>
       {loggedIn && (
         <>
-          <div className="flex justify-around justiy-stretch">
+          <div className="flex justify-around">
             <button
               className="btn-action my-4"
               onClick={() => showFollowingOnly(true)}
@@ -41,24 +41,6 @@ function Home() {
       {viewAll ? (
         <>
           <Feed getFunction={getPosts(page)} />
-          <button
-            className="btn-action"
-            onClick={() => {
-              setPage(page + 1);
-              setRefresh(refresh + 1);
-            }}
-          >
-            +
-          </button>
-          <button
-            className="btn-action"
-            onClick={() => {
-              setPage(page - 1);
-              setRefresh(refresh + 1);
-            }}
-          >
-            -
-          </button>
         </>
       ) : (
         <Feed getFunction={getPostsByFollowing()} />

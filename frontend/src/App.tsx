@@ -10,6 +10,7 @@ function App() {
   const [roles, setRoles] = useState<string[]>([]);
   const [postReplying, setPostReplying] = useState<Post | null>(null);
   const [refresh, setRefresh] = useState<number>(0);
+  const [page, setPage] = useState<number>(0);
 
   return (
     <MyGlobalContext.Provider
@@ -24,6 +25,8 @@ function App() {
         setPostReplying,
         refresh,
         setRefresh,
+        page,
+        setPage,
       }}
     >
       <NavBar />

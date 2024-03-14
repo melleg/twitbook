@@ -12,8 +12,8 @@ import Popup from "reactjs-popup";
 
 function Profile() {
   const { username } = useParams();
+  const { loggedIn, myUsername, page, setPage } = useGlobalContext();
   const [update, setUpdate] = useState<number>(0);
-  const { loggedIn, myUsername } = useGlobalContext();
   const [loading, setLoading] = useState<boolean>(true);
   const [user, setUser] = useState<User | null>(null);
   const [errorMessage, setErrorMessage] = useState<string>("");
@@ -52,7 +52,10 @@ function Profile() {
   };
 
   // Loading
-  if (loading) return <p>Loading {username}...</p>;
+  if (loading) {
+    setPage(0);
+    return <p>Loading {username}...</p>;
+  }
 
   // User not found
   if (!user) return <div>User not found</div>;
@@ -113,7 +116,7 @@ function Profile() {
 
       {username === myUsername && <CreatePostComponent />}
 
-      <Feed getFunction={getPostsByUser(user.username)} />
+      <Feed getFunction={getPostsByUser(user.username, page)} />
     </>
   );
 }
