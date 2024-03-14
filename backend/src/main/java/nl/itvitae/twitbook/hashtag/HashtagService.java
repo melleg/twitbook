@@ -14,7 +14,7 @@ public class HashtagService {
   private final HashtagRepository hashtagRepository;
 
   public Optional<Hashtag> findHashtagByText(String text) {
-    return hashtagRepository.findHashtagByText(text);
+    return hashtagRepository.findHashtagByTextIgnoreCase(text);
   }
 
   public void createHashtags(Post post) {
@@ -25,7 +25,7 @@ public class HashtagService {
       String group = matcher.group();
 
       // Find the hashtag
-      Hashtag hashtag = hashtagRepository.findHashtagByText(group)
+      Hashtag hashtag = findHashtagByText(group)
           .orElse(hashtagRepository.save(new Hashtag(group)));
 
       System.out.println("Found/created hashTag: " + hashtag.getText());
