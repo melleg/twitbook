@@ -9,8 +9,8 @@ export const getPostById = async (postId: number) => {
   return mapPost(post);
 };
 
-export const getPosts = async () => {
-  const posts = (await api.get<Post[]>(`${uri}`)).data;
+export const getPosts = async (page: number) => {
+  const posts = (await api.get<Post[]>(`${uri}?page=${page}`)).data;
   posts.forEach((p) => mapPost(p));
   return posts;
 };

@@ -5,9 +5,9 @@ import { getPosts, getPostsByFollowing } from "../post/post-service";
 import { useGlobalContext } from "../auth/GlobalContext";
 
 function Home() {
-  const { loggedIn } = useGlobalContext();
+  const { loggedIn, refresh, setRefresh } = useGlobalContext();
   const [viewAll, setViewAll] = useState<boolean>(true);
-  const { refresh, setRefresh } = useGlobalContext();
+  const [page, setPage] = useState<number>(0);
 
   const showFollowingOnly = (value: boolean) => {
     if (value !== viewAll) {
@@ -39,7 +39,27 @@ function Home() {
       )}
 
       {viewAll ? (
-        <Feed getFunction={getPosts()} />
+        <>
+          <Feed getFunction={getPosts(page)} />
+          <button
+            className="btn-action"
+            onClick={() => {
+              setPage(page + 1);
+              setRefresh(refresh + 1);
+            }}
+          >
+            +
+          </button>
+          <button
+            className="btn-action"
+            onClick={() => {
+              setPage(page - 1);
+              setRefresh(refresh + 1);
+            }}
+          >
+            -
+          </button>
+        </>
       ) : (
         <Feed getFunction={getPostsByFollowing()} />
       )}
