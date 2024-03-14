@@ -10,6 +10,7 @@
   --grey-light: #ebebeb;
   --glass: #d2d2d287;
   --red: red;
+  --purple: #9600ff;
 }
 
 .border {
@@ -97,9 +98,17 @@ input {
   font-size: 1rem;
 }
 
+a {
+  cursor: pointer;
+}
+
 a:hover {
   text-decoration: underline;
   text-underline-offset: 3px;
+}
+
+.post-body a {
+  color: var(--purple);
 }
 
 .text-light {
