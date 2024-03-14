@@ -126,7 +126,7 @@ const PostCard: React.FC<PostCardProps> = ({ post: postProp }) => {
           <>
             <UserInfo username={post.username} />
             <PostBody content={post.content} />
-            <div className="rounded-lg border-2 border-gray-500 p-2 mt-1">
+            <div className="rounded-lg border-green p-2 mt-1">
               {!linkedPost ? (
                 <span className="text-light">Not found</span>
               ) : (
@@ -227,7 +227,7 @@ const PostCard: React.FC<PostCardProps> = ({ post: postProp }) => {
     );
 
   return (
-    <div className="py-2 pl-20 pr-4 glass rounded-lg">
+    <div className="py-2 pl-20 pr-4 glass relative rounded-lg">
       <PostContent />
     </div>
   );

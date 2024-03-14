@@ -22,10 +22,10 @@ function Profile() {
       setLoading(true);
 
       try {
-        const userResponse = await getUserByUsername(username!)
+        const userResponse = await getUserByUsername(username!);
         setUser(userResponse);
         setHasFollowed(userResponse.hasFollowed);
-        setErrorMessage("");;
+        setErrorMessage("");
       } catch {
         setUser(null);
       }
@@ -35,16 +35,14 @@ function Profile() {
 
     loadUser();
   }, [username]);
-  
-  const handleFollow = async () => {
 
+  const handleFollow = async () => {
     try {
-      await followUser(username!);      
-      setHasFollowed(!hasFollowed);   
-    } catch (error: any) {
+      await followUser(username!);
+      setHasFollowed(!hasFollowed);
+    } catch (err) {
       setErrorMessage("Could not follow user");
     }
-
   };
 
   // Loading
