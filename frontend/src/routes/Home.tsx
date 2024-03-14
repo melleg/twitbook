@@ -43,7 +43,7 @@ function Home() {
           <Feed getFunction={getPosts(page)} />
         </>
       ) : (
-        <Feed getFunction={getPostsByFollowing()} />
+        <Feed getFunction={getPostsByFollowing(page)} />
       )}
     </>
   );

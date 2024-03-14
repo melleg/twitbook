@@ -22,8 +22,8 @@ export const getPostsByUser = async (username: string, page: number) => {
 };
 
 
-export const getPostsByFollowing = async () => {
-  const posts = (await api.get<Post[]>(`${uri}/by-following`)).data;
+export const getPostsByFollowing = async (page: number) => {
+  const posts = (await api.get<Post[]>(`${uri}/by-following?page=${page}`)).data;
   posts.forEach((p) => mapPost(p));
   return posts;
 };

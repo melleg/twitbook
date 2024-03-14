@@ -170,7 +170,8 @@ public class PostController {
   }
 
   @GetMapping("by-following")
-  public ResponseEntity<?> getAllByFollowing(@AuthenticationPrincipal User user) {
+  public ResponseEntity<?> getAllByFollowing(@AuthenticationPrincipal User user,
+      Pageable pageable) {
     if (user == null) {
       return ResponseEntity.notFound().build();
     }
@@ -180,10 +181,18 @@ public class PostController {
     List<Post> posts = new ArrayList<>();
     for (Follow follow : follows) {
       posts.addAll(
-          postRepository.findByAuthor_UsernameIgnoreCase(follow.getFollowing().getUsername()));
+          postRepository.findByAuthor_UsernameIgnoreCase(follow.getFollowing().getUsername(),
+              PageRequest.of(
+                  pageable.getPageNumber(),
+                  Math.min(pageable.getPageSize(), 4),
+                  pageable.getSortOr(Sort.by(Direction.DESC, "postedDate")))));
     }
 
-    posts.addAll(postRepository.findByAuthor_UsernameIgnoreCase(user.getUsername()));
+    posts.addAll(postRepository.findByAuthor_UsernameIgnoreCase(user.getUsername(),
+        PageRequest.of(
+            pageable.getPageNumber(),
+            Math.min(pageable.getPageSize(), 4),
+            pageable.getSortOr(Sort.by(Direction.DESC, "postedDate")))));
 
     return ResponseEntity.ok(posts.stream().map(p -> getPostDTO(p, user)).toList());
   }
