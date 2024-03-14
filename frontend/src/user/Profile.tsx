@@ -12,6 +12,7 @@ import Popup from "reactjs-popup";
 
 function Profile() {
   const { username } = useParams();
+  const [update, setUpdate] = useState<number>(0);
   const { loggedIn, myUsername } = useGlobalContext();
   const [loading, setLoading] = useState<boolean>(true);
   const [user, setUser] = useState<User | null>(null);
@@ -35,7 +36,7 @@ function Profile() {
     };
 
     loadUser();
-  }, [username]);
+  }, [update]);
 
   const handleFollow = async () => {
     if (!loggedIn) {
@@ -92,7 +93,7 @@ function Profile() {
                 modal
                 nested
               >
-                <EditProfile displayName={user.displayName} bio={user.bio} />
+                <EditProfile displayName={user.displayName} bio={user.bio} update={update} setUpdate={setUpdate}/>
               </Popup>
             </div>
           )}

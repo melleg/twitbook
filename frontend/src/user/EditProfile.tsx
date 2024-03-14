@@ -23,6 +23,8 @@ const EditProfile = (props: any) => {
     } catch (err) {
       setErrorMessage("Unable to update profile");
     }
+
+    props.setUpdate(props.update + 1);
   };
 
   return (
@@ -41,9 +43,8 @@ const EditProfile = (props: any) => {
         </label>
         <label>
           Bio
-          <input
+          <textarea
             className="block border-2 border-black"
-            type="textarea"
             placeholder="bio"
             value={newBio}
             onChange={(e) => setNewBio(e.target.value)}
