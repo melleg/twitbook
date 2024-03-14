@@ -21,8 +21,10 @@
 }
 
 body {
+  background-attachment: fixed;
   background-image: url(../SkyV1.png);
   background-size: cover;
+  background-repeat: no-repeat;
 }
 
 h1,
