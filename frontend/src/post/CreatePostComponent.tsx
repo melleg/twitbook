@@ -2,6 +2,7 @@ import { useState } from "react";
 import PostModel from "./post-model";
 import { createPost } from "./post-service";
 import { useGlobalContext } from "../auth/GlobalContext";
+import TextArea from "./TextArea";
 
 const CreatePostComponent: React.FC = () => {
   const [content, setContent] = useState("");
@@ -32,11 +33,10 @@ const CreatePostComponent: React.FC = () => {
   return (
     <form className="p-4 glass rounded-lg gap-2 mt-2" onSubmit={handleSubmit}>
       <span className="error-message">{errorMessage}</span>
-      <textarea
-        className="p-2 glass rounded-lg w-5/6 border-solid border-gray-600"
-        placeholder="What're you twitting about?"
-        value={content}
+      <TextArea
         onChange={(e) => setContent(e.target.value)}
+        value={content}
+        placeholder="What're you twitting about?"
       />
       <button type="submit" className="btn-action ml-4">
         Post
