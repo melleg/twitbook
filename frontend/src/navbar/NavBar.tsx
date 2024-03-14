@@ -6,7 +6,7 @@ const NavBar = () => {
 
   return (
     <>
-      <nav className="sticky top-0 w-full z-10 text-xl font-medium flex bg-black text-white">
+      <nav className="sticky top-0 w-full z-10 text-xl font-medium flex nav-bg text-white">
         <Link to="/" className="p-3 mr-auto">
           twitbook
         </Link>

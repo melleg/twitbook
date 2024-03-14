@@ -46,7 +46,7 @@ function Profile() {
     try {
       await followUser(username!);
       setHasFollowed(!hasFollowed);
-    } catch (error: any) {
+    } catch (err) {
       setErrorMessage("Could not follow user");
     }
   };

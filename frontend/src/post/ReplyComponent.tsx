@@ -47,7 +47,7 @@ const ReplyComponent: React.FC<ReplyComponentProps> = ({ onSubmit }) => {
         <form className="gap-2 mt-2 flex flex-col" onSubmit={handleSubmit}>
           <span className="error-message">{errorMessage}</span>
           <textarea
-            className="p-2 glass rounded-lg w-full border-solid border-gray-600"
+            className="p-2 rounded-lg w-full"
             value={content}
             onChange={(e) => setContent(e.target.value)}
           />
