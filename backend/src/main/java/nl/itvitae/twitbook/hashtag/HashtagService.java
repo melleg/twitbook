@@ -18,7 +18,7 @@ public class HashtagService {
   }
 
   public void createHashtags(Post post) {
-    Pattern pattern = Pattern.compile("\\B#(\\w|#)+\\b");
+    Pattern pattern = Pattern.compile("(#(\\w|#)+)");
     Matcher matcher = pattern.matcher(post.getContent());
 
     while (matcher.find()) {
