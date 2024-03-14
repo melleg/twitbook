@@ -34,6 +34,26 @@ public class Seeder implements CommandLineRunner {
 
     Post post1 = savePost("Bingleblong", nol);
     Post post2 = savePost("Melle en Raafi zijn chads", sjaakie);
+    savePost("TAke a look, y'all: IMG_4346.jpeg", melle);
+    savePost("Xenoblade", raafi);
+    savePost("New rule: never trust how you feel about your life past 9pm", nol);
+    savePost("░L░I░N░K ░I░N ░B░I░O", sjaakie);
+    savePost("This website is so much better than the other bird site", melle);
+    savePost("""
+        Wow i really need to study
+        *distraction*
+        *distraction*
+        *distraction*
+        *distraction*
+        *distraction*
+        Dude i really need to study rn
+        *distraction*
+        *distraction*
+        *distraction*
+        *distraction*
+        *distraction*
+        Haha omg i reaaally need to st-""", raafi);
+
     Post reply = saveRepost("Mee eens", nol, post2);
 
     Post repost = saveRepost("", sjaakie, post1);

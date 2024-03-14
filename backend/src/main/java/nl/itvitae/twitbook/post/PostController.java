@@ -53,7 +53,7 @@ public class PostController {
   public List<?> getAll(@AuthenticationPrincipal User user, Pageable pageable) {
     return postRepository.findAll(PageRequest.of(
         pageable.getPageNumber(),
-        Math.min(pageable.getPageSize(), 5),
+        Math.min(pageable.getPageSize(), 4),
         pageable.getSortOr(Sort.by("postedDate")))).stream().map(p -> getPostDTO(p, user)).toList();
 //    return postRepository.findAll().stream().map(p -> getPostDTO(p, user)).toList();
   }
