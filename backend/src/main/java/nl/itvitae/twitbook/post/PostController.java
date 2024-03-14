@@ -18,6 +18,8 @@ import nl.itvitae.twitbook.user.UserRepository;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.domain.Sort.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -54,8 +56,7 @@ public class PostController {
     return postRepository.findAll(PageRequest.of(
         pageable.getPageNumber(),
         Math.min(pageable.getPageSize(), 4),
-        pageable.getSortOr(Sort.by("postedDate")))).stream().map(p -> getPostDTO(p, user)).toList();
-//    return postRepository.findAll().stream().map(p -> getPostDTO(p, user)).toList();
+        pageable.getSortOr(Sort.by(Direction.DESC, "postedDate")))).stream().map(p -> getPostDTO(p, user)).toList();
   }
 
   @GetMapping("{id}")
