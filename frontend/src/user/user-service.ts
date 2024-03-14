@@ -1,5 +1,6 @@
 import { api } from "../base-api";
 import User from "./user";
+import ProfileModel from "./profile-model";
 
 const uri = "users";
 
@@ -13,4 +14,8 @@ export const getUserByUsername = async (username: string) => {
 
 export const followUser = async (followUsername: string) => {
   return (await api.post(`follows/user/${followUsername}`));
+};
+
+export const updateProfile = async (model: ProfileModel) => {
+  return await api.patch(`${uri}/profile`, model);
 };

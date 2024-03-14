@@ -7,11 +7,13 @@ import { getPostsByUser } from "../post/post-service";
 import { format } from "date-fns";
 import CreatePostComponent from "../post/CreatePostComponent";
 import { useGlobalContext } from "../auth/GlobalContext";
+import EditProfile from "./EditProfile";
+import Popup from "reactjs-popup";
 
 function Profile() {
   const { username } = useParams();
-  const { myUsername } = useGlobalContext();
-
+  const [update, setUpdate] = useState<number>(0);
+  const { loggedIn, myUsername } = useGlobalContext();
   const [loading, setLoading] = useState<boolean>(true);
   const [user, setUser] = useState<User | null>(null);
   const [errorMessage, setErrorMessage] = useState<string>("");
@@ -34,9 +36,13 @@ function Profile() {
     };
 
     loadUser();
-  }, [username]);
+  }, [update]);
 
   const handleFollow = async () => {
+    if (!loggedIn) {
+      alert("You must be logged in to follow");
+      return;
+    }
     try {
       await followUser(username!);
       setHasFollowed(!hasFollowed);
@@ -69,10 +75,9 @@ function Profile() {
             className="h-40 -mt-32 rounded-md aspect-square border-solid border-4 border-white"
             src="https://picsum.photos/200"
           ></img>
-          {username !== myUsername && (
+          {username !== myUsername ? (
             <div>
               <p className="error-message">{errorMessage}</p>
-
               <button
                 type="button"
                 className="btn-action"
@@ -81,14 +86,26 @@ function Profile() {
                 {hasFollowed ? <div className="unfollow"></div> : "Follow"}
               </button>
             </div>
+          ) : (
+            <div>
+              <Popup
+                trigger={<button className="btn-action">Edit profile</button>}
+                modal
+                nested
+              >
+                <EditProfile displayName={user.displayName} bio={user.bio} update={update} setUpdate={setUpdate}/>
+              </Popup>
+            </div>
           )}
         </div>
         {/* Additional profile info */}
         <div className="px-4 pb-4">
-          <h3>@{user.username}</h3>
-          <p className="text-light">
-            User since: {format(user.registerDate, "dd MMMM yyyy")}
-          </p>
+          <h3>{user.displayName}</h3>
+          <div className="text-light">
+            <p>@{user.username}</p>
+            <p>User since: {format(user.registerDate, "dd MMMM yyyy")}</p>
+          </div>
+          <p>{user.bio}</p>
           <p>Followers: {user.numberOfFollowers}</p>
           <p>Following: {user.numberOfFollowing}</p>
         </div>

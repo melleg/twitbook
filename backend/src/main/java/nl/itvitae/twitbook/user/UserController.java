@@ -5,8 +5,6 @@ import java.util.Optional;
 
 import lombok.AllArgsConstructor;
 
-import nl.itvitae.twitbook.follow.Follow;
-import nl.itvitae.twitbook.follow.FollowDTO;
 import nl.itvitae.twitbook.follow.FollowRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,7 +30,8 @@ public class UserController {
   }
 
   @GetMapping("by-username/{username}")
-  public ResponseEntity<?> findByUsername(@PathVariable String username,  @AuthenticationPrincipal User user) {
+  public ResponseEntity<?> findByUsername(@PathVariable String username,
+      @AuthenticationPrincipal User user) {
     Optional<User> targetUser = userRepository.findByUsernameIgnoreCase(username);
 
     if (targetUser.isEmpty()) {
@@ -42,6 +41,21 @@ public class UserController {
     if (user == null) {
       return new ResponseEntity<>(new UserDTO(targetUser.get()), HttpStatus.OK);
     }
-    return new ResponseEntity<>(new UserDTO(targetUser.get(), followRepository.existsFollowByFollowerIdAndFollowingId(user.getId(), targetUser.get().getId())), HttpStatus.OK);
+    return new ResponseEntity<>(new UserDTO(targetUser.get(),
+        followRepository.existsFollowByFollowerIdAndFollowingId(user.getId(),
+            targetUser.get().getId())), HttpStatus.OK);
+  }
+
+  private record UserUsernameBioOnly(String newDisplayName, String newBio) {
+
+  }
+
+  @PatchMapping("profile")
+  public ResponseEntity<?> editProfile(@RequestBody UserUsernameBioOnly userUsernameBioOnly,
+      @AuthenticationPrincipal User user) {
+    user.setDisplayName(userUsernameBioOnly.newDisplayName());
+    user.setBio(userUsernameBioOnly.newBio());
+    userRepository.save(user);
+    return ResponseEntity.ok().build();
   }
 }

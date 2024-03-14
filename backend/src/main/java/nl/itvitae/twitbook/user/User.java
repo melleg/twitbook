@@ -39,6 +39,10 @@ public class User implements UserDetails {
 
   private String password;
 
+  private String bio;
+
+  private String displayName;
+
   private Role[] roles;
 
   private LocalDateTime registerDate;
@@ -53,6 +57,7 @@ public class User implements UserDetails {
     this.username = username;
     this.password = password;
     this.roles = roles;
+    this.displayName = username;
     this.registerDate = LocalDateTime.now();
   }
 

@@ -74,6 +74,17 @@ input {
   border-radius: 0.25rem;
 }
 
+textarea {
+  border: 2px solid #f2f2f2;
+  background-color: #f2f2f2;
+}
+
+textarea:focus {
+  border-color: var(--green-dark);
+  outline: 0;
+}
+
+
 .nav-bg {
   background-image: linear-gradient(90deg, green, #0ae002);
 }
@@ -135,12 +146,6 @@ a:hover {
   content: "Following ";
 }
 
-textarea {
-  border: 2px solid #f2f2f2;
-  background-color: #f2f2f2;
-}
-
-textarea:focus {
-  border-color: var(--green-dark);
-  outline: 0;
+.popup-overlay{
+  background:rgba(0,0,0,.5);
 }
