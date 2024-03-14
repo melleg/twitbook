@@ -15,6 +15,9 @@ import nl.itvitae.twitbook.user.User;
 import nl.itvitae.twitbook.user.User.Role;
 import nl.itvitae.twitbook.user.UserRepository;
 
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -47,8 +50,12 @@ public class PostController {
   }
 
   @GetMapping
-  public List<?> getAll(@AuthenticationPrincipal User user) {
-    return postRepository.findAll().stream().map(p -> getPostDTO(p, user)).toList();
+  public List<?> getAll(@AuthenticationPrincipal User user, Pageable pageable) {
+    return postRepository.findAll(PageRequest.of(
+        pageable.getPageNumber(),
+        Math.min(pageable.getPageSize(), 5),
+        pageable.getSortOr(Sort.by("postedDate")))).stream().map(p -> getPostDTO(p, user)).toList();
+//    return postRepository.findAll().stream().map(p -> getPostDTO(p, user)).toList();
   }
 
   @GetMapping("{id}")
