@@ -3,9 +3,10 @@ import { Globals } from "../globals";
 
 interface RenderTextInterface {
   content: string;
+  className?: string;
 }
 
-const RenderText: React.FC<RenderTextInterface> = ({ content }) => {
+const RenderText: React.FC<RenderTextInterface> = ({ content, className }) => {
   const formatText = (text: string) => {
     return (
       text.match(Globals.WORD_REGEX)?.map((w, index) =>
@@ -21,7 +22,11 @@ const RenderText: React.FC<RenderTextInterface> = ({ content }) => {
   };
 
   return (
-    <div className="w-full post-body break-words flex flex-wrap gap-1 hyphens-auto">
+    <div
+      className={`w-full text-rendered break-words hyphens-auto ${
+        className ?? ""
+      }`}
+    >
       {formatText(content)}
     </div>
   );
