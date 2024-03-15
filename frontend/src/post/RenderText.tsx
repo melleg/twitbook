@@ -10,16 +10,14 @@ const RenderText: React.FC<RenderTextInterface> = ({ content, className }) => {
   const formatText = (text: string) => {
     const matchesAndNonMatches = matchAndSplit(text, Globals.HASHTAG_REGEX);
 
-    return (
-      matchesAndNonMatches.map((w, index) =>
-        w.match(Globals.HASHTAG_REGEX) ? (
-          <Link key={index} to={`search?q=${w}`}>
-            {w}
-          </Link>
-        ) : (
-          <span key={index}>{w}</span>
-        )
-      ) ?? ""
+    return matchesAndNonMatches.map((w, index) =>
+      w.match(Globals.HASHTAG_REGEX) ? (
+        <Link key={index} to={`search?q=${w}`}>
+          {w}
+        </Link>
+      ) : (
+        <span key={index}>{w}</span>
+      )
     );
   };
 
