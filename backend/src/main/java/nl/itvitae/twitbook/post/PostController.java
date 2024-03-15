@@ -1,10 +1,13 @@
 package nl.itvitae.twitbook.post;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import lombok.AllArgsConstructor;
 
+import nl.itvitae.twitbook.follow.Follow;
+import nl.itvitae.twitbook.follow.FollowRepository;
 import nl.itvitae.twitbook.like.Like;
 import nl.itvitae.twitbook.like.LikeRepository;
 import nl.itvitae.twitbook.user.User;
@@ -29,13 +32,16 @@ import org.springframework.web.util.UriComponentsBuilder;
 @AllArgsConstructor
 @RequestMapping("api/v1/posts")
 public class PostController {
+
   private final PostService postService;
   private final UserRepository userRepository;
+  private final FollowRepository followRepository;
   private final LikeRepository likeRepository;
 
   // Returns the proper DTO based on post type
   private Object getPostDTO(Post post, User userRequesting) {
-    return post.getLinkedPost() == null ? new PostDTO(post, userRequesting) : new RepostDTO(post, userRequesting);
+    return post.getLinkedPost() == null ? new PostDTO(post, userRequesting)
+        : new RepostDTO(post, userRequesting);
   }
 
   @GetMapping
@@ -55,7 +61,8 @@ public class PostController {
   }
 
   @GetMapping("by-username/{username}")
-  public ResponseEntity<?> getAllByUsername(@PathVariable String username, @AuthenticationPrincipal User user) {
+  public ResponseEntity<?> getAllByUsername(@PathVariable String username,
+      @AuthenticationPrincipal User user) {
     Optional<User> findUser = userRepository.findByUsernameIgnoreCase(username);
     if (findUser.isEmpty()) {
       return ResponseEntity.notFound().build();
@@ -66,7 +73,8 @@ public class PostController {
   }
 
   @PostMapping
-  public ResponseEntity<?> createPost(@RequestBody PostModel model, UriComponentsBuilder uriBuilder, @AuthenticationPrincipal User user) {
+  public ResponseEntity<?> createPost(@RequestBody PostModel model, UriComponentsBuilder uriBuilder,
+      @AuthenticationPrincipal User user) {
 
     // Create post and save to database
     Post newPost = postService.addPost(model.content(), user);
@@ -135,6 +143,25 @@ public class PostController {
     }
 
     return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
+  }
+
+  @GetMapping("by-following")
+  public ResponseEntity<?> getAllByFollowing(@AuthenticationPrincipal User user) {
+    if (user == null) {
+      return ResponseEntity.notFound().build();
+    }
+
+    List<Follow> follows = followRepository.findAllByFollowerId(user.getId());
+
+    List<Post> posts = new ArrayList<>();
+    for (Follow follow : follows) {
+      posts.addAll(
+          postService.findByAuthor_UsernameIgnoreCase(follow.getFollowing().getUsername()));
+    }
+
+    posts.addAll(postService.findByAuthor_UsernameIgnoreCase(user.getUsername()));
+
+    return ResponseEntity.ok(posts.stream().map(p -> getPostDTO(p, user)).toList());
   }
 
   @PostMapping("/like/{postId}")

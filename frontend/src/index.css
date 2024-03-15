@@ -8,18 +8,23 @@
   --text-light: #545454;
   --grey: rgb(196, 196, 196);
   --grey-light: #ebebeb;
-  --glass: #d2d2d287;
+  --green-light: #51f903;
+  --green-hover: #46d802;
+  --green-dark: #2f9102ce;
+  --glass: white;
   --red: red;
-  --purple: #9600ff;
+  --purple: #c511ff;
 }
 
-.border {
-  border: 1px solid var(--grey);
+.border-green {
+  border: 2px solid var(--green-dark);
 }
 
 body {
-  background-image: url(https://picsum.photos/1000);
+  background-attachment: fixed;
+  background-image: url(../SkyV1.png);
   background-size: cover;
+  background-repeat: no-repeat;
 }
 
 h1,
@@ -69,22 +74,36 @@ input {
   border-radius: 0.25rem;
 }
 
+textarea {
+  border: 2px solid #f2f2f2;
+  background-color: #f2f2f2;
+}
+
+textarea:focus {
+  border-color: var(--green-dark);
+  outline: 0;
+}
+
+.nav-bg {
+  background-image: linear-gradient(90deg, green, #0ae002);
+}
+
 .btn-action {
   padding: 0.35rem 0.95rem;
   font-weight: bold;
   color: white;
-  background-color: var(--action) !important;
+  background-color: var(--green-light) !important;
   border-radius: 0.9rem;
   text-align: center;
 
   &:hover {
-    background-color: var(--action-hover) !important;
+    background-color: var(--green-hover) !important;
   }
 }
 
 .btn-icon {
   background-color: transparent;
-  color: white;
+  color: #00ad29;
   font-size: 1rem;
 
   &:hover {
@@ -92,27 +111,25 @@ input {
   }
 }
 
-.btn-icon-nohover {
-  background-color: transparent;
-  color: white;
-  font-size: 1rem;
-}
-
 a {
   cursor: pointer;
+
+  &:hover {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
 }
 
 a:hover {
-  text-decoration: underline;
-  text-underline-offset: 3px;
 }
 
-.text-rendered > * {
-  white-space: pre-wrap;
-}
-
-.text-rendered a {
-  color: var(--purple);
+.text-rendered {
+  & > * {
+    white-space: pre-wrap;
+  }
+  & a {
+    color: var(--purple);
+  }
 }
 
 .text-light {
@@ -121,7 +138,6 @@ a:hover {
 
 .glass {
   background-color: var(--glass);
-  backdrop-filter: blur(23px);
 }
 
 .error-message {
@@ -129,9 +145,22 @@ a:hover {
 }
 
 .activated {
-  color: yellow;
+  color: var(--purple);
+  font-weight: bold;
 }
 
-:user-invalid {
+*:user-invalid {
   border-color: red;
+}
+
+.unfollow:hover::before {
+  content: "Unfollow";
+}
+
+.unfollow::before {
+  content: "Following ";
+}
+
+.popup-overlay {
+  background: rgba(0, 0, 0, 0.5);
 }

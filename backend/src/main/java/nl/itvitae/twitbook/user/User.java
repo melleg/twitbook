@@ -6,6 +6,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collection;
@@ -17,6 +18,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import nl.itvitae.twitbook.follow.Follow;
 import nl.itvitae.twitbook.like.Like;
 
 import org.springframework.security.core.GrantedAuthority;
@@ -37,14 +39,25 @@ public class User implements UserDetails {
 
   private String password;
 
+  private String bio;
+
+  private String displayName;
+
   private Role[] roles;
 
   private LocalDateTime registerDate;
+
+  @OneToMany(mappedBy = "follower")
+  private Set<Follow> following = new HashSet<>();
+
+  @OneToMany(mappedBy = "following")
+  private Set<Follow> followers = new HashSet<>();
 
   public User(String username, String password, Role... roles) {
     this.username = username;
     this.password = password;
     this.roles = roles;
+    this.displayName = username;
     this.registerDate = LocalDateTime.now();
   }
 

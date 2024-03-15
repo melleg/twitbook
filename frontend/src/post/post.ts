@@ -3,6 +3,7 @@ export default interface Post {
   content: string;
   postedDate: Date;
   username: string;
+  displayName: string;
   type: PostType;
   likes: number;
   reposts: number;

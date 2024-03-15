@@ -2,6 +2,8 @@ package nl.itvitae.twitbook.seeder;
 
 import lombok.AllArgsConstructor;
 
+import nl.itvitae.twitbook.follow.Follow;
+import nl.itvitae.twitbook.follow.FollowRepository;
 import nl.itvitae.twitbook.like.Like;
 import nl.itvitae.twitbook.like.LikeRepository;
 import nl.itvitae.twitbook.post.Post;
@@ -19,6 +21,7 @@ import org.springframework.stereotype.Component;
 public class Seeder implements CommandLineRunner {
   private final PostService postService;
   private final UserRepository userRepository;
+  private final FollowRepository followRepository;
   private final LikeRepository likeRepository;
   private final PasswordEncoder passwordEncoder;
 
@@ -35,6 +38,9 @@ public class Seeder implements CommandLineRunner {
     Post repost = saveRepost(sjaakie, post1);
     Post reply = saveReply("Mee eens", nol, post2);
 
+    followUser(sjaakie, nol);
+    followUser(sjaakie, raafi);
+    
     likePost(post1, melle);
   }
 
@@ -51,12 +57,14 @@ public class Seeder implements CommandLineRunner {
   }
 
   private User saveUser(String username, String password, Role... roles) {
-    User user = new User(username, passwordEncoder.encode(password), roles);
-    userRepository.save(user);
-    return user;
+    return userRepository.save(new User(username, passwordEncoder.encode(password), roles));
   }
 
-  private void likePost(Post post, User user) {
-    likeRepository.save(new Like(post, user));
+  private Follow followUser(User follower, User following) {
+    return followRepository.save(new Follow(follower, following));
+  }
+  
+  private Like likePost(Post post, User user) {
+    return likeRepository.save(new Like(post, user));
   }
 }
