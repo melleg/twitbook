@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { useGlobalContext } from "../auth/GlobalContext";
 import { Globals } from "../globals";
 import ReplyComponent from "./ReplyComponent";
+import RenderText from "./RenderText";
 
 interface PostCardProps {
   post: Post;
@@ -50,6 +51,7 @@ const PostCard: React.FC<PostCardProps> = ({ post: postProp }) => {
     try {
       await deletePost(post.id);
       setDeleted(true);
+      setRefresh(refresh + 1);
     } catch (error) {
       setErrorMessage("Post could not be deleted");
     }
@@ -100,7 +102,7 @@ const PostCard: React.FC<PostCardProps> = ({ post: postProp }) => {
         return (
           <>
             <UserInfo displayName={post.displayName} username={post.username} />
-            <PostBody content={post.content} />
+            <RenderText content={post.content} />
             <BottomButtons post={post} />
           </>
         );
@@ -111,11 +113,14 @@ const PostCard: React.FC<PostCardProps> = ({ post: postProp }) => {
 
         return (
           <>
-            <UserInfo displayName={linkedPost.displayName} username={linkedPost.username} />
+            <UserInfo
+              displayName={linkedPost.displayName}
+              username={linkedPost.username}
+            />
             <span className="ml-2 text-light italic">
               • 🔁 by {post.username}
             </span>
-            <PostBody content={linkedPost.content} />
+            <RenderText content={linkedPost.content} />
             <BottomButtons post={linkedPost} />
           </>
         );
@@ -125,14 +130,18 @@ const PostCard: React.FC<PostCardProps> = ({ post: postProp }) => {
         return (
           <>
             <UserInfo displayName={post.displayName} username={post.username} />
-            <PostBody content={post.content} />
+            <RenderText content={post.content} />
             <div className="rounded-lg border-green p-2 mt-1">
               {!linkedPost ? (
                 <span className="text-light">Not found</span>
               ) : (
                 <>
-                  <UserInfo displayName={linkedPost.displayName} username={linkedPost.username} small={true} />
-                  <PostBody content={linkedPost.content} />
+                  <UserInfo
+                    displayName={linkedPost.displayName}
+                    username={linkedPost.username}
+                    small={true}
+                  />
+                  <RenderText content={linkedPost.content} />
                 </>
               )}
             </div>
@@ -143,7 +152,11 @@ const PostCard: React.FC<PostCardProps> = ({ post: postProp }) => {
   };
 
   // Post top info
-  const UserInfo = (props: { displayName: string, username: string; small?: boolean }) => (
+  const UserInfo = (props: {
+    displayName: string;
+    username: string;
+    small?: boolean;
+  }) => (
     <>
       <Link to={`/profile/${props.username}`}>
         <img
@@ -158,14 +171,9 @@ const PostCard: React.FC<PostCardProps> = ({ post: postProp }) => {
         {props.displayName}
       </Link>
       <span className="text-light">
-      @{props.username} • {format(post.postedDate, "dd MMMM yyyy")}
+        @{props.username} • {format(post.postedDate, "dd MMMM yyyy")}
       </span>
     </>
-  );
-
-  // Post text content
-  const PostBody = (props: { content: string }) => (
-    <p className="w-full break-words hyphens-auto">{props.content}</p>
   );
 
   // Post bottom buttons
