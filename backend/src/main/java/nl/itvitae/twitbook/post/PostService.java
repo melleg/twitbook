@@ -33,7 +33,7 @@ public class PostService {
 
   // Save regular post
   public Post addPost(String content, User author) {
-    Post post = constructPost(content, author);
+    Post post = new Post(content, author);
     post.setType(Post.PostType.POST);
     hashtagService.createHashtags(post); // add hashtags
     return postRepository.save(post);
@@ -41,7 +41,7 @@ public class PostService {
 
   // Save reply
   public Post addReply(String content, User author, Post linkedPost) {
-    Post post = constructPost(content, author);
+    Post post = new Post(content, author);
     post.setLinkedPost(linkedPost);
     post.setType(Post.PostType.REPLY);
     hashtagService.createHashtags(post); // add hashtags
@@ -50,19 +50,12 @@ public class PostService {
 
   // Save re-post
   public Post addRepost(User author, Post linkedPost) {
-    Post post = constructPost("", author);
+    Post post = new Post("", author);
     post.setLinkedPost(linkedPost);
     post.setType(Post.PostType.REPOST);
     return postRepository.save(post);
   }
 
-  private Post constructPost(String content, User author) {
-    Post post = new Post();
-    post.setContent(content);
-    post.setAuthor(author);
-    post.setPostedDate(LocalDateTime.now());
-    return post;
-  }
 
   // Delete post
   public void deletePost(Post post) {

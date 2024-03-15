@@ -57,4 +57,10 @@ public class Post {
     REPOST,
     REPLY,
   }
+
+  public Post(String content, User author) {
+    this.content = content;
+    this.author = author;
+    this.postedDate = LocalDateTime.now();
+  }
 }
