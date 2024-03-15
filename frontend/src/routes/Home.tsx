@@ -3,7 +3,6 @@ import Feed from "../feed/Feed";
 import CreatePostComponent from "../post/CreatePostComponent";
 import { getPosts, getPostsByFollowing } from "../post/post-service";
 import { useGlobalContext } from "../auth/GlobalContext";
-import SearchBar from "../search/SearchBar";
 
 function Home() {
   const { loggedIn } = useGlobalContext();
@@ -19,7 +18,6 @@ function Home() {
 
   return (
     <>
-      <SearchBar />
       {loggedIn && (
         <>
           <div className="flex justify-around justiy-stretch">

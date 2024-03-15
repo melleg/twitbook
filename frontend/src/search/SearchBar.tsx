@@ -18,16 +18,16 @@ const SearchBar: React.FC = () => {
     <>
       <form onSubmit={searchHandler}>
         <input
-          type="text"
+          type="textarea"
           placeholder="Search for a user"
-          className="my-2 py-2"
+          className="my-2 py-2 text-light"
           onChange={(e) => setSearch(e.target.value)}
         ></input>
         <button className="btn-action" type="submit">
           Search
         </button>
       </form>
-      <span className="my-4 py-2 pl-4 pr-4 glass rounded-lg text-left">
+      <span className="my-2 py-2 pl-4 pr-4 glass rounded-lg text-left text-light">
         {results.map((User) => User.displayName)}
       </span>
     </>
