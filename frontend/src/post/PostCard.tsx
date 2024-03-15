@@ -111,7 +111,10 @@ const PostCard: React.FC<PostCardProps> = ({ post: postProp }) => {
 
         return (
           <>
-            <UserInfo displayName={linkedPost.displayName} username={linkedPost.username} />
+            <UserInfo
+              displayName={linkedPost.displayName}
+              username={linkedPost.username}
+            />
             <span className="ml-2 text-light italic">
               • 🔁 by {post.username}
             </span>
@@ -131,7 +134,11 @@ const PostCard: React.FC<PostCardProps> = ({ post: postProp }) => {
                 <span className="text-light">Not found</span>
               ) : (
                 <>
-                  <UserInfo displayName={linkedPost.displayName} username={linkedPost.username} small={true} />
+                  <UserInfo
+                    displayName={linkedPost.displayName}
+                    username={linkedPost.username}
+                    small={true}
+                  />
                   <PostBody content={linkedPost.content} />
                 </>
               )}
@@ -143,7 +150,11 @@ const PostCard: React.FC<PostCardProps> = ({ post: postProp }) => {
   };
 
   // Post top info
-  const UserInfo = (props: { displayName: string, username: string; small?: boolean }) => (
+  const UserInfo = (props: {
+    displayName: string;
+    username: string;
+    small?: boolean;
+  }) => (
     <>
       <Link to={`/profile/${props.username}`}>
         <img
@@ -158,7 +169,7 @@ const PostCard: React.FC<PostCardProps> = ({ post: postProp }) => {
         {props.displayName}
       </Link>
       <span className="text-light">
-      @{props.username} • {format(post.postedDate, "dd MMMM yyyy")}
+        @{props.username} • {format(post.postedDate, "dd MMMM yyyy")}
       </span>
     </>
   );
