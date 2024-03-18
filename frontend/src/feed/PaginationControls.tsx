@@ -9,10 +9,8 @@ const PaginationControls = ({ totalPages }) => {
   };
 
   const setPage = (page: number) => {
-    console.log("Attemptong to set page");
     if (!searchParams) console.error("No search params!");
     setSearchParams({ page: page.toString() });
-    console.log(searchParams);
   };
 
   return (

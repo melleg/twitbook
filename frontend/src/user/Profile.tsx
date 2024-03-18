@@ -21,8 +21,6 @@ function Profile() {
   const [hasFollowed, setHasFollowed] = useState<boolean>(false);
 
   useEffect(() => {
-    console.log(searchParams.get("page"));
-
     const loadUser = async () => {
       setLoading(true);
       // setPage(0);

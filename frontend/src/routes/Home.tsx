@@ -25,10 +25,8 @@ function Home() {
   }
 
   const setPage = (page: number) => {
-    console.log("Attempting to set page");
     if (!searchParams) console.error("No search params!");
     setSearchParams({ page: page.toString() });
-    console.log(searchParams);
   };
 
   return (

@@ -1,5 +1,6 @@
 package nl.itvitae.twitbook.seeder;
 
+import java.util.List;
 import lombok.AllArgsConstructor;
 
 import nl.itvitae.twitbook.follow.Follow;
@@ -19,6 +20,7 @@ import org.springframework.stereotype.Component;
 @Component
 @AllArgsConstructor
 public class Seeder implements CommandLineRunner {
+
   private final PostRepository postRepository;
   private final UserRepository userRepository;
   private final FollowRepository followRepository;
@@ -34,12 +36,31 @@ public class Seeder implements CommandLineRunner {
 
     Post post1 = savePost("Bingleblong", nol);
     Post post2 = savePost("Melle en Raafi zijn chads", sjaakie);
-    savePost("TAke a look, y'all: IMG_4346.jpeg", melle);
-    savePost("Xenoblade", raafi);
-    savePost("New rule: never trust how you feel about your life past 9pm", nol);
-    savePost("░L░I░N░K ░I░N ░B░I░O", sjaakie);
-    savePost("This website is so much better than the other bird site", melle);
-    savePost("""
+
+    final int postsPerUser = 6;
+    for (int i = 0; i < postsPerUser; i++) {
+      postRepository.saveAll(List.of(
+          new Post(randomContent(), melle),
+          new Post(randomContent(), raafi),
+          new Post(randomContent(), nol),
+          new Post(randomContent(), sjaakie)
+      ));
+    }
+
+    Post reply = saveRepost("Mee eens", nol, post2);
+
+    Post repost = saveRepost("", sjaakie, post1);
+
+    followUser(sjaakie, nol);
+    followUser(sjaakie, raafi);
+
+    likePost(post1, melle);
+  }
+
+  private static final String[] CONTENT = {
+      "TAke a look, y'all: IMG_4346.jpeg", "Xenoblade",
+      "New rule: never trust how you feel about your life past 9pm",
+      "░L░I░N░K ░I░N ░B░I░O", "This website is so much better than the other bird site", """
         Wow i really need to study
         *distraction*
         *distraction*
@@ -52,16 +73,12 @@ public class Seeder implements CommandLineRunner {
         *distraction*
         *distraction*
         *distraction*
-        Haha omg i reaaally need to st-""", raafi);
+        Haha omg i reaaally need to st-""", "twitbook is love, twitbook is life", "gameing",
+      "me when the", "banaan", "fun", "wow", "concerning", "interesting", "looking into this", "I'm running out of unique tweets"
+  };
 
-    Post reply = saveRepost("Mee eens", nol, post2);
-
-    Post repost = saveRepost("", sjaakie, post1);
-
-    followUser(sjaakie, nol);
-    followUser(sjaakie, raafi);
-    
-    likePost(post1, melle);
+  private static String randomContent() {
+    return CONTENT[(int) (Math.random() * CONTENT.length)];
   }
 
   private Post savePost(String content, User author) {
@@ -80,7 +97,7 @@ public class Seeder implements CommandLineRunner {
   private Follow followUser(User follower, User following) {
     return followRepository.save(new Follow(follower, following));
   }
-  
+
   private Like likePost(Post post, User user) {
     return likeRepository.save(new Like(post, user));
   }
