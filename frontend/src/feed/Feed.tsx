@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import Post from "../post/post";
 import PostCard from "../post/PostCard";
-import { useGlobalContext } from "../auth/GlobalContext";
+import PaginationControls from "./PaginationControls";
 
 interface FeedProps {
   getFunction: Promise<Post[]>;
@@ -10,7 +10,6 @@ interface FeedProps {
 const Feed: React.FC<FeedProps> = ({ getFunction }) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [posts, setPosts] = useState<Post[]>([]);
-  const { refresh, setRefresh, page, setPage, totalPages} = useGlobalContext();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -21,7 +20,7 @@ const Feed: React.FC<FeedProps> = ({ getFunction }) => {
 
     fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [refresh]);
+  }, [getFunction]);
 
   const Body: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     return <div className="flex flex-col gap-2 pt-2">{children}</div>;
@@ -53,30 +52,7 @@ const Feed: React.FC<FeedProps> = ({ getFunction }) => {
             <PostCard key={post.id} post={post} />
           ))}
       </Body>
-      <div className="flex justify-around">
-        {page !== 0 && (
-          <button
-            className="btn-action"
-            onClick={() => {
-              setPage(page - 1);
-              setRefresh(refresh + 1);
-            }}
-          >
-            Previous
-          </button>
-        )}
-        {(page < totalPages-1 || totalPages === 1)&& (
-          <button
-            className="btn-action"
-            onClick={() => {
-              setPage(page + 1);
-              setRefresh(refresh + 1);
-            }}
-          >
-            Next
-          </button>
-        )}
-      </div>
+      <PaginationControls />
     </>
   );
 };

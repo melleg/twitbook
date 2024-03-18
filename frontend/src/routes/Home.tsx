@@ -3,18 +3,24 @@ import Feed from "../feed/Feed";
 import CreatePostComponent from "../post/CreatePostComponent";
 import { getPosts, getPostsByFollowing } from "../post/post-service";
 import { useGlobalContext } from "../auth/GlobalContext";
+import { useSearchParams } from "react-router-dom";
 
 function Home() {
-  const { loggedIn, refresh, setRefresh, page, setPage } = useGlobalContext();
+  const { loggedIn, refresh, setRefresh } = useGlobalContext();
   const [viewAll, setViewAll] = useState<boolean>(true);
+  const [ searchParams ] = useSearchParams();
 
   const showFollowingOnly = (value: boolean) => {
     if (value !== viewAll) {
       setViewAll(value);
       setRefresh(refresh + 1);
-      setPage(0);
     }
   };
+
+  const getPage = () => {
+    if(!searchParams) console.error("No search params!");
+    return parseInt(searchParams.get("page") ?? "0");
+  }
 
   return (
     <>
@@ -40,10 +46,10 @@ function Home() {
 
       {viewAll ? (
         <>
-          <Feed getFunction={getPosts(page)} />
+          <Feed getFunction={getPosts(getPage())} />
         </>
       ) : (
-        <Feed getFunction={getPostsByFollowing(page)} />
+        <Feed getFunction={getPostsByFollowing(0)} />
       )}
     </>
   );

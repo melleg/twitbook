@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import User from "./user";
-import { useParams } from "react-router-dom";
+import { useParams, useSearchParams } from "react-router-dom";
 import { followUser, getUserByUsername } from "./user-service";
 import Feed from "../feed/Feed";
 import { getPostsByUser } from "../post/post-service";
@@ -12,16 +12,20 @@ import Popup from "reactjs-popup";
 
 function Profile() {
   const { username } = useParams();
-  const { loggedIn, myUsername, page, setPage } = useGlobalContext();
-  const [update, setUpdate] = useState<number>(0);
+  const [ searchParams ] = useSearchParams();
+  
+  const { loggedIn, myUsername, refresh } = useGlobalContext();
   const [loading, setLoading] = useState<boolean>(true);
   const [user, setUser] = useState<User | null>(null);
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [hasFollowed, setHasFollowed] = useState<boolean>(false);
 
   useEffect(() => {
+    console.log(searchParams.get("page"));
+
     const loadUser = async () => {
       setLoading(true);
+      // setPage(0);
 
       try {
         const userResponse = await getUserByUsername(username!);
@@ -36,7 +40,12 @@ function Profile() {
     };
 
     loadUser();
-  }, [update]);
+  }, [refresh, username, searchParams]);
+
+  const getPage = () => {
+    if(!searchParams) console.error("No search params!");
+    return parseInt(searchParams.get("page") ?? "0");
+  }
 
   const handleFollow = async () => {
     if (!loggedIn) {
@@ -53,7 +62,6 @@ function Profile() {
 
   // Loading
   if (loading) {
-    setPage(0);
     return <p>Loading {username}...</p>;
   }
 
@@ -96,7 +104,7 @@ function Profile() {
                 modal
                 nested
               >
-                <EditProfile displayName={user.displayName} bio={user.bio} update={update} setUpdate={setUpdate}/>
+                <EditProfile displayName={user.displayName} bio={user.bio}/>
               </Popup>
             </div>
           )}
@@ -116,7 +124,7 @@ function Profile() {
 
       {username === myUsername && <CreatePostComponent />}
 
-      <Feed getFunction={getPostsByUser(user.username, page)} />
+      <Feed getFunction={getPostsByUser(user.username, getPage())} />
     </>
   );
 }

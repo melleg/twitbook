@@ -43,7 +43,7 @@ public class PostController {
   private final FollowRepository followRepository;
   private final LikeRepository likeRepository;
 
-  private static final int PAGE_SIZE = 4;
+  private static final int PAGE_SIZE = 1;
 
   // Returns the proper DTO based on post type
   private Object getPostDTO(Post post, User userRequesting) {
@@ -82,9 +82,9 @@ public class PostController {
       return ResponseEntity.notFound().build();
     }
 
-    List<Post> posts = postRepository.findByAuthor_UsernameIgnoreCase(findUser.get().getUsername(),
+    Page posts = postRepository.findByAuthor_UsernameIgnoreCase(findUser.get().getUsername(),
         getPageable(pageable));
-    return ResponseEntity.ok(posts.stream().map(p -> getPostDTO(p, user)).toList());
+    return ResponseEntity.ok(posts.map(p -> getPostDTO((Post) p, user)));
   }
 
   @PostMapping
@@ -169,27 +169,27 @@ public class PostController {
     return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
   }
 
-  @GetMapping("by-following")
-  public ResponseEntity<?> getAllByFollowing(@AuthenticationPrincipal User user,
-      Pageable pageable) {
-    if (user == null) {
-      return ResponseEntity.notFound().build();
-    }
-
-    List<Follow> follows = followRepository.findAllByFollowerId(user.getId());
-
-    List<Post> posts = new ArrayList<>();
-    for (Follow follow : follows) {
-      posts.addAll(
-          postRepository.findByAuthor_UsernameIgnoreCase(follow.getFollowing().getUsername(),
-              getPageable(pageable)));
-    }
-
-    posts.addAll(postRepository.findByAuthor_UsernameIgnoreCase(user.getUsername(),
-        getPageable(pageable)));
-
-    return ResponseEntity.ok(posts.stream().map(p -> getPostDTO(p, user)).toList());
-  }
+//  @GetMapping("by-following")
+//  public ResponseEntity<?> getAllByFollowing(@AuthenticationPrincipal User user,
+//      Pageable pageable) {
+//    if (user == null) {
+//      return ResponseEntity.notFound().build();
+//    }
+//
+//    List<Follow> follows = followRepository.findAllByFollowerId(user.getId());
+//
+//    List<Page> posts = new ArrayList<>();
+//    for (Follow follow : follows) {
+//      posts.add(
+//          postRepository.findByAuthor_UsernameIgnoreCase(follow.getFollowing().getUsername(),
+//              getPageable(pageable)));
+//    }
+//
+//    posts.add(postRepository.findByAuthor_UsernameIgnoreCase(user.getUsername(),
+//        getPageable(pageable)));
+//
+//    return ResponseEntity.ok(posts.getFirst().map(p -> getPostDTO((Post) p, user)).toList());
+//  }
 
   @PostMapping("/like/{postId}")
   public ResponseEntity<?> likePost(@PathVariable long postId, @AuthenticationPrincipal User user,

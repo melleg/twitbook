@@ -1,4 +1,4 @@
-import { useGlobalContext } from "../auth/GlobalContext";
+
 import { api } from "../base-api";
 import Post from "./post";
 import PostModel from "./post-model";
@@ -11,24 +11,24 @@ export const getPostById = async (postId: number) => {
 };
 
 export const getPosts = async (page: number) => {
-  const { setTotalPages } = useGlobalContext(); 
   const response = (await api.get(`${uri}?page=${page}`)).data;
-  const posts = response.content;  
-  setTotalPages(response.totalPages);
+  const posts: Post[] = response.content;  
   posts.forEach((p: Post) => mapPost(p));
   return posts;
 };
 
 export const getPostsByUser = async (username: string, page: number) => {
-  const posts = (await api.get<Post[]>(`${uri}/by-username/${username}?page=${page}`)).data;
-  posts.forEach((p) => mapPost(p));
+  const response = (await api.get(`${uri}/by-username/${username}?page=${page}`)).data;
+  const posts: Post[] = response.content;  
+  posts.forEach((p: Post) => mapPost(p));
   return posts;
 };
 
 
 export const getPostsByFollowing = async (page: number) => {
-  const posts = (await api.get<Post[]>(`${uri}/by-following?page=${page}`)).data;
-  posts.forEach((p) => mapPost(p));
+  const response = (await api.get(`${uri}/by-following?page=${page}`)).data;
+  const posts: Post[] = response.content;  
+  posts.forEach((p: Post) => mapPost(p));
   return posts;
 };
 
