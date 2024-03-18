@@ -1,13 +1,17 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useGlobalContext } from "../auth/GlobalContext";
 
 const SearchBar: React.FC = () => {
+  const { refresh, setRefresh } = useGlobalContext();
   const [search, setSearch] = useState("");
   const navigate = useNavigate();
 
   const searchHandler = async (e: React.FormEvent) => {
     e.preventDefault();
-    {search ? (navigate(`search/${search}`)) : (<></>)};
+    if (!search) return;
+    navigate(`search?q=${search}`);
+    setRefresh(refresh + 1);
   };
 
   return (
