@@ -1,17 +1,13 @@
 import { useState } from "react";
-import { getUsers } from "../user/user-service";
-import User from "../user/user";
+import { useNavigate } from "react-router-dom";
 
 const SearchBar: React.FC = () => {
   const [search, setSearch] = useState("");
-  const [results, setResults] = useState<User[]>([]);
+  const navigate = useNavigate();
 
   const searchHandler = async (e: React.FormEvent) => {
     e.preventDefault();
-    const res = await getUsers();
-    console.log(res);
-    setResults(res.filter((User) => User.displayName.includes?.(search)));
-    console.log(res.filter((User) => User.displayName.includes?.(search)));
+    {search ? (navigate(`search/${search}`)) : (<></>)};
   };
 
   return (
@@ -20,16 +16,13 @@ const SearchBar: React.FC = () => {
         <input
           type="textarea"
           placeholder="Search for a user"
-          className="my-2 py-2 text-light"
+          className="mt-2 py-1 glass rounded-lg text-left text-light"
           onChange={(e) => setSearch(e.target.value)}
         ></input>
         <button className="btn-action" type="submit">
           Search
         </button>
       </form>
-      <span className="my-2 py-2 pl-4 pr-4 glass rounded-lg text-left text-light">
-        {results.map((User) => User.displayName)}
-      </span>
     </>
   );
 };
