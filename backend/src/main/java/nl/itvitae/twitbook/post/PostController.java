@@ -169,27 +169,19 @@ public class PostController {
     return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
   }
 
-//  @GetMapping("by-following")
-//  public ResponseEntity<?> getAllByFollowing(@AuthenticationPrincipal User user,
-//      Pageable pageable) {
-//    if (user == null) {
-//      return ResponseEntity.notFound().build();
-//    }
-//
-//    List<Follow> follows = followRepository.findAllByFollowerId(user.getId());
-//
-//    List<Page> posts = new ArrayList<>();
-//    for (Follow follow : follows) {
-//      posts.add(
-//          postRepository.findByAuthor_UsernameIgnoreCase(follow.getFollowing().getUsername(),
-//              getPageable(pageable)));
-//    }
-//
-//    posts.add(postRepository.findByAuthor_UsernameIgnoreCase(user.getUsername(),
-//        getPageable(pageable)));
-//
-//    return ResponseEntity.ok(posts.getFirst().map(p -> getPostDTO((Post) p, user)).toList());
-//  }
+  @GetMapping("by-following")
+  public ResponseEntity<?> getAllByFollowing(@AuthenticationPrincipal User user,
+      Pageable pageable) {
+    if (user == null) {
+      return ResponseEntity.notFound().build();
+    }
+
+    Page posts = postRepository.findByAuthor_Followers_Follower_UsernameIgnoreCase(user.getUsername(),
+            getPageable(pageable));
+
+
+    return ResponseEntity.ok(posts.map(p -> getPostDTO((Post) p, user)));
+  }
 
   @PostMapping("/like/{postId}")
   public ResponseEntity<?> likePost(@PathVariable long postId, @AuthenticationPrincipal User user,
