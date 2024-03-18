@@ -1,6 +1,8 @@
 import { useSearchParams } from "react-router-dom";
-
-const PaginationControls = ({ totalPages }) => {
+interface PaginationProps {
+    totalPages: number;
+  }
+const PaginationControls: React.FC<PaginationProps> = ( {totalPages} ) => {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const getPage = () => {
