@@ -43,7 +43,7 @@ public class PostController {
   private final FollowRepository followRepository;
   private final LikeRepository likeRepository;
 
-  private static final int PAGE_SIZE = 1;
+  private static final int PAGE_SIZE = 4;
 
   // Returns the proper DTO based on post type
   private Object getPostDTO(Post post, User userRequesting) {

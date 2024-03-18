@@ -1,4 +1,5 @@
 
+import { Dispatch, SetStateAction } from "react";
 import { api } from "../base-api";
 import Post from "./post";
 import PostModel from "./post-model";
@@ -10,24 +11,27 @@ export const getPostById = async (postId: number) => {
   return mapPost(post);
 };
 
-export const getPosts = async (page: number) => {
+export const getPosts = async (page: number, setTotalPages: Dispatch<SetStateAction<number>>) => {
   const response = (await api.get(`${uri}?page=${page}`)).data;
   const posts: Post[] = response.content;  
+  setTotalPages(response.totalPages);
   posts.forEach((p: Post) => mapPost(p));
   return posts;
 };
 
-export const getPostsByUser = async (username: string, page: number) => {
+export const getPostsByUser = async (username: string, page: number, setTotalPages: Dispatch<SetStateAction<number>>) => {
   const response = (await api.get(`${uri}/by-username/${username}?page=${page}`)).data;
   const posts: Post[] = response.content;  
+  setTotalPages(response.totalPages);
   posts.forEach((p: Post) => mapPost(p));
   return posts;
 };
 
 
-export const getPostsByFollowing = async (page: number) => {
+export const getPostsByFollowing = async (page: number, setTotalPages: Dispatch<SetStateAction<number>>) => {
   const response = (await api.get(`${uri}/by-following?page=${page}`)).data;
-  const posts: Post[] = response.content;  
+  const posts: Post[] = response.content;
+  setTotalPages(response.totalPages);  
   posts.forEach((p: Post) => mapPost(p));
   return posts;
 };

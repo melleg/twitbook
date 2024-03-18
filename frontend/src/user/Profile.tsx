@@ -13,7 +13,7 @@ import Popup from "reactjs-popup";
 function Profile() {
   const { username } = useParams();
   const [ searchParams ] = useSearchParams();
-  
+  const [totalPages, setTotalPages] = useState<number>(0);
   const { loggedIn, myUsername, refresh } = useGlobalContext();
   const [loading, setLoading] = useState<boolean>(true);
   const [user, setUser] = useState<User | null>(null);
@@ -124,7 +124,7 @@ function Profile() {
 
       {username === myUsername && <CreatePostComponent />}
 
-      <Feed getFunction={getPostsByUser(user.username, getPage())} />
+      <Feed getFunction={getPostsByUser(user.username, getPage(), setTotalPages)} totalPages={totalPages}/>
     </>
   );
 }

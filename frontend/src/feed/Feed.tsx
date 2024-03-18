@@ -5,9 +5,10 @@ import PaginationControls from "./PaginationControls";
 
 interface FeedProps {
   getFunction: Promise<Post[]>;
+  totalPages: number;
 }
 
-const Feed: React.FC<FeedProps> = ({ getFunction }) => {
+const Feed: React.FC<FeedProps> = ({ getFunction, totalPages }) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [posts, setPosts] = useState<Post[]>([]);
 
@@ -52,7 +53,7 @@ const Feed: React.FC<FeedProps> = ({ getFunction }) => {
             <PostCard key={post.id} post={post} />
           ))}
       </Body>
-      <PaginationControls />
+      <PaginationControls totalPages={totalPages}/>
     </>
   );
 };

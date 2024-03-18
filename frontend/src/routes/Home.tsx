@@ -8,11 +8,13 @@ import { useSearchParams } from "react-router-dom";
 function Home() {
   const { loggedIn, refresh, setRefresh } = useGlobalContext();
   const [viewAll, setViewAll] = useState<boolean>(true);
-  const [ searchParams ] = useSearchParams();
+  const [ searchParams, setSearchParams ] = useSearchParams();
+  const [totalPages, setTotalPages] = useState<number>(0);
 
   const showFollowingOnly = (value: boolean) => {
     if (value !== viewAll) {
       setViewAll(value);
+      setPage(0);
       setRefresh(refresh + 1);
     }
   };
@@ -21,6 +23,13 @@ function Home() {
     if(!searchParams) console.error("No search params!");
     return parseInt(searchParams.get("page") ?? "0");
   }
+
+  const setPage = (page: number) => {
+    console.log("Attempting to set page");
+    if (!searchParams) console.error("No search params!");
+    setSearchParams({ page: page.toString() });
+    console.log(searchParams);
+  };
 
   return (
     <>
@@ -46,10 +55,10 @@ function Home() {
 
       {viewAll ? (
         <>
-          <Feed getFunction={getPosts(getPage())} />
+          <Feed getFunction={getPosts(getPage(), setTotalPages)} totalPages={totalPages}/>
         </>
       ) : (
-        <Feed getFunction={getPostsByFollowing(0)} />
+        <Feed getFunction={getPostsByFollowing(getPage(), setTotalPages)} totalPages={totalPages}/>
       )}
     </>
   );

@@ -1,9 +1,7 @@
-import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
-const PaginationControls = () => {
+const PaginationControls = ({ totalPages }) => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const [totalPages, setTotalPages] = useState<number>(0);
 
   const getPage = () => {
     if (!searchParams) console.error("No search params!");
