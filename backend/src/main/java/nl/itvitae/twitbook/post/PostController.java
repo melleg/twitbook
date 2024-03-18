@@ -9,21 +9,19 @@ import lombok.AllArgsConstructor;
 import nl.itvitae.twitbook.follow.Follow;
 import nl.itvitae.twitbook.follow.FollowRepository;
 import nl.itvitae.twitbook.like.Like;
-import nl.itvitae.twitbook.like.LikeModel;
 import nl.itvitae.twitbook.like.LikeRepository;
 import nl.itvitae.twitbook.user.User;
 import nl.itvitae.twitbook.user.User.Role;
 import nl.itvitae.twitbook.user.UserRepository;
 
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
-import org.springframework.data.domain.Sort.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -45,19 +43,24 @@ public class PostController {
   private final FollowRepository followRepository;
   private final LikeRepository likeRepository;
 
+  private static final int PAGE_SIZE = 4;
+
   // Returns the proper DTO based on post type
   private Object getPostDTO(Post post, User userRequesting) {
     return post.getLinkedPost() == null ? new PostDTO(post, userRequesting)
         : new RepostDTO(post, userRequesting);
   }
 
+  private PageRequest getPageable(Pageable pageable){
+    return PageRequest.of(
+        pageable.getPageNumber(),
+        Math.min(pageable.getPageSize(), PAGE_SIZE),
+        Sort.by(Direction.DESC, "postedDate"));
+  }
+
   @GetMapping
-  public List<?> getAll(@AuthenticationPrincipal User user, Pageable pageable) {
-    return postRepository.findAll(PageRequest.of(
-            pageable.getPageNumber(),
-            Math.min(pageable.getPageSize(), 4),
-            pageable.getSortOr(Sort.by(Direction.DESC, "postedDate")))).stream()
-        .map(p -> getPostDTO(p, user)).toList();
+  public ResponseEntity<?> getAll(@AuthenticationPrincipal User user, Pageable pageable) {
+    return ResponseEntity.ok(postRepository.findAll(getPageable(pageable)).map(p -> getPostDTO((Post) p, user)));
   }
 
   @GetMapping("{id}")
@@ -80,10 +83,7 @@ public class PostController {
     }
 
     List<Post> posts = postRepository.findByAuthor_UsernameIgnoreCase(findUser.get().getUsername(),
-        (PageRequest.of(
-            pageable.getPageNumber(),
-            Math.min(pageable.getPageSize(), 4),
-            pageable.getSortOr(Sort.by(Direction.DESC, "postedDate")))));
+        getPageable(pageable));
     return ResponseEntity.ok(posts.stream().map(p -> getPostDTO(p, user)).toList());
   }
 
@@ -182,17 +182,11 @@ public class PostController {
     for (Follow follow : follows) {
       posts.addAll(
           postRepository.findByAuthor_UsernameIgnoreCase(follow.getFollowing().getUsername(),
-              PageRequest.of(
-                  pageable.getPageNumber(),
-                  Math.min(pageable.getPageSize(), 4),
-                  pageable.getSortOr(Sort.by(Direction.DESC, "postedDate")))));
+              getPageable(pageable)));
     }
 
     posts.addAll(postRepository.findByAuthor_UsernameIgnoreCase(user.getUsername(),
-        PageRequest.of(
-            pageable.getPageNumber(),
-            Math.min(pageable.getPageSize(), 4),
-            pageable.getSortOr(Sort.by(Direction.DESC, "postedDate")))));
+        getPageable(pageable)));
 
     return ResponseEntity.ok(posts.stream().map(p -> getPostDTO(p, user)).toList());
   }

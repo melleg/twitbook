@@ -10,7 +10,7 @@ interface FeedProps {
 const Feed: React.FC<FeedProps> = ({ getFunction }) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [posts, setPosts] = useState<Post[]>([]);
-  const { refresh, setRefresh, page, setPage } = useGlobalContext();
+  const { refresh, setRefresh, page, setPage, totalPages} = useGlobalContext();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -65,15 +65,17 @@ const Feed: React.FC<FeedProps> = ({ getFunction }) => {
             Previous
           </button>
         )}
-        <button
-          className="btn-action"
-          onClick={() => {
-            setPage(page + 1);
-            setRefresh(refresh + 1);
-          }}
-        >
-          Next
-        </button>
+        {(page < totalPages-1 || totalPages === 1)&& (
+          <button
+            className="btn-action"
+            onClick={() => {
+              setPage(page + 1);
+              setRefresh(refresh + 1);
+            }}
+          >
+            Next
+          </button>
+        )}
       </div>
     </>
   );
