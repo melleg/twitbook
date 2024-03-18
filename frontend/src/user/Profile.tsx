@@ -12,9 +12,9 @@ import Popup from "reactjs-popup";
 
 function Profile() {
   const { username } = useParams();
-  const [ searchParams ] = useSearchParams();
-  const [totalPages, setTotalPages] = useState<number>(0);
+  const [searchParams] = useSearchParams();
   const { loggedIn, myUsername, refresh } = useGlobalContext();
+  const [totalPages, setTotalPages] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(true);
   const [user, setUser] = useState<User | null>(null);
   const [errorMessage, setErrorMessage] = useState<string>("");
@@ -23,7 +23,6 @@ function Profile() {
   useEffect(() => {
     const loadUser = async () => {
       setLoading(true);
-      // setPage(0);
 
       try {
         const userResponse = await getUserByUsername(username!);
@@ -41,9 +40,9 @@ function Profile() {
   }, [refresh, username, searchParams]);
 
   const getPage = () => {
-    if(!searchParams) console.error("No search params!");
+    if (!searchParams) console.error("No search params!");
     return parseInt(searchParams.get("page") ?? "0");
-  }
+  };
 
   const handleFollow = async () => {
     if (!loggedIn) {
@@ -102,7 +101,7 @@ function Profile() {
                 modal
                 nested
               >
-                <EditProfile displayName={user.displayName} bio={user.bio}/>
+                <EditProfile displayName={user.displayName} bio={user.bio} />
               </Popup>
             </div>
           )}
@@ -122,7 +121,10 @@ function Profile() {
 
       {username === myUsername && <CreatePostComponent />}
 
-      <Feed getFunction={getPostsByUser(user.username, getPage(), setTotalPages)} totalPages={totalPages}/>
+      <Feed
+        getFunction={getPostsByUser(user.username, getPage(), setTotalPages)}
+        totalPages={totalPages}
+      />
     </>
   );
 }

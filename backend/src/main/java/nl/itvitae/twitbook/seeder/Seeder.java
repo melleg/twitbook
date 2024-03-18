@@ -27,6 +27,27 @@ public class Seeder implements CommandLineRunner {
   private final LikeRepository likeRepository;
   private final PasswordEncoder passwordEncoder;
 
+  private static final String[] CONTENT = {
+      "TAke a look, y'all: IMG_4346.jpeg", "Xenoblade",
+      "New rule: never trust how you feel about your life past 9pm",
+      "░L░I░N░K ░I░N ░B░I░O", "This website is so much better than the other bird site", """
+        Wow i really need to study
+        *distraction*
+        *distraction*
+        *distraction*
+        *distraction*
+        *distraction*
+        Dude i really need to study rn
+        *distraction*
+        *distraction*
+        *distraction*
+        *distraction*
+        *distraction*
+        Haha omg i reaaally need to st-""", "twitbook is love, twitbook is life", "gameing",
+      "me when the", "banaan", "fun", "wow", "concerning", "interesting", "looking into this",
+      "I'm running out of unique tweets"
+  };
+
   @Override
   public void run(String... args) {
     User melle = saveUser("Melle", "Password", Role.ROLE_ADMIN);
@@ -56,26 +77,6 @@ public class Seeder implements CommandLineRunner {
 
     likePost(post1, melle);
   }
-
-  private static final String[] CONTENT = {
-      "TAke a look, y'all: IMG_4346.jpeg", "Xenoblade",
-      "New rule: never trust how you feel about your life past 9pm",
-      "░L░I░N░K ░I░N ░B░I░O", "This website is so much better than the other bird site", """
-        Wow i really need to study
-        *distraction*
-        *distraction*
-        *distraction*
-        *distraction*
-        *distraction*
-        Dude i really need to study rn
-        *distraction*
-        *distraction*
-        *distraction*
-        *distraction*
-        *distraction*
-        Haha omg i reaaally need to st-""", "twitbook is love, twitbook is life", "gameing",
-      "me when the", "banaan", "fun", "wow", "concerning", "interesting", "looking into this", "I'm running out of unique tweets"
-  };
 
   private static String randomContent() {
     return CONTENT[(int) (Math.random() * CONTENT.length)];

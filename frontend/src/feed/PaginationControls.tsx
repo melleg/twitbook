@@ -1,8 +1,8 @@
 import { useSearchParams } from "react-router-dom";
 interface PaginationProps {
-    totalPages: number;
-  }
-const PaginationControls: React.FC<PaginationProps> = ( {totalPages} ) => {
+  totalPages: number;
+}
+const PaginationControls: React.FC<PaginationProps> = ({ totalPages }) => {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const getPage = () => {
@@ -15,9 +15,17 @@ const PaginationControls: React.FC<PaginationProps> = ( {totalPages} ) => {
     setSearchParams({ page: page.toString() });
   };
 
+  const checkIfLastPage = () => {
+    return getPage() < totalPages - 1 || totalPages === 0;
+  };
+
+  const checkIfFirstPage = () => {
+    return getPage() !== 0;
+  };
+
   return (
     <div className="flex justify-around">
-      {getPage() !== 0 && (
+      {checkIfFirstPage() ? (
         <button
           className="btn-action"
           onClick={() => {
@@ -26,8 +34,31 @@ const PaginationControls: React.FC<PaginationProps> = ( {totalPages} ) => {
         >
           Previous
         </button>
-      )}
-      {(getPage() < totalPages - 1 || totalPages === 0) && (
+      ): <div></div>}
+      <div>
+        {checkIfFirstPage() && (
+          <button
+            className="btn-action"
+            onClick={() => {
+              setPage(getPage() - 1);
+            }}
+          >
+            {getPage()}
+          </button>
+        )}
+        <button className="btn-action">{getPage() + 1}</button>
+        {checkIfLastPage() && (
+          <button
+            className="btn-action"
+            onClick={() => {
+              setPage(getPage() + 1);
+            }}
+          >
+            {getPage() + 2}
+          </button>
+        )}
+      </div>
+      {checkIfLastPage() ? (
         <button
           className="btn-action"
           onClick={() => {
@@ -36,7 +67,7 @@ const PaginationControls: React.FC<PaginationProps> = ( {totalPages} ) => {
         >
           Next
         </button>
-      )}
+      ): <div></div>}
     </div>
   );
 };
