@@ -2,6 +2,7 @@ import { useState } from "react";
 import { replyToPost } from "./post-service";
 import { useGlobalContext } from "../auth/GlobalContext";
 import PostModel from "./post-model";
+import TextArea from "./TextArea";
 
 interface ReplyComponentProps {
   onSubmit: () => void;
@@ -46,10 +47,10 @@ const ReplyComponent: React.FC<ReplyComponentProps> = ({ onSubmit }) => {
       ) : (
         <form className="gap-2 mt-2 flex flex-col" onSubmit={handleSubmit}>
           <span className="error-message">{errorMessage}</span>
-          <textarea
-            className="p-2 rounded-lg w-full"
-            value={content}
+          <TextArea
             onChange={(e) => setContent(e.target.value)}
+            value={content}
+            placeholder="Reply here..."
           />
           <button type="submit" className="btn-action ml-auto">
             Reply

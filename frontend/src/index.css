@@ -74,17 +74,6 @@ input {
   border-radius: 0.25rem;
 }
 
-textarea {
-  border: 2px solid #f2f2f2;
-  background-color: #f2f2f2;
-}
-
-textarea:focus {
-  border-color: var(--green-dark);
-  outline: 0;
-}
-
-
 .nav-bg {
   background-image: linear-gradient(90deg, green, #0ae002);
 }
@@ -112,9 +101,35 @@ textarea:focus {
   }
 }
 
-a:hover {
-  text-decoration: underline;
-  text-underline-offset: 3px;
+a {
+  cursor: pointer;
+
+  &:hover {
+    text-decoration: underline 2px solid;
+    text-underline-offset: 3px;
+  }
+}
+
+.text-rendered {
+  & a {
+    color: var(--purple);
+  }
+}
+
+.text-area {
+  & > * {
+    border: 2px solid transparent;
+    white-space: pre-wrap;
+  }
+
+  & textarea {
+    background-color: #f2f2f2;
+
+    &:focus {
+      border-color: var(--green-dark);
+      outline: 0;
+    }
+  }
 }
 
 .text-light {
@@ -134,18 +149,20 @@ a:hover {
   font-weight: bold;
 }
 
-:user-invalid {
+*:user-invalid {
   border-color: red;
 }
 
-.unfollow:hover::before {
-  content: "Unfollow";
+.unfollow {
+  &:hover::before {
+    content: "Unfollow";
+  }
+
+  &::before {
+    content: "Following ";
+  }
 }
 
-.unfollow::before {
-  content: "Following ";
-}
-
-.popup-overlay{
-  background:rgba(0,0,0,.5);
+.popup-overlay {
+  background: rgba(0, 0, 0, 0.5);
 }

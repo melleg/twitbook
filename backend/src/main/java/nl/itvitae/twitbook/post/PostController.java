@@ -38,9 +38,8 @@ import org.springframework.web.util.UriComponentsBuilder;
 @RequestMapping("api/v1/posts")
 public class PostController {
 
-  private final PostRepository postRepository;
+  private final PostService postService;
   private final UserRepository userRepository;
-  private final FollowRepository followRepository;
   private final LikeRepository likeRepository;
 
   private static final int PAGE_SIZE = 4;
@@ -51,7 +50,7 @@ public class PostController {
         : new RepostDTO(post, userRequesting);
   }
 
-  private PageRequest getPageable(Pageable pageable){
+  private PageRequest getPageable(Pageable pageable) {
     return PageRequest.of(
         pageable.getPageNumber(),
         Math.min(pageable.getPageSize(), PAGE_SIZE),
@@ -60,12 +59,13 @@ public class PostController {
 
   @GetMapping
   public ResponseEntity<?> getAll(@AuthenticationPrincipal User user, Pageable pageable) {
-    return ResponseEntity.ok(postRepository.findAll(getPageable(pageable)).map(p -> getPostDTO((Post) p, user)));
+    return ResponseEntity.ok(
+        postService.findAll(getPageable(pageable)).map(p -> getPostDTO(p, user)));
   }
 
   @GetMapping("{id}")
   public ResponseEntity<?> getById(@PathVariable Long id, @AuthenticationPrincipal User user) {
-    Optional<Post> post = postRepository.findById(id);
+    Optional<Post> post = postService.findById(id);
 
     if (post.isEmpty()) {
       return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
@@ -82,9 +82,9 @@ public class PostController {
       return ResponseEntity.notFound().build();
     }
 
-    Page posts = postRepository.findByAuthor_UsernameIgnoreCase(findUser.get().getUsername(),
+    Page<Post> posts = postService.getByAuthor(findUser.get().getUsername(),
         getPageable(pageable));
-    return ResponseEntity.ok(posts.map(p -> getPostDTO((Post) p, user)));
+    return ResponseEntity.ok(posts.map(p -> getPostDTO(p, user)));
   }
 
   @PostMapping
@@ -92,8 +92,7 @@ public class PostController {
       @AuthenticationPrincipal User user) {
 
     // Create post and save to database
-    Post newPost = new Post(model.content(), user);
-    postRepository.save(newPost);
+    Post newPost = postService.addPost(model.content(), user);
 
     // Return post uri
     var uri = uriBuilder.path("/posts/{id}")
@@ -106,14 +105,13 @@ public class PostController {
   @PostMapping("reply/{postId}")
   public ResponseEntity<?> replyToPost(@PathVariable long postId, @RequestBody PostModel model,
       UriComponentsBuilder uriBuilder, @AuthenticationPrincipal User user) {
-    Optional<Post> originalPost = postRepository.findById(postId);
+    Optional<Post> originalPost = postService.findById(postId);
     if (originalPost.isEmpty()) {
       return ResponseEntity.notFound().build();
     }
 
     // Create post and save to database
-    Post newPost = new Post(model.content(), user, originalPost.get());
-    postRepository.save(newPost);
+    Post newPost = postService.addReply(model.content(), user, originalPost.get());
 
     // Return post uri
     var uri = uriBuilder.path("/posts/{id}")
@@ -126,23 +124,22 @@ public class PostController {
   @PostMapping("repost/{postId}")
   public ResponseEntity<?> repostPost(@PathVariable long postId, @AuthenticationPrincipal User user,
       UriComponentsBuilder uriBuilder) {
-    Optional<Post> originalPost = postRepository.findById(postId);
+    Optional<Post> originalPost = postService.findById(postId);
     if (originalPost.isEmpty()) {
       return ResponseEntity.notFound().build();
     }
 
     // If we have reposted already, remove repost
-    Optional<Post> repostCheck = postRepository.findByTypeAndLinkedPostAndAuthor_UsernameIgnoreCase(
+    Optional<Post> repostCheck = postService.findByTypeAndLinkedPostAndAuthor_UsernameIgnoreCase(
         Post.PostType.REPOST, originalPost.get(), user.getUsername());
 
     if (repostCheck.isPresent()) {
-      postRepository.delete(repostCheck.get());
+      postService.deletePost(repostCheck.get());
       return ResponseEntity.noContent().build();
     }
 
     // Otherwise, create and save repost
-    Post newPost = new Post(null, user, originalPost.get());
-    postRepository.save(newPost);
+    Post newPost = postService.addRepost(user, originalPost.get());
 
     var uri = uriBuilder.path("/posts/{id}")
         .buildAndExpand(newPost.getId())
@@ -153,7 +150,7 @@ public class PostController {
 
   @DeleteMapping("{id}")
   public ResponseEntity<?> deletePost(@PathVariable long id, @AuthenticationPrincipal User user) {
-    Optional<Post> post = postRepository.findById(id);
+    Optional<Post> post = postService.findById(id);
     if (post.isEmpty()) {
       return ResponseEntity.notFound().build();
     }
@@ -162,7 +159,7 @@ public class PostController {
 
     if (userRoles.contains(Role.ROLE_ADMIN) || (userRoles.contains(Role.ROLE_USER) && post.get()
         .getAuthor().getId().equals(user.getId()))) {
-      postRepository.delete(post.get());
+      postService.deletePost(post.get());
       return ResponseEntity.noContent().build();
     }
 
@@ -176,17 +173,16 @@ public class PostController {
       return ResponseEntity.notFound().build();
     }
 
-    Page posts = postRepository.findByAuthor_Followers_Follower_UsernameIgnoreCase(user.getUsername(),
-            getPageable(pageable));
+    Page<Post> posts = postService.getByFollowing(user.getUsername(),
+        getPageable(pageable));
 
-
-    return ResponseEntity.ok(posts.map(p -> getPostDTO((Post) p, user)));
+    return ResponseEntity.ok(posts.map(p -> getPostDTO(p, user)));
   }
 
   @PostMapping("/like/{postId}")
   public ResponseEntity<?> likePost(@PathVariable long postId, @AuthenticationPrincipal User user,
       UriComponentsBuilder ucb) {
-    Optional<Post> post = postRepository.findById(postId);
+    Optional<Post> post = postService.findById(postId);
     if (post.isEmpty()) {
       return ResponseEntity.notFound().build();
     }
