@@ -20,7 +20,7 @@ const SearchBar: React.FC = () => {
         <input
           type="textarea"
           placeholder="Search for a user"
-          className="mt-2 py-1 glass rounded-lg text-left text-light"
+          className="mt-2 py-1 glass rounded-lg text-left text-light gap-2"
           onChange={(e) => setSearch(e.target.value)}
         ></input>
         <button className="btn-action" type="submit">
