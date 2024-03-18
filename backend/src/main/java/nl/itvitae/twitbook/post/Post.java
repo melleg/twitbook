@@ -10,6 +10,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import nl.itvitae.twitbook.hashtag.Hashtag;
 import nl.itvitae.twitbook.like.Like;
 import nl.itvitae.twitbook.user.User;
 import org.hibernate.annotations.Cascade;
@@ -47,26 +48,19 @@ public class Post {
   @OnDelete(action = OnDeleteAction.SET_NULL) // If linkedPost is deleted, set this property to null
   private Post linkedPost;
 
-  public Post(PostModel model, User author) {
-    this(model.content(), author);
-  }
-
-  public Post(String content, User author) {
-    this.content = content;
-    this.author = author;
-    postedDate = LocalDateTime.now();
-    this.type = PostType.POST;
-  }
-
-  public Post(String content, User author, Post linkedPost) {
-    this(content, author);
-    this.linkedPost = linkedPost;
-    this.type = (content == null || content.isBlank()) ? PostType.REPOST : PostType.REPLY;
-  }
+  @ManyToMany
+  @OnDelete(action = OnDeleteAction.SET_NULL) // If hashtag is deleted, set this property to null
+  private Set<Hashtag> hashtags = new HashSet<>();
 
   public enum PostType {
     POST,
     REPOST,
     REPLY,
+  }
+
+  public Post(String content, User author) {
+    this.content = content;
+    this.author = author;
+    this.postedDate = LocalDateTime.now();
   }
 }

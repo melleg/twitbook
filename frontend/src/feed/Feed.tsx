@@ -24,7 +24,7 @@ const Feed: React.FC<FeedProps> = ({ getFunction }) => {
   }, [refresh]);
 
   const Body: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-    return <div className="flex flex-col gap-2 pt-2">{children}</div>;
+    return <div className="flex flex-col gap-2 mt-2 mb-4">{children}</div>;
   };
 
   // Loading
