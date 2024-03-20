@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { useGlobalContext } from "../auth/GlobalContext";
+import SearchBar from "../search/SearchBar";
 
 const NavBar = () => {
   const { loggedIn, myUsername } = useGlobalContext();
@@ -10,6 +11,7 @@ const NavBar = () => {
         <Link to="/" className="p-3 mr-auto">
           twitbook
         </Link>
+        <SearchBar />
         {loggedIn ? (
           <>
             <Link to={`/profile/${myUsername}`} className="p-3">

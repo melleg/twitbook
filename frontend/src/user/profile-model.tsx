@@ -1,4 +1,4 @@
 export default interface ProfileModel {
-  newDisplayName: string;
-  newBio: string;
+  displayName: string;
+  bio: string;
 }

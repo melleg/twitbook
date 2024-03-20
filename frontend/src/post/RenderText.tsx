@@ -44,7 +44,7 @@ const RenderText: React.FC<RenderTextInterface> = ({ content, className }) => {
 
   return (
     <div
-      className={`w-full text-rendered break-words hyphens-auto ${className}`}
+      className={`w-full text-rendered break-words hyphens-auto whitespace-pre-line ${className}`}
     >
       {formatText(content)}
     </div>

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import User from "./user";
-import { useParams } from "react-router-dom";
+import { useParams, useSearchParams } from "react-router-dom";
 import { followUser, getUserByUsername } from "./user-service";
 import Feed from "../feed/Feed";
 import { getPostsByUser } from "../post/post-service";
@@ -12,8 +12,9 @@ import Popup from "reactjs-popup";
 
 function Profile() {
   const { username } = useParams();
-  const [update, setUpdate] = useState<number>(0);
-  const { loggedIn, myUsername } = useGlobalContext();
+  const [searchParams] = useSearchParams();
+  const { loggedIn, myUsername, refresh } = useGlobalContext();
+  const [totalPages, setTotalPages] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(true);
   const [user, setUser] = useState<User | null>(null);
   const [errorMessage, setErrorMessage] = useState<string>("");
@@ -38,7 +39,12 @@ function Profile() {
     };
 
     loadUser();
-  }, [update, username]);
+  }, [refresh, username, searchParams]);
+
+  const getPage = () => {
+    if (!searchParams) console.error("No search params!");
+    return parseInt(searchParams.get("page") ?? "0");
+  };
 
   const handleFollow = async () => {
     if (!loggedIn) {
@@ -55,7 +61,9 @@ function Profile() {
   };
 
   // Loading
-  if (loading) return <p>Loading {username}...</p>;
+  if (loading) {
+    return <p>Loading {username}...</p>;
+  }
 
   // User not found
   if (!user) return <div>User not found</div>;
@@ -96,7 +104,7 @@ function Profile() {
                 modal
                 nested
               >
-                <EditProfile displayName={user.displayName} bio={user.bio} update={update} setUpdate={setUpdate}/>
+                <EditProfile displayName={user.displayName} bio={user.bio} />
               </Popup>
             </div>
           ))}
@@ -116,7 +124,10 @@ function Profile() {
 
       {username === myUsername && <CreatePostComponent />}
 
-      <Feed getFunction={getPostsByUser(user.username)} />
+      <Feed
+        getFunction={getPostsByUser(user.username, getPage(), setTotalPages)}
+        totalPages={totalPages}
+      />
     </>
   );
 }
