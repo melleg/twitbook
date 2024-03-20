@@ -5,7 +5,6 @@ import nl.itvitae.twitbook.hashtag.HashtagService;
 import nl.itvitae.twitbook.user.User;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,25 +22,25 @@ public class PostService {
     return postRepository.findById(id);
   }
 
-  public Optional<Post> findByTypeAndLinkedPostAndAuthor_UsernameIgnoreCase(Post.PostType postType, Post linkedPost, String username) {
-    return postRepository.findByTypeAndLinkedPostAndAuthor_UsernameIgnoreCase(postType, linkedPost, username);
+  public Optional<Post> findByTypeAndLinkedPostAndPoster_UsernameIgnoreCase(Post.PostType postType, Post linkedPost, String username) {
+    return postRepository.findByTypeAndLinkedPostAndPoster_UsernameIgnoreCase(postType, linkedPost, username);
   }
 
-  public List<Post> findByAuthor_UsernameIgnoreCase(String username) {
-    return postRepository.findByAuthor_UsernameIgnoreCase(username);
+  public List<Post> findByPoster_UsernameIgnoreCase(String username) {
+    return postRepository.findByPoster_UsernameIgnoreCase(username);
   }
 
   // Save regular post
-  public Post addPost(String content, User author) {
-    Post post = new Post(content, author);
+  public Post addPost(String content, User poster) {
+    Post post = new Post(content, poster);
     post.setType(Post.PostType.POST);
     hashtagService.createHashtags(post); // add hashtags
     return postRepository.save(post);
   }
 
   // Save reply
-  public Post addReply(String content, User author, Post linkedPost) {
-    Post post = new Post(content, author);
+  public Post addReply(String content, User poster, Post linkedPost) {
+    Post post = new Post(content, poster);
     post.setLinkedPost(linkedPost);
     post.setType(Post.PostType.REPLY);
     hashtagService.createHashtags(post); // add hashtags
@@ -49,8 +48,8 @@ public class PostService {
   }
 
   // Save re-post
-  public Post addRepost(User author, Post linkedPost) {
-    Post post = new Post("", author);
+  public Post addRepost(User poster, Post linkedPost) {
+    Post post = new Post("", poster);
     post.setLinkedPost(linkedPost);
     post.setType(Post.PostType.REPOST);
     return postRepository.save(post);

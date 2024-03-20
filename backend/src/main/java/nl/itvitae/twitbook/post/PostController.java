@@ -68,7 +68,7 @@ public class PostController {
       return ResponseEntity.notFound().build();
     }
 
-    List<Post> posts = postService.findByAuthor_UsernameIgnoreCase(findUser.get().getUsername());
+    List<Post> posts = postService.findByPoster_UsernameIgnoreCase(findUser.get().getUsername());
     return ResponseEntity.ok(posts.stream().map(p -> getPostDTO(p, user)).toList());
   }
 
@@ -109,7 +109,7 @@ public class PostController {
     if(originalPost.isEmpty()) return ResponseEntity.notFound().build();
 
     // If we have reposted already, remove repost
-    Optional<Post> repostCheck = postService.findByTypeAndLinkedPostAndAuthor_UsernameIgnoreCase(
+    Optional<Post> repostCheck = postService.findByTypeAndLinkedPostAndPoster_UsernameIgnoreCase(
         Post.PostType.REPOST, originalPost.get(), user.getUsername());
 
     if(repostCheck.isPresent()) {
@@ -137,7 +137,7 @@ public class PostController {
     var userRoles = List.of(user.getRoles());
 
     if (userRoles.contains(Role.ROLE_ADMIN) || (userRoles.contains(Role.ROLE_USER) && post.get()
-        .getAuthor().getId().equals(user.getId()))) {
+        .getPoster().getId().equals(user.getId()))) {
       postService.deletePost(post.get());
       return ResponseEntity.noContent().build();
     }
@@ -156,10 +156,10 @@ public class PostController {
     List<Post> posts = new ArrayList<>();
     for (Follow follow : follows) {
       posts.addAll(
-          postService.findByAuthor_UsernameIgnoreCase(follow.getFollowing().getUsername()));
+          postService.findByPoster_UsernameIgnoreCase(follow.getFollowing().getUsername()));
     }
 
-    posts.addAll(postService.findByAuthor_UsernameIgnoreCase(user.getUsername()));
+    posts.addAll(postService.findByPoster_UsernameIgnoreCase(user.getUsername()));
 
     return ResponseEntity.ok(posts.stream().map(p -> getPostDTO(p, user)).toList());
   }

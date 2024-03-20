@@ -44,16 +44,16 @@ public class Seeder implements CommandLineRunner {
     likePost(post1, melle);
   }
 
-  private Post savePost(String content, User author) {
-    return postService.addPost(content, author);
+  private Post savePost(String content, User poster) {
+    return postService.addPost(content, poster);
   }
 
-  private Post saveRepost(User author, Post linkedPost) {
-    return postService.addRepost(author, linkedPost);
+  private Post saveRepost(User poster, Post linkedPost) {
+    return postService.addRepost(poster, linkedPost);
   }
 
-  private Post saveReply(String content, User author, Post linkedPost) {
-    return postService.addReply(content, author, linkedPost);
+  private Post saveReply(String content, User poster, Post linkedPost) {
+    return postService.addReply(content, poster, linkedPost);
   }
 
   private User saveUser(String username, String password, Role... roles) {

@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface PostRepository extends JpaRepository<Post, Long> {
-    List<Post> findByAuthor_UsernameIgnoreCase(String username);
-    Optional<Post> findByTypeAndLinkedPostAndAuthor_UsernameIgnoreCase(Post.PostType postType, Post linkedPost, String username);
-    boolean existsByTypeAndLinkedPostAndAuthor(Post.PostType postType, Post linkedPost, User user);
+    List<Post> findByPoster_UsernameIgnoreCase(String username);
+    Optional<Post> findByTypeAndLinkedPostAndPoster_UsernameIgnoreCase(Post.PostType postType, Post linkedPost, String username);
+    boolean existsByTypeAndLinkedPostAndPoster(Post.PostType postType, Post linkedPost, User user);
 }

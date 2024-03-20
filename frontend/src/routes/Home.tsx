@@ -31,7 +31,7 @@ function Home() {
               className="btn-action my-4"
               onClick={() => showFollowingOnly(false)}
             >
-              View followers only
+              View following only
             </button>
           </div>
           <CreatePostComponent />
