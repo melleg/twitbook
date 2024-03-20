@@ -16,16 +16,11 @@ const PaginationControls: React.FC<PaginationProps> = ({ totalPages }) => {
     setSearchParams(searchParams);
   };
 
-  const checkIfLastPage = () => {
-    return getPage() === totalPages - 1;
-  };
-
-  const checkIfFirstPage = () => {
-    return getPage() === 0;
-  };
+  const checkIfLastPage = () => getPage() === totalPages - 1;
+  const checkIfFirstPage = () => getPage() === 0;
 
   return (
-    <div className="flex justify-around">
+    <div className="flex justify-center gap-6 mb-2">
       {checkIfFirstPage() ? (
         <div></div>
       ) : (
