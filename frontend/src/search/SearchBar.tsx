@@ -10,7 +10,11 @@ const SearchBar: React.FC = () => {
   const searchHandler = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!search || search.length === 0) return;
-    navigate(`search?q=${search}`);
+    navigate(
+      search.startsWith("#")
+        ? `search?h=${search.slice(1)}`
+        : `search?q=${search}`
+    );
     setRefresh(refresh + 1);
   };
 

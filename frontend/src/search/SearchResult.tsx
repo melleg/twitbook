@@ -17,20 +17,26 @@ const SearchResult: React.FC = () => {
 
   useEffect(() => {
     const resultHandler = async () => {
-      const query = searchParams.get("q");
-      if (!query) return;
-
+      const generalQuery = searchParams.get("q");
+      const hashtagQuery = searchParams.get("h");
       const page = parseInt(searchParams.get("page") ?? "0");
 
+      console.log(hashtagQuery);
       // Search for hashtag
-      if (query.startsWith("#")) {
-        const results = await getPostsByHashtag(query, page, setTotalPages);
+      if (hashtagQuery) {
+        const results = await getPostsByHashtag(
+          hashtagQuery,
+          page,
+          setTotalPages
+        );
         setPosts(results);
       }
       // Search for user
-      else {
-        const results = await queryUsers(query, page, setTotalPages);
-        setUsers(results.filter((user) => user.displayName.includes(query)));
+      if (generalQuery) {
+        const results = await queryUsers(generalQuery, page, setTotalPages);
+        setUsers(
+          results.filter((user) => user.displayName.includes(generalQuery))
+        );
       }
     };
     resultHandler();
