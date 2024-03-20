@@ -15,6 +15,7 @@ const SearchBar: React.FC = () => {
         ? `search?h=${search.slice(1)}`
         : `search?q=${search}`
     );
+    setSearch("");
     setRefresh(refresh + 1);
   };
 
@@ -24,6 +25,7 @@ const SearchBar: React.FC = () => {
         <input
           type="textarea"
           placeholder="Search for user or #hashtag"
+          value={search}
           className="w-0 flex-grow flex-shrink py-1 glass rounded-lg text-left text-light"
           onChange={(e) => setSearch(e.target.value)}
         ></input>
