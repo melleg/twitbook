@@ -32,7 +32,7 @@ const CreatePostComponent: React.FC = () => {
 
   return (
     <form
-      className="p-4 glass flex flex-col rounded-lg gap-2 mt-2"
+      className="p-4 glass flex flex-col rounded-lg gap-2 my-2"
       onSubmit={handleSubmit}
     >
       <span className="error-message">{errorMessage}</span>

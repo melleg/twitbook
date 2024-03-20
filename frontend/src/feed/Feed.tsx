@@ -1,16 +1,16 @@
 import { useEffect, useState } from "react";
 import Post from "../post/post";
 import PostCard from "../post/PostCard";
-import { useGlobalContext } from "../auth/GlobalContext";
+import PaginationControls from "./PaginationControls";
 
 interface FeedProps {
   getFunction: Promise<Post[]>;
+  totalPages: number;
 }
 
-const Feed: React.FC<FeedProps> = ({ getFunction }) => {
+const Feed: React.FC<FeedProps> = ({ getFunction, totalPages }) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [posts, setPosts] = useState<Post[]>([]);
-  const { refresh } = useGlobalContext();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -21,10 +21,10 @@ const Feed: React.FC<FeedProps> = ({ getFunction }) => {
 
     fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [refresh]);
+  }, [getFunction]);
 
   const Body: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-    return <div className="flex flex-col gap-2 mt-2 mb-4">{children}</div>;
+    return <div className="flex flex-col gap-2 py-2">{children}</div>;
   };
 
   // Loading
@@ -45,13 +45,16 @@ const Feed: React.FC<FeedProps> = ({ getFunction }) => {
 
   // Posts
   return (
-    <Body>
-      {posts
-        .sort((a, b) => b.postedDate.getTime() - a.postedDate.getTime())
-        .map((post) => (
-          <PostCard key={post.id} post={post} />
-        ))}
-    </Body>
+    <>
+      <Body>
+        {posts
+          .sort((a, b) => b.postedDate.getTime() - a.postedDate.getTime())
+          .map((post) => (
+            <PostCard key={post.id} post={post} />
+          ))}
+      </Body>
+      <PaginationControls totalPages={totalPages}/>
+    </>
   );
 };
 
