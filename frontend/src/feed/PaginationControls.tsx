@@ -16,16 +16,16 @@ const PaginationControls: React.FC<PaginationProps> = ({ totalPages }) => {
   };
 
   const checkIfLastPage = () => {
-    return getPage() < totalPages - 1 || totalPages === 0;
+    return getPage() === totalPages - 1;
   };
 
   const checkIfFirstPage = () => {
-    return getPage() !== 0;
+    return getPage() === 0;
   };
 
   return (
     <div className="flex justify-around">
-      {checkIfFirstPage() ? (
+      {checkIfFirstPage() ? <div></div> : (
         <button
           className="btn-action"
           onClick={() => {
@@ -34,9 +34,9 @@ const PaginationControls: React.FC<PaginationProps> = ({ totalPages }) => {
         >
           Previous
         </button>
-      ): <div></div>}
+      )}
       <div>
-        {checkIfFirstPage() && (
+        {checkIfFirstPage() ? <></> : (
           <button
             className="btn-action"
             onClick={() => {
@@ -47,7 +47,7 @@ const PaginationControls: React.FC<PaginationProps> = ({ totalPages }) => {
           </button>
         )}
         <button className="btn-action">{getPage() + 1}</button>
-        {checkIfLastPage() && (
+        {checkIfLastPage() ? <></> : (
           <button
             className="btn-action"
             onClick={() => {
@@ -58,7 +58,7 @@ const PaginationControls: React.FC<PaginationProps> = ({ totalPages }) => {
           </button>
         )}
       </div>
-      {checkIfLastPage() ? (
+      {checkIfLastPage() ? <div></div> : (
         <button
           className="btn-action"
           onClick={() => {
@@ -67,7 +67,7 @@ const PaginationControls: React.FC<PaginationProps> = ({ totalPages }) => {
         >
           Next
         </button>
-      ): <div></div>}
+      )}
     </div>
   );
 };
