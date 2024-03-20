@@ -1,12 +1,10 @@
 package nl.itvitae.twitbook.user;
 
-import java.util.List;
 import java.util.Optional;
 
 import lombok.AllArgsConstructor;
 
 import nl.itvitae.twitbook.follow.FollowRepository;
-import nl.itvitae.twitbook.post.Post;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -29,7 +27,7 @@ public class UserController {
   private final UserRepository userRepository;
   private final FollowRepository followRepository;
 
-  private static final int PAGE_SIZE = 4;
+  private static final int PAGE_SIZE = 1;
 
   private PageRequest getPageable(Pageable pageable) {
     return PageRequest.of(
@@ -41,6 +39,12 @@ public class UserController {
   @GetMapping
   public ResponseEntity<?> getAll(Pageable pageable) {
     Page<User> users = userRepository.findAll(getPageable(pageable));
+    return ResponseEntity.ok(users.map(UserDTO::new));
+  }
+
+  @GetMapping("search/{query}")
+  public ResponseEntity<?> findAllByQuery(@PathVariable String query, Pageable pageable) {
+    Page<User> users = userRepository.findAllByDisplayNameIgnoreCase(query, getPageable(pageable));
     return ResponseEntity.ok(users.map(UserDTO::new));
   }
 
