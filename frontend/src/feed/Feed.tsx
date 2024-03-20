@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import Post from "../post/post";
 import PostCard from "../post/PostCard";
 import PaginationControls from "./PaginationControls";
+import { useGlobalContext } from "../auth/GlobalContext";
 
 interface FeedProps {
   getFunction: Promise<Post[]>;
@@ -11,6 +12,7 @@ interface FeedProps {
 const Feed: React.FC<FeedProps> = ({ getFunction, totalPages }) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [posts, setPosts] = useState<Post[]>([]);
+  const { refresh } = useGlobalContext();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -21,7 +23,7 @@ const Feed: React.FC<FeedProps> = ({ getFunction, totalPages }) => {
 
     fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [getFunction]);
+  }, [refresh]);
 
   const Body: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     return <div className="flex flex-col gap-2 py-2">{children}</div>;

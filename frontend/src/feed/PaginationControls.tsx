@@ -1,9 +1,12 @@
 import { useSearchParams } from "react-router-dom";
+import { useGlobalContext } from "../auth/GlobalContext";
+
 interface PaginationProps {
   totalPages: number;
 }
 const PaginationControls: React.FC<PaginationProps> = ({ totalPages }) => {
   const [searchParams, setSearchParams] = useSearchParams();
+  const { refresh, setRefresh } = useGlobalContext();
 
   const getPage = () => {
     if (!searchParams) console.error("No search params!");
@@ -12,6 +15,7 @@ const PaginationControls: React.FC<PaginationProps> = ({ totalPages }) => {
 
   const setPage = (page: number) => {
     if (!searchParams) console.error("No search params!");
+    setRefresh(refresh + 1);
     setSearchParams({ page: page.toString() });
   };
 

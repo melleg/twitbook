@@ -9,11 +9,11 @@ import java.util.List;
 import java.util.Optional;
 
 public interface PostRepository extends JpaRepository<Post, Long> {
-    List<Post> findByAuthor_UsernameIgnoreCase(String username);
+    List<Post> findByPoster_UsernameIgnoreCase(String username);
 
-    Page<Post> findByAuthor_UsernameIgnoreCase(String username, Pageable pageable);
+    Page<Post> findByPoster_UsernameIgnoreCase(String username, Pageable pageable);
 
-    Page<Post> findByAuthor_Followers_Follower_UsernameIgnoreCase(String username, Pageable pageable);
-    Optional<Post> findByTypeAndLinkedPostAndAuthor_UsernameIgnoreCase(Post.PostType postType, Post linkedPost, String username);
-    boolean existsByTypeAndLinkedPostAndAuthor(Post.PostType postType, Post linkedPost, User user);
+    Page<Post> findByPoster_Followers_Follower_UsernameIgnoreCase(String username, Pageable pageable);
+    Optional<Post> findByTypeAndLinkedPostAndPoster_UsernameIgnoreCase(Post.PostType postType, Post linkedPost, String username);
+    boolean existsByTypeAndLinkedPostAndPoster(Post.PostType postType, Post linkedPost, User user);
 }

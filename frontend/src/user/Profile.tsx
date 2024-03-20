@@ -19,6 +19,7 @@ function Profile() {
   const [user, setUser] = useState<User | null>(null);
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [hasFollowed, setHasFollowed] = useState<boolean>(false);
+  const [followers, setFollowers] = useState<number>(0);
 
   useEffect(() => {
     const loadUser = async () => {
@@ -28,6 +29,7 @@ function Profile() {
         const userResponse = await getUserByUsername(username!);
         setUser(userResponse);
         setHasFollowed(userResponse.hasFollowed);
+        setFollowers(userResponse.numberOfFollowers);
         setErrorMessage("");
       } catch {
         setUser(null);
@@ -51,6 +53,7 @@ function Profile() {
     }
     try {
       await followUser(username!);
+      setFollowers(followers + (hasFollowed ? -1 : 1));
       setHasFollowed(!hasFollowed);
     } catch (err) {
       setErrorMessage("Could not follow user");
@@ -83,7 +86,7 @@ function Profile() {
             className="h-40 -mt-32 rounded-md aspect-square border-solid border-4 border-white"
             src="https://picsum.photos/200"
           ></img>
-          {username !== myUsername ? (
+          {loggedIn && (username !== myUsername ? (
             <div>
               <p className="error-message">{errorMessage}</p>
               <button
@@ -104,7 +107,7 @@ function Profile() {
                 <EditProfile displayName={user.displayName} bio={user.bio} />
               </Popup>
             </div>
-          )}
+          ))}
         </div>
         {/* Additional profile info */}
         <div className="px-4 pb-4">
@@ -114,7 +117,7 @@ function Profile() {
             <p>User since: {format(user.registerDate, "dd MMMM yyyy")}</p>
           </div>
           <p>{user.bio}</p>
-          <p>Followers: {user.numberOfFollowers}</p>
+          <p>Followers: {followers}</p>
           <p>Following: {user.numberOfFollowing}</p>
         </div>
       </div>
