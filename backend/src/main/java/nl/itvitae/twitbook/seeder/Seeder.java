@@ -1,10 +1,14 @@
 package nl.itvitae.twitbook.seeder;
 
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.List;
 import lombok.AllArgsConstructor;
 
 import nl.itvitae.twitbook.follow.Follow;
 import nl.itvitae.twitbook.follow.FollowRepository;
+import nl.itvitae.twitbook.image.Image;
+import nl.itvitae.twitbook.image.ImageRepository;
 import nl.itvitae.twitbook.like.Like;
 import nl.itvitae.twitbook.like.LikeRepository;
 import nl.itvitae.twitbook.post.Post;
@@ -20,11 +24,13 @@ import org.springframework.stereotype.Component;
 @Component
 @AllArgsConstructor
 public class Seeder implements CommandLineRunner {
+
   private final PostService postService;
   private final UserRepository userRepository;
   private final FollowRepository followRepository;
   private final LikeRepository likeRepository;
   private final PasswordEncoder passwordEncoder;
+  private final ImageRepository imageRepository;
 
   private static final String[] CONTENT = {
       "TAke a look, y'all: IMG_4346.jpeg", "Xenoblade",
@@ -69,7 +75,14 @@ public class Seeder implements CommandLineRunner {
     followUser(sjaakie, raafi);
 
     likePost(post1, melle);
+    try {
+      saveImage();
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    }
+
   }
+
   private static String randomContent() {
     return CONTENT[(int) (Math.random() * CONTENT.length)];
   }
@@ -100,5 +113,10 @@ public class Seeder implements CommandLineRunner {
 
   private Like likePost(Post post, User user) {
     return likeRepository.save(new Like(post, user));
+  }
+
+  private void saveImage() throws Exception {
+    Image image = new Image("hello.jpg", "image/jpeg", Files.readAllBytes(Paths.get("src/main/resources/images/hello.jpg")));
+    imageRepository.save(image);
   }
 }
