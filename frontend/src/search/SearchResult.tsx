@@ -4,33 +4,24 @@ import { queryUsers } from "../user/user-service";
 import User from "../user/user";
 import { useGlobalContext } from "../auth/GlobalContext";
 import { format } from "date-fns";
-import Post from "../post/post";
 import { getPostsByHashtag } from "../post/post-service";
 import PaginationControls from "../feed/PaginationControls";
+import Feed from "../feed/Feed";
 
 const SearchResult: React.FC = () => {
   const [searchParams] = useSearchParams();
   const { refresh } = useGlobalContext();
   const [users, setUsers] = useState<User[]>([]);
-  const [posts, setPosts] = useState<Post[]>([]);
   const [totalPages, setTotalPages] = useState<number>(0);
+  const [hashtagQuery, setHashtagQuery] = useState<string | null>(null);
 
   useEffect(() => {
     const resultHandler = async () => {
       const generalQuery = searchParams.get("q");
-      const hashtagQuery = searchParams.get("h");
+      setHashtagQuery(searchParams.get("h"));
       const page = parseInt(searchParams.get("page") ?? "0");
 
       console.log(hashtagQuery);
-      // Search for hashtag
-      if (hashtagQuery) {
-        const results = await getPostsByHashtag(
-          hashtagQuery,
-          page,
-          setTotalPages
-        );
-        setPosts(results);
-      }
       // Search for user
       if (generalQuery) {
         const results = await queryUsers(generalQuery, page, setTotalPages);
@@ -42,16 +33,23 @@ const SearchResult: React.FC = () => {
     resultHandler();
   }, [refresh, searchParams]);
 
+  const getPage = () => {
+    return parseInt(searchParams.get("page") ?? "0");
+  };
+
+  // Hashtag results
+  if (hashtagQuery) {
+    return (
+      <Feed
+        getFunction={getPostsByHashtag(hashtagQuery, getPage(), setTotalPages)}
+        totalPages={totalPages}
+      />
+    );
+  }
+
+  // User results
   return (
     <>
-      {/* Hashtag results */}
-      <div className="flex flex-col gap-3 mt-2 mb-4">
-        {posts.map((post) => (
-          // TODO
-          <div>{post.id}</div>
-        ))}
-      </div>
-
       {/* User results */}
       <div className="flex flex-col gap-3 mt-2 mb-4">
         {users.map((user) => (
