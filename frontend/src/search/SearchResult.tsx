@@ -16,7 +16,7 @@ const SearchResult: React.FC = () => {
       if (!query) return;
 
       const res = await getUsers();
-      setResults(res.filter((user) => user.displayName.includes?.(query)));
+      setResults(res.filter((user) => user.displayName.includes(query)));
     };
     resultHandler();
   }, [refresh]);
