@@ -78,7 +78,7 @@ function Profile() {
             className="h-40 -mt-32 rounded-md aspect-square border-solid border-4 border-white"
             src="https://picsum.photos/200"
           ></img>
-          {username !== myUsername ? (
+          {loggedIn && (username !== myUsername ? (
             <div>
               <p className="error-message">{errorMessage}</p>
               <button
@@ -99,7 +99,7 @@ function Profile() {
                 <EditProfile displayName={user.displayName} bio={user.bio} update={update} setUpdate={setUpdate}/>
               </Popup>
             </div>
-          )}
+          ))}
         </div>
         {/* Additional profile info */}
         <div className="px-4 pb-4">
