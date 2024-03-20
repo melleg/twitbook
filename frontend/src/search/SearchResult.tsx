@@ -33,7 +33,12 @@ const SearchResult: React.FC = () => {
               className={
                 "inline-block rounded-full aspect-square mr-1 w-14 left-3 top-3"
               }
-              src="https://picsum.photos/50"
+              src={
+                "data:" +
+                  user.profileImage.mimeType +
+                  ";base64," +
+                  user.profileImage.data || "https://picsum.photos/50"
+              }
             ></img>
           </Link>
           <div className="flex flex-col justify-center">
