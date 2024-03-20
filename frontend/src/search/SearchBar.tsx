@@ -23,7 +23,7 @@ const SearchBar: React.FC = () => {
       <form onSubmit={searchHandler}>
         <input
           type="textarea"
-          placeholder="Search for a user"
+          placeholder="Search for user or #hashtag"
           className="mt-2 py-1 glass rounded-lg text-left text-light gap-2"
           onChange={(e) => setSearch(e.target.value)}
         ></input>
