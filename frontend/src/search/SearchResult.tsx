@@ -44,7 +44,7 @@ const SearchResult: React.FC = () => {
               >
                 {user.displayName}
               </Link>
-              @{user.username} • User since:
+              @{user.username} • User since:{" "}
               {format(user.registerDate, "dd MMMM yyyy")}
             </div>
             {user.bio?.length > 0 && <p>"{user.bio}"</p>}
