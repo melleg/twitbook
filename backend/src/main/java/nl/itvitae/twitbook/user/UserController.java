@@ -40,7 +40,7 @@ public class UserController {
 
   @GetMapping
   public ResponseEntity<?> getAll(Pageable pageable) {
-    Page<User> users = userRepository.getAll(getPageable(pageable));
+    Page<User> users = userRepository.findAll(getPageable(pageable));
     return ResponseEntity.ok(users.map(UserDTO::new));
   }
 
