@@ -12,7 +12,8 @@ const PaginationControls: React.FC<PaginationProps> = ({ totalPages }) => {
 
   const setPage = (page: number) => {
     if (!searchParams) console.error("No search params!");
-    setSearchParams({ page: page.toString() });
+    searchParams.set("page", page.toString());
+    setSearchParams(searchParams);
   };
 
   const checkIfLastPage = () => {
@@ -25,7 +26,9 @@ const PaginationControls: React.FC<PaginationProps> = ({ totalPages }) => {
 
   return (
     <div className="flex justify-around">
-      {checkIfFirstPage() ? <div></div> : (
+      {checkIfFirstPage() ? (
+        <div></div>
+      ) : (
         <button
           className="btn-action"
           onClick={() => {
@@ -36,7 +39,9 @@ const PaginationControls: React.FC<PaginationProps> = ({ totalPages }) => {
         </button>
       )}
       <div>
-        {checkIfFirstPage() ? <></> : (
+        {checkIfFirstPage() ? (
+          <></>
+        ) : (
           <button
             className="btn-action"
             onClick={() => {
@@ -47,7 +52,9 @@ const PaginationControls: React.FC<PaginationProps> = ({ totalPages }) => {
           </button>
         )}
         <button className="btn-action">{getPage() + 1}</button>
-        {checkIfLastPage() ? <></> : (
+        {checkIfLastPage() ? (
+          <></>
+        ) : (
           <button
             className="btn-action"
             onClick={() => {
@@ -58,7 +65,9 @@ const PaginationControls: React.FC<PaginationProps> = ({ totalPages }) => {
           </button>
         )}
       </div>
-      {checkIfLastPage() ? <div></div> : (
+      {checkIfLastPage() ? (
+        <div></div>
+      ) : (
         <button
           className="btn-action"
           onClick={() => {
