@@ -110,6 +110,10 @@ a {
   }
 }
 
+.width-medium {
+  width: min(50rem, calc(100% - 20px));
+}
+
 .text-rendered {
   & a {
     color: var(--purple);

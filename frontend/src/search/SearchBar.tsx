@@ -20,7 +20,7 @@ const SearchBar: React.FC = () => {
 
   return (
     <>
-      <form onSubmit={searchHandler} className="flex gap-1 basis-96 py-1">
+      <form onSubmit={searchHandler} className="flex gap-1 flex-grow py-1">
         <input
           type="textarea"
           placeholder="Search for user or #hashtag"
