@@ -34,10 +34,7 @@ const SearchResult: React.FC = () => {
                 "inline-block rounded-full aspect-square mr-1 w-14 left-3 top-3"
               }
               src={
-                "data:" +
-                  user.profileImage.mimeType +
-                  ";base64," +
-                  user.profileImage.data || "https://picsum.photos/50"
+                `data:${user.profileImage.mimeType};base64,${user.profileImage.data}` || "https://picsum.photos/50"
               }
             ></img>
           </Link>
