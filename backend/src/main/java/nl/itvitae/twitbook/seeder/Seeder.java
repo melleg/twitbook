@@ -58,10 +58,10 @@ public class Seeder implements CommandLineRunner {
 
     Image defaultimage = saveImage("hello.jpg");
 
-    User melle = saveUser("Melle", "Password", saveImage("trollface.jpg"), Role.ROLE_ADMIN);
+    User melle = saveUser("Melle", "Password", Role.ROLE_ADMIN);
     User raafi = saveUser("Raafi", "Password", saveImage("raafi_pfp.jpg"), Role.ROLE_ADMIN);
     User nol = saveUser("Nol", "Password",     saveImage("nol_pfp.jpg"), Role.ROLE_ADMIN);
-    User sjaakie = saveUser("sjaakie", "Password", defaultimage, Role.ROLE_USER);
+    User sjaakie = saveUser("sjaakie", "Password", saveImage("trollface.jpg"), Role.ROLE_USER);
 
     Post post1 = savePost("#Bingleblong", nol);
     Post post2 = savePost("Melle en Raafi zijn #chads #winning", sjaakie);
