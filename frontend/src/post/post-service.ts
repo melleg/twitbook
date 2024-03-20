@@ -46,6 +46,19 @@ export const getPostsByFollowing = async (
   return posts;
 };
 
+export const getPostsByHashtag = async (
+  hashtag: string,
+  page: number,
+  setTotalPages: Dispatch<SetStateAction<number>>
+) => {
+  const response = (await api.get(`${uri}/by-hashtag/${hashtag}?page=${page}`))
+    .data;
+  const posts: Post[] = response.content;
+  setTotalPages(response.totalPages);
+  posts.forEach((p: Post) => mapPost(p));
+  return posts;
+};
+
 export const createPost = async (model: PostModel) => {
   return await api.post(`${uri}`, model);
 };
