@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
-import { getUsers, queryUsers } from "../user/user-service";
+import { queryUsers } from "../user/user-service";
 import User from "../user/user";
 import { useGlobalContext } from "../auth/GlobalContext";
 import { format } from "date-fns";
