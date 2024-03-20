@@ -44,7 +44,7 @@ public class UserController {
 
   @GetMapping("search/{query}")
   public ResponseEntity<?> queryByDisplayName(@PathVariable String query, Pageable pageable) {
-    Page<User> users = userRepository.findAllByDisplayNameContainingIgnoreCase(query, getPageable(pageable));
+    Page<User> users = userRepository.findByDisplayNameContainingIgnoreCase(query, getPageable(pageable));
     return ResponseEntity.ok(users.map(UserDTO::new));
   }
 
