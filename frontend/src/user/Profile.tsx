@@ -36,7 +36,7 @@ function Profile() {
     };
 
     loadUser();
-  }, [update]);
+  }, [update, username]);
 
   const handleFollow = async () => {
     if (!loggedIn) {
