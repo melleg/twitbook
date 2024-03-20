@@ -28,23 +28,33 @@ const SearchResult: React.FC = () => {
   // Hashtag results
   if (getHashtagQuery()) {
     return (
-      <PostFeed
-        getFunction={queryPostsByHashtag(
-          getHashtagQuery()!,
-          getPage(),
-          setTotalPages
-        )}
-        totalPages={totalPages}
-      />
+      <>
+        <h3 className="text-white mt-4 mb-2">
+          Showing posts with hashtag <i>#{getHashtagQuery()}</i>
+        </h3>
+        <PostFeed
+          getFunction={queryPostsByHashtag(
+            getHashtagQuery()!,
+            getPage(),
+            setTotalPages
+          )}
+          totalPages={totalPages}
+        />
+      </>
     );
   }
 
   // User results
   return (
-    <UserFeed
-      getFunction={queryUsers(getQuery()!, getPage(), setTotalPages)}
-      totalPages={totalPages}
-    />
+    <>
+      <h3 className="text-white mt-4 mb-2">
+        Showing users with name "<i>{getQuery()}</i>"
+      </h3>
+      <UserFeed
+        getFunction={queryUsers(getQuery()!, getPage(), setTotalPages)}
+        totalPages={totalPages}
+      />
+    </>
   );
 };
 
