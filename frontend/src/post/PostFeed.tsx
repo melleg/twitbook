@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react";
-import Post from "../post/post";
-import PostCard from "../post/PostCard";
-import PaginationControls from "./PaginationControls";
+import Post from "./post";
+import PostCard from "./PostCard";
+import PaginationControls from "../misc/PaginationControls";
 
 interface FeedProps {
   getFunction: Promise<Post[]>;
   totalPages: number;
 }
 
-const Feed: React.FC<FeedProps> = ({ getFunction, totalPages }) => {
+const PostFeed: React.FC<FeedProps> = ({ getFunction, totalPages }) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [posts, setPosts] = useState<Post[]>([]);
 
@@ -53,9 +53,9 @@ const Feed: React.FC<FeedProps> = ({ getFunction, totalPages }) => {
             <PostCard key={post.id} post={post} />
           ))}
       </Body>
-      <PaginationControls totalPages={totalPages}/>
+      <PaginationControls totalPages={totalPages} />
     </>
   );
 };
 
-export default Feed;
+export default PostFeed;

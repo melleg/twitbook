@@ -5,8 +5,8 @@ import User from "../user/user";
 import { useGlobalContext } from "../auth/GlobalContext";
 import { format } from "date-fns";
 import { getPostsByHashtag } from "../post/post-service";
-import PaginationControls from "../feed/PaginationControls";
-import Feed from "../feed/Feed";
+import PaginationControls from "../misc/PaginationControls";
+import PostFeed from "../post/PostFeed";
 
 const SearchResult: React.FC = () => {
   const [searchParams] = useSearchParams();
@@ -40,7 +40,7 @@ const SearchResult: React.FC = () => {
   // Hashtag results
   if (hashtagQuery) {
     return (
-      <Feed
+      <PostFeed
         getFunction={getPostsByHashtag(hashtagQuery, getPage(), setTotalPages)}
         totalPages={totalPages}
       />

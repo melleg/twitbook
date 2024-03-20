@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import User from "./user";
 import { useParams, useSearchParams } from "react-router-dom";
 import { followUser, getUserByUsername } from "./user-service";
-import Feed from "../feed/Feed";
+import PostFeed from "../post/PostFeed";
 import { getPostsByUser } from "../post/post-service";
 import { format } from "date-fns";
 import CreatePostComponent from "../post/CreatePostComponent";
@@ -121,7 +121,7 @@ function Profile() {
 
       {username === myUsername && <CreatePostComponent />}
 
-      <Feed
+      <PostFeed
         getFunction={getPostsByUser(user.username, getPage(), setTotalPages)}
         totalPages={totalPages}
       />
