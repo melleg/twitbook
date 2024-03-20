@@ -92,7 +92,9 @@ public class PostController {
       @AuthenticationPrincipal User user, Pageable pageable) {
 
     Optional<Hashtag> hashtag = hashtagService.findHashtagByText(hashtagText);
-    if(hashtag.isEmpty()) return ResponseEntity.notFound().build();
+    if(hashtag.isEmpty()) return ResponseEntity.ok(getPageable(pageable)); // Return empty page
+
+
 
     Page<Post> posts = postService.findByHashtag(hashtag.get(), getPageable(pageable));
     return ResponseEntity.ok(posts.map(p -> getPostDTO(p, user)));

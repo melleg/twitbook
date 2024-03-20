@@ -15,7 +15,7 @@ export const getPosts = async (
   setTotalPages: Dispatch<SetStateAction<number>>
 ) => {
   const response = (await api.get(`${uri}?page=${page}`)).data;
-  const posts: Post[] = response.content;
+  const posts: Post[] = response.content ?? [];
   setTotalPages(response.totalPages);
   posts.forEach((p: Post) => mapPost(p));
   return posts;
@@ -29,7 +29,7 @@ export const getPostsByUser = async (
   const response = (
     await api.get(`${uri}/by-username/${username}?page=${page}`)
   ).data;
-  const posts: Post[] = response.content;
+  const posts: Post[] = response.content ?? [];
   setTotalPages(response.totalPages);
   posts.forEach((p: Post) => mapPost(p));
   return posts;
@@ -40,7 +40,7 @@ export const getPostsByFollowing = async (
   setTotalPages: Dispatch<SetStateAction<number>>
 ) => {
   const response = (await api.get(`${uri}/by-following?page=${page}`)).data;
-  const posts: Post[] = response.content;
+  const posts: Post[] = response.content ?? [];
   setTotalPages(response.totalPages);
   posts.forEach((p: Post) => mapPost(p));
   return posts;
@@ -53,7 +53,7 @@ export const getPostsByHashtag = async (
 ) => {
   const response = (await api.get(`${uri}/by-hashtag/${hashtag}?page=${page}`))
     .data;
-  const posts: Post[] = response.content;
+  const posts: Post[] = response.content ?? [];
   setTotalPages(response.totalPages);
   posts.forEach((p: Post) => mapPost(p));
   return posts;
