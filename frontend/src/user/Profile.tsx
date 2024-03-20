@@ -20,6 +20,7 @@ function Profile() {
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [hasFollowed, setHasFollowed] = useState<boolean>(false);
   const [followers, setFollowers] = useState<number>(0);
+  const [imageSource, setImageSource] = useState<string>('');
 
   useEffect(() => {
     const loadUser = async () => {
@@ -30,6 +31,7 @@ function Profile() {
         setUser(userResponse);
         setHasFollowed(userResponse.hasFollowed);
         setFollowers(userResponse.numberOfFollowers);
+        setImageSource("data:" + userResponse.profileImage.mimeType + ";base64," + userResponse.profileImage.data);
         setErrorMessage("");
       } catch {
         setUser(null);
@@ -84,7 +86,7 @@ function Profile() {
           {/* Profile picture */}
           <img
             className="h-40 -mt-32 rounded-md aspect-square border-solid border-4 border-white"
-            src="https://picsum.photos/200"
+            src={imageSource || "https://picsum.photos/200"}
           ></img>
           {loggedIn && (username !== myUsername ? (
             <div>

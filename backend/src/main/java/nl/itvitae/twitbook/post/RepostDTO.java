@@ -1,5 +1,6 @@
 package nl.itvitae.twitbook.post;
 
+import nl.itvitae.twitbook.image.Image;
 import nl.itvitae.twitbook.user.User;
 
 import java.time.LocalDateTime;
@@ -11,6 +12,8 @@ public class RepostDTO {
   public String username;
 
   public String displayName;
+
+  public Image profileImage;
   public int type;
   public long likes;
   public long reposts;
@@ -28,6 +31,7 @@ public class RepostDTO {
     this.postedDate = post.getPostedDate();
     this.username = post.getPoster().getUsername();
     this.displayName = post.getPoster().getDisplayName();
+    this.profileImage = post.getPoster().getProfileImage();
     this.type = post.getType().ordinal();
     this.likes = post.getLikes().size();
     this.reposts = postInQuestion.getLinkedPosts().stream().filter(p -> p.getType().equals(Post.PostType.REPOST)).count();

@@ -7,6 +7,7 @@ import { useGlobalContext } from "../auth/GlobalContext";
 import { Globals } from "../globals";
 import ReplyComponent from "./ReplyComponent";
 import RenderText from "./RenderText";
+import Image from "../user/image";
 
 interface PostCardProps {
   post: Post;
@@ -101,7 +102,11 @@ const PostCard: React.FC<PostCardProps> = ({ post: postProp }) => {
       case PostType.POST:
         return (
           <>
-            <UserInfo displayName={post.displayName} username={post.username} />
+            <UserInfo
+              displayName={post.displayName}
+              username={post.username}
+              profileImage={post.profileImage}
+            />
             <RenderText content={post.content} />
             <BottomButtons post={post} />
           </>
@@ -116,6 +121,7 @@ const PostCard: React.FC<PostCardProps> = ({ post: postProp }) => {
             <UserInfo
               displayName={linkedPost.displayName}
               username={linkedPost.username}
+              profileImage={post.linkedPost.profileImage}
             />
             <span className="ml-2 text-light italic">
               • 🔁 by {post.username}
@@ -129,7 +135,11 @@ const PostCard: React.FC<PostCardProps> = ({ post: postProp }) => {
       case PostType.REPLY:
         return (
           <>
-            <UserInfo displayName={post.displayName} username={post.username} />
+            <UserInfo
+              displayName={post.displayName}
+              username={post.username}
+              profileImage={post.profileImage}
+            />
             <RenderText content={post.content} />
             <div className="rounded-lg border-green p-2 mt-1">
               {!linkedPost ? (
@@ -139,6 +149,7 @@ const PostCard: React.FC<PostCardProps> = ({ post: postProp }) => {
                   <UserInfo
                     displayName={linkedPost.displayName}
                     username={linkedPost.username}
+                    profileImage={post.linkedPost.profileImage}
                     small={true}
                   />
                   <RenderText content={linkedPost.content} />
@@ -155,6 +166,7 @@ const PostCard: React.FC<PostCardProps> = ({ post: postProp }) => {
   const UserInfo = (props: {
     displayName: string;
     username: string;
+    profileImage: Image;
     small?: boolean;
   }) => (
     <>
@@ -164,7 +176,12 @@ const PostCard: React.FC<PostCardProps> = ({ post: postProp }) => {
             "inline-block rounded-full aspect-square " +
             (props.small ? "w-6 mr-1" : "w-14 absolute left-3 top-3")
           }
-          src="https://picsum.photos/50"
+          src={
+            "data:" +
+              props.profileImage.mimeType +
+              ";base64," +
+              props.profileImage.data || "https://picsum.photos/50"
+          }
         ></img>
       </Link>
       <Link to={`/profile/${props.username}`} className="h4 mr-1">

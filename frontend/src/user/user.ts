@@ -1,3 +1,5 @@
+import Image from "./image";
+
 export default interface User {
   username: string;
   registerDate: Date;
@@ -6,4 +8,5 @@ export default interface User {
   numberOfFollowing: number;
   bio: string;
   displayName: string;
+  profileImage: Image;
 }

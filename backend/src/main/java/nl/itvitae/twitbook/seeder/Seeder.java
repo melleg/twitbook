@@ -54,11 +54,14 @@ public class Seeder implements CommandLineRunner {
   };
 
   @Override
-  public void run(String... args) {
-    User melle = saveUser("Melle", "Password", Role.ROLE_ADMIN);
-    User raafi = saveUser("Raafi", "Password", Role.ROLE_ADMIN);
-    User nol = saveUser("Nol", "Password", Role.ROLE_ADMIN);
-    User sjaakie = saveUser("sjaakie", "Password", Role.ROLE_USER);
+  public void run(String... args) throws Exception {
+
+    Image defaultimage = saveImage("hello.jpg");
+
+    User melle = saveUser("Melle", "Password", saveImage("trollface.jpg"), Role.ROLE_ADMIN);
+    User raafi = saveUser("Raafi", "Password", saveImage("raafi_pfp.jpg"), Role.ROLE_ADMIN);
+    User nol = saveUser("Nol", "Password",     saveImage("nol_pfp.jpg"), Role.ROLE_ADMIN);
+    User sjaakie = saveUser("sjaakie", "Password", defaultimage, Role.ROLE_USER);
 
     Post post1 = savePost("#Bingleblong", nol);
     Post post2 = savePost("Melle en Raafi zijn #chads #winning", sjaakie);
@@ -75,11 +78,6 @@ public class Seeder implements CommandLineRunner {
     followUser(sjaakie, raafi);
 
     likePost(post1, melle);
-    try {
-      saveImage();
-    } catch (Exception e) {
-      throw new RuntimeException(e);
-    }
 
   }
 
@@ -107,6 +105,10 @@ public class Seeder implements CommandLineRunner {
     return userRepository.save(new User(username, passwordEncoder.encode(password), roles));
   }
 
+  private User saveUser(String username, String password, Image profileImage, Role... roles) {
+    return userRepository.save(new User(username, passwordEncoder.encode(password), profileImage, roles));
+  }
+
   private Follow followUser(User follower, User following) {
     return followRepository.save(new Follow(follower, following));
   }
@@ -115,8 +117,9 @@ public class Seeder implements CommandLineRunner {
     return likeRepository.save(new Like(post, user));
   }
 
-  private void saveImage() throws Exception {
-    Image image = new Image("hello.jpg", "image/jpeg", Files.readAllBytes(Paths.get("src/main/resources/images/hello.jpg")));
-    imageRepository.save(image);
+  private Image saveImage(String filename) throws Exception {
+    Image image = new Image(filename, "image/jpeg",
+        Files.readAllBytes(Paths.get("src/main/resources/images/" + filename)));
+    return imageRepository.save(image);
   }
 }
