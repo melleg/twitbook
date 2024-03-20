@@ -121,7 +121,7 @@ const PostCard: React.FC<PostCardProps> = ({ post: postProp }) => {
             <UserInfo
               displayName={linkedPost.displayName}
               username={linkedPost.username}
-              profileImage={post.linkedPost.profileImage}
+              profileImage={post.linkedPost!.profileImage}
             />
             <span className="ml-2 text-light italic">
               • 🔁 by {post.username}
@@ -149,7 +149,7 @@ const PostCard: React.FC<PostCardProps> = ({ post: postProp }) => {
                   <UserInfo
                     displayName={linkedPost.displayName}
                     username={linkedPost.username}
-                    profileImage={post.linkedPost.profileImage}
+                    profileImage={post.linkedPost!.profileImage}
                     small={true}
                   />
                   <RenderText content={linkedPost.content} />
