@@ -3,6 +3,8 @@ package nl.itvitae.twitbook.post;
 import lombok.AllArgsConstructor;
 import nl.itvitae.twitbook.hashtag.HashtagService;
 import nl.itvitae.twitbook.user.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -15,8 +17,8 @@ public class PostService {
   private final PostRepository postRepository;
   private final HashtagService hashtagService;
 
-  public List<Post> findAll() {
-    return postRepository.findAll();
+  public Page<Post> findAll(Pageable pageable) {
+    return postRepository.findAll(pageable);
   }
 
   public Optional<Post> findById(Long id) {
@@ -56,9 +58,18 @@ public class PostService {
     return postRepository.save(post);
   }
 
-
   // Delete post
   public void deletePost(Post post) {
     postRepository.delete(post);
+  }
+
+  public Page<Post> getByAuthor(String username, Pageable pageable){
+    return postRepository.findByAuthor_UsernameIgnoreCase(username,
+        pageable);
+  }
+
+  public Page<Post> getByFollowing(String username, Pageable pageable){
+    return postRepository.findByAuthor_Followers_Follower_UsernameIgnoreCase(username,
+        pageable);
   }
 }

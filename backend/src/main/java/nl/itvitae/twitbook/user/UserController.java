@@ -46,15 +46,15 @@ public class UserController {
             targetUser.get().getId())), HttpStatus.OK);
   }
 
-  private record UserUsernameBioOnly(String newDisplayName, String newBio) {
+  private record UserUsernameBioOnly(String displayName, String bio) {
 
   }
 
   @PatchMapping("profile")
   public ResponseEntity<?> editProfile(@RequestBody UserUsernameBioOnly userUsernameBioOnly,
       @AuthenticationPrincipal User user) {
-    user.setDisplayName(userUsernameBioOnly.newDisplayName());
-    user.setBio(userUsernameBioOnly.newBio());
+    user.setDisplayName(userUsernameBioOnly.displayName());
+    user.setBio(userUsernameBioOnly.bio());
     userRepository.save(user);
     return ResponseEntity.ok().build();
   }
