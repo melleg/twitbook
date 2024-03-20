@@ -25,9 +25,7 @@ const SearchResult: React.FC = () => {
       // Search for user
       if (generalQuery) {
         const results = await queryUsers(generalQuery, page, setTotalPages);
-        setUsers(
-          results.filter((user) => user.displayName.includes(generalQuery))
-        );
+        setUsers(results);
       }
     };
     resultHandler();
