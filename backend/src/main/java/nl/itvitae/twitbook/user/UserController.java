@@ -27,7 +27,7 @@ public class UserController {
   private final UserRepository userRepository;
   private final FollowRepository followRepository;
 
-  private static final int PAGE_SIZE = 1;
+  private static final int PAGE_SIZE = 4;
 
   private PageRequest getPageable(Pageable pageable) {
     return PageRequest.of(
