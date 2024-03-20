@@ -16,17 +16,17 @@ const SearchResult: React.FC = () => {
       if (!query) return;
 
       const res = await getUsers();
-      setResults(res.filter((User) => User.displayName.includes?.(query)));
+      setResults(res.filter((user) => user.displayName.includes?.(query)));
     };
     resultHandler();
   }, [refresh]);
 
   return (
-    <div className="flex flex-col gap-2 mt-2 mb-4">
+    <div className="flex flex-col gap-3 mt-2 mb-4">
       {results.map((user) => (
         <div
           key={user.username}
-          className="my-2 py-2 pl-4 pr-4 glass rounded-lg text-left text-light gap-2 flex "
+          className="py-2 pl-4 pr-4 glass rounded-lg text-left text-light gap-2 flex "
         >
           <Link to={`/profile/${user.displayName}`}>
             <img
