@@ -1,13 +1,12 @@
 package nl.itvitae.twitbook.post;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import lombok.AllArgsConstructor;
 
-import nl.itvitae.twitbook.follow.Follow;
-import nl.itvitae.twitbook.follow.FollowRepository;
+import nl.itvitae.twitbook.hashtag.Hashtag;
+import nl.itvitae.twitbook.hashtag.HashtagService;
 import nl.itvitae.twitbook.like.Like;
 import nl.itvitae.twitbook.like.LikeRepository;
 import nl.itvitae.twitbook.user.User;
@@ -41,6 +40,7 @@ public class PostController {
   private final PostService postService;
   private final UserRepository userRepository;
   private final LikeRepository likeRepository;
+  private final HashtagService hashtagService;
 
   private static final int PAGE_SIZE = 4;
 
@@ -87,6 +87,17 @@ public class PostController {
     return ResponseEntity.ok(posts.map(p -> getPostDTO(p, user)));
   }
 
+  @GetMapping("by-hashtag/{hashtagText}")
+  public ResponseEntity<?> queryByHashtag(@PathVariable String hashtagText,
+      @AuthenticationPrincipal User user, Pageable pageable) {
+
+    Optional<Hashtag> hashtag = hashtagService.findHashtagByText(hashtagText);
+    if(hashtag.isEmpty()) return ResponseEntity.notFound().build();
+
+    Page<Post> posts = postService.findByHashtag(hashtag.get(), getPageable(pageable));
+    return ResponseEntity.ok(posts.map(p -> getPostDTO(p, user)));
+  }
+
   @PostMapping
   public ResponseEntity<?> createPost(@RequestBody PostModel model, UriComponentsBuilder uriBuilder,
       @AuthenticationPrincipal User user) {
@@ -130,7 +141,7 @@ public class PostController {
     }
 
     // If we have reposted already, remove repost
-    Optional<Post> repostCheck = postService.findByTypeAndLinkedPostAndAuthor_UsernameIgnoreCase(
+    Optional<Post> repostCheck = postService.findByTypeAndLinkedPostAndUsername(
         Post.PostType.REPOST, originalPost.get(), user.getUsername());
 
     if (repostCheck.isPresent()) {

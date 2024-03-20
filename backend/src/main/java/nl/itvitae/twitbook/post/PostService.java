@@ -1,14 +1,13 @@
 package nl.itvitae.twitbook.post;
 
 import lombok.AllArgsConstructor;
+import nl.itvitae.twitbook.hashtag.Hashtag;
 import nl.itvitae.twitbook.hashtag.HashtagService;
 import nl.itvitae.twitbook.user.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -21,16 +20,14 @@ public class PostService {
     return postRepository.findAll(pageable);
   }
 
+  public Page<Post> findByHashtag(Hashtag hashtag, Pageable pageable) { return postRepository.findByHashtagsContaining(hashtag, pageable); }
+
   public Optional<Post> findById(Long id) {
     return postRepository.findById(id);
   }
 
-  public Optional<Post> findByTypeAndLinkedPostAndAuthor_UsernameIgnoreCase(Post.PostType postType, Post linkedPost, String username) {
+  public Optional<Post> findByTypeAndLinkedPostAndUsername(Post.PostType postType, Post linkedPost, String username) {
     return postRepository.findByTypeAndLinkedPostAndAuthor_UsernameIgnoreCase(postType, linkedPost, username);
-  }
-
-  public List<Post> findByAuthor_UsernameIgnoreCase(String username) {
-    return postRepository.findByAuthor_UsernameIgnoreCase(username);
   }
 
   // Save regular post
