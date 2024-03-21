@@ -23,7 +23,7 @@ const SearchBar: React.FC = () => {
     <>
       <form
         onSubmit={searchHandler}
-        className="search-bar flex basis-72 text-lg gap-1 w-full py-1"
+        className="search-bar flex basis-72 text-lg gap-1 w-full"
       >
         <input
           type="textarea"

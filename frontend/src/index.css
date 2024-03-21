@@ -130,6 +130,7 @@ input {
     background-color: var(--green-hover);
     border-radius: 1rem;
     border: 2px solid transparent;
+    line-height: 1;
 
     &::placeholder {
       color: var(--green-activated);

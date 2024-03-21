@@ -8,7 +8,7 @@ const NavBar = () => {
   return (
     <>
       <nav className="sticky top-0 w-full z-10 px-4 nav-bg text-white">
-        <div className="width-medium mx-auto flex items-center justify-between gap-4">
+        <div className="width-medium mx-auto  h-12 flex items-center justify-between gap-4">
           {/* Left content */}
           <div className="flex-grow basis-10 flex items-center">
             <Link to="/" className="w-8 flex-shrink-0">
