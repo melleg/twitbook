@@ -19,9 +19,7 @@ const NavBar = () => {
             </Link>
           </div>
           {/* Middle content */}
-          <div className="basis-80 text-lg flex items-center justify-between gap-4">
-            <SearchBar />
-          </div>
+          <SearchBar />
           {/* Right content */}
           <div className="flex-grow basis-0 font-medium text-xl flex justify-end items-center gap-2">
             {loggedIn ? (

@@ -124,11 +124,19 @@ input {
 }
 
 .search-bar {
-  background-color: var(--green-hover);
-  border-radius: 1rem;
+  transition: flex-basis 0.4s;
 
-  &::placeholder {
-    color: var(--green-activated);
+  & .search-input {
+    background-color: var(--green-hover);
+    border-radius: 1rem;
+
+    &::placeholder {
+      color: var(--green-activated);
+    }
+  }
+
+  &:has(.search-input:focus) {
+    flex-basis: 22.5rem;
   }
 }
 
