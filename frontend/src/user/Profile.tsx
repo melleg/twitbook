@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import User from "./user";
-import { useParams, useSearchParams } from "react-router-dom";
+import { Link, useParams, useSearchParams } from "react-router-dom";
 import { followUser, getUserByUsername } from "./user-service";
 import Feed from "../feed/Feed";
 import { getPostsByUser } from "../post/post-service";
@@ -118,7 +118,7 @@ function Profile() {
           </div>
           <p>{user.bio}</p>
           <p>Followers: {followers}</p>
-          <p>Following: {user.numberOfFollowing}</p>
+          <Link to={`/profile/${user.username}/follows`}>Following: {user.numberOfFollowing}</Link>
         </div>
       </div>
 
