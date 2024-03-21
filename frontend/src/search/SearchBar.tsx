@@ -27,7 +27,7 @@ const SearchBar: React.FC = () => {
       >
         <input
           type="textarea"
-          placeholder="Search for user or #hashtag"
+          placeholder="Search user or #hashtag..."
           value={search}
           className="w-0 flex-grow flex-shrink search-input"
           onChange={(e) => setSearch(e.target.value)}
