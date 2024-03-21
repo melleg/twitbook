@@ -17,6 +17,6 @@ public class Hashtag {
   private String text;
 
   public Hashtag(String text) {
-    this.text = text;
+    this.text = text.startsWith("#") ? text.substring(1) : text;
   }
 }

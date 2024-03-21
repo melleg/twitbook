@@ -11,7 +11,6 @@ function App() {
   const [postReplying, setPostReplying] = useState<Post | null>(null);
   const [refresh, setRefresh] = useState<number>(0);
 
-
   return (
     <MyGlobalContext.Provider
       value={{
@@ -28,12 +27,7 @@ function App() {
       }}
     >
       <NavBar />
-      <div
-        className="mx-auto text-lg"
-        style={{
-          width: "min(50rem, calc(100% - 20px))",
-        }}
-      >
+      <div className="mx-auto text-lg width-medium">
         <Outlet />
       </div>
     </MyGlobalContext.Provider>
