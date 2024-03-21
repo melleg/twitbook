@@ -43,6 +43,6 @@ public class ImageController {
     var uri = uriBuilder.path("api/v1/images/{filename}")
         .buildAndExpand(image.getFilename())
         .toUri();
-    return ResponseEntity.created(uri).body(imageRepository.save(image).getFilename());
+    return ResponseEntity.created(uri).body(image.getFilename());
   }
 }

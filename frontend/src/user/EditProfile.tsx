@@ -8,7 +8,7 @@ const EditProfile: React.FC<ProfileModel> = ({ displayName, bio }) => {
   const [newDisplayName, setNewDisplayName] = useState<string>(displayName);
   const [newBio, setNewBio] = useState<string>(bio ?? "");
   const [errorMessage, setErrorMessage] = useState<string>("");
-  const [newImage, setNewImage] = useState<Blob | MediaSource>();
+  const [newImage, setNewImage] = useState<Blob>();
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
@@ -16,11 +16,10 @@ const EditProfile: React.FC<ProfileModel> = ({ displayName, bio }) => {
     const model: ProfileModel = {
       displayName: newDisplayName,
       bio: newBio,
-      profileImage: newImage
     };
 
     try {
-      await updateProfile(model);
+      await updateProfile(model, newImage!);
     } catch (err) {
       setErrorMessage("Unable to update profile");
     }

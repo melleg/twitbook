@@ -21,7 +21,7 @@ public class ImageService {
         .mimeType(file.getContentType())
         .data(file.getBytes())
         .build();
-    return image;
+    return imageRepository.save(image);
   }
 
   public Optional<Image> getByFilename(String filename) {
