@@ -8,6 +8,7 @@ import { Globals } from "../globals";
 import ReplyComponent from "./ReplyComponent";
 import RenderText from "./RenderText";
 import Image from "../user/image";
+import defaultImage from './../../public/default.jpg'
 
 interface PostCardProps {
   post: Post;
@@ -177,7 +178,7 @@ const PostCard: React.FC<PostCardProps> = ({ post: postProp }) => {
             (props.small ? "w-6 mr-1" : "w-14 absolute left-3 top-3")
           }
           src={
-            props.profileImage ? `data:${props.profileImage.mimeType};base64,${props.profileImage.data}` : "https://picsum.photos/50"
+            props.profileImage ? `data:${props.profileImage.mimeType};base64,${props.profileImage.data}` : defaultImage
           }
         ></img>
       </Link>

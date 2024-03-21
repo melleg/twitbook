@@ -2,8 +2,6 @@ package nl.itvitae.twitbook.user;
 
 import java.time.LocalDateTime;
 import nl.itvitae.twitbook.image.Image;
-import org.springframework.core.io.ByteArrayResource;
-import org.springframework.core.io.Resource;
 
 public record UserDTO(String username, String displayName, LocalDateTime registerDate,
                       boolean hasFollowed, int numberOfFollowers, int numberOfFollowing,
