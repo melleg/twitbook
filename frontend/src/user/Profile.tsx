@@ -9,7 +9,7 @@ import CreatePostComponent from "../post/CreatePostComponent";
 import { useGlobalContext } from "../auth/GlobalContext";
 import EditProfile from "./EditProfile";
 import Popup from "reactjs-popup";
-import defaultImage from './../../public/default.jpg'
+import defaultImage from '/default.jpg'
 
 function Profile() {
   const { username } = useParams();

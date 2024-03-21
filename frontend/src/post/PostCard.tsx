@@ -8,7 +8,7 @@ import { Globals } from "../globals";
 import ReplyComponent from "./ReplyComponent";
 import RenderText from "./RenderText";
 import Image from "../user/image";
-import defaultImage from './../../public/default.jpg'
+import defaultImage from '/default.jpg'
 
 interface PostCardProps {
   post: Post;
