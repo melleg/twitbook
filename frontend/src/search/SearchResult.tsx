@@ -11,19 +11,11 @@ const SearchResult: React.FC = () => {
   const { refresh } = useGlobalContext();
   const [totalPages, setTotalPages] = useState<number>(0);
 
-  const getHashtagQuery = () => {
-    return searchParams.get("h");
-  };
-
-  const getQuery = () => {
-    return searchParams.get("q");
-  };
-
   useEffect(() => {}, [refresh, searchParams]);
 
-  const getPage = () => {
-    return parseInt(searchParams.get("page") ?? "0");
-  };
+  const getHashtagQuery = () => searchParams.get("h");
+  const getQuery = () => searchParams.get("q");
+  const getPage = () => parseInt(searchParams.get("page") ?? "0");
 
   // Hashtag results
   if (getHashtagQuery()) {
