@@ -33,22 +33,24 @@ const PaginationControls: React.FC<PaginationProps> = ({ totalPages }) => {
   };
 
   return (
-    <div className="flex justify-center gap-6 mb-2">
-      {checkIfFirstPage() ? (
-        <div></div>
-      ) : (
-        <PageButton page={getPage() - 1} text="Previous" />
-      )}
-      <div className="flex gap-1">
-        <div>
+    <div className="max-w-xl mx-auto flex flex-wrap justify-center gap-6 mb-2">
+      <div className="flex-grow basis-0">
+        {!checkIfFirstPage() && (
+          <PageButton page={getPage() - 1} text="Previous" />
+        )}
+      </div>
+      <div className="flex gap-1 ml-auto mr-auto">
+        <div className="w-10">
           {!checkIfFirstPage() && (
             <PageButton page={getPage() - 1} text={getPage().toString()} />
           )}
         </div>
 
-        <PageButton page={getPage()} text={(getPage() + 1).toString()} />
+        <div className="w-10">
+          <PageButton page={getPage()} text={(getPage() + 1).toString()} />
+        </div>
 
-        <div>
+        <div className="w-10">
           {!checkIfLastPage() && (
             <PageButton
               page={getPage() + 1}
@@ -57,11 +59,9 @@ const PaginationControls: React.FC<PaginationProps> = ({ totalPages }) => {
           )}
         </div>
       </div>
-      {checkIfLastPage() ? (
-        <div></div>
-      ) : (
-        <PageButton page={getPage() + 1} text="Next" />
-      )}
+      <div className="flex-grow basis-0 flex justify-end">
+        {!checkIfLastPage() && <PageButton page={getPage() + 1} text="Next" />}
+      </div>
     </div>
   );
 };
