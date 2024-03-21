@@ -30,7 +30,7 @@ const SearchBar: React.FC = () => {
           onChange={(e) => setSearch(e.target.value)}
         ></input>
         <button className="btn-action" type="submit">
-          Search
+          🔎
         </button>
       </form>
     </>

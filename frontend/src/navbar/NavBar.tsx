@@ -7,17 +7,20 @@ const NavBar = () => {
 
   return (
     <>
-      <nav className="sticky top-0 w-full z-10 text-xl font-medium px-4 flex justify-between gap-2 nav-bg text-white">
+      <nav className="sticky top-0 w-full z-10 px-4 flex justify-between gap-2 nav-bg text-white">
         {/* Left content */}
-        <Link to="/" className="flex-grow basis-0 flex items-center">
+        <Link
+          to="/"
+          className="flex-grow basis-0 font-medium text-xl flex items-center"
+        >
           twitbook
         </Link>
         {/* Middle content */}
-        <div className="width-medium flex">
+        <div className="width-medium text-lg flex">
           <SearchBar />
         </div>
         {/* Right content */}
-        <div className="flex-grow basis-0 flex justify-end items-center gap-2">
+        <div className="flex-grow basis-0 font-medium text-xl flex justify-end items-center gap-2">
           {loggedIn ? (
             <>
               <Link to={`/profile/${myUsername}`}>Profile</Link>
