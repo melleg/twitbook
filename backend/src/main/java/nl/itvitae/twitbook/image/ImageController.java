@@ -1,5 +1,6 @@
 package nl.itvitae.twitbook.image;
 
+import java.util.Optional;
 import lombok.AllArgsConstructor;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
@@ -23,24 +24,21 @@ import org.springframework.web.util.UriComponentsBuilder;
 public class ImageController {
 
   private final ImageRepository imageRepository;
+  private final ImageService imageService;
 
   @GetMapping("{filename}")
   public ResponseEntity<Resource> getImage(@PathVariable String filename) {
-    Image image = imageRepository.findByFilename(filename).get();
-    return ResponseEntity.ok().header(HttpHeaders.CONTENT_TYPE, image.getMimeType())
-        .body(new ByteArrayResource(image.getData()));
+    Optional<Image> optionalImage = imageService.getByFilename(filename);
+    if (optionalImage.isEmpty()) {
+      return ResponseEntity.notFound().build();
+    }
+    return ResponseEntity.ok().header(HttpHeaders.CONTENT_TYPE, optionalImage.get().getMimeType())
+        .body(new ByteArrayResource(optionalImage.get().getData()));
   }
 
   @PostMapping("upload")
   public ResponseEntity<?> uploadImage(@RequestPart MultipartFile file, UriComponentsBuilder uriBuilder) throws Exception {
-    if (imageRepository.existsByFilename(file.getOriginalFilename())) {
-      return new ResponseEntity<>(null, HttpStatus.CONFLICT);
-    }
-    var image = Image.builder()
-        .filename(file.getOriginalFilename())
-        .mimeType(file.getContentType())
-        .data(file.getBytes())
-        .build();
+    var image = imageService.uploadImage(file);
 
     var uri = uriBuilder.path("api/v1/images/{filename}")
         .buildAndExpand(image.getFilename())
