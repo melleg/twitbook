@@ -130,7 +130,20 @@ button {
 .search-bar {
   transition: flex-basis 0.4s;
 
-  & .search-input {
+  &:focus-within {
+    flex-basis: 22.5rem;
+
+    & button {
+      opacity: 1;
+    }
+  }
+
+  & button {
+    opacity: 0;
+    transition: opacity 0.15s;
+  }
+
+  & input {
     background-color: var(--green-hover);
     border-radius: 1rem;
     border: 2px solid transparent;
@@ -144,10 +157,6 @@ button {
       outline: none;
       border-color: var(--green-activated);
     }
-  }
-
-  &:has(.search-input:focus-visible) {
-    flex-basis: 22.5rem;
   }
 }
 
