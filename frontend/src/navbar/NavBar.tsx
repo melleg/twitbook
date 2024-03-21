@@ -11,7 +11,13 @@ const NavBar = () => {
         <div className="width-medium mx-auto flex items-center justify-between gap-4">
           {/* Left content */}
           <div className="flex-grow basis-0 flex items-center">
-            <Link to="/">twitbook</Link>
+            <Link to="/">
+              <img
+                src="/public/favicon.ico"
+                style={{ filter: "grayscale(0.4) brightness(1.7)" }}
+                className="h-8"
+              ></img>
+            </Link>
           </div>
           {/* Middle content */}
           <div className="basis-80 text-lg flex items-center justify-between gap-4">
