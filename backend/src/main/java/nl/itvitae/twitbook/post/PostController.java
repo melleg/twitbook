@@ -82,7 +82,7 @@ public class PostController {
       return ResponseEntity.notFound().build();
     }
 
-    Page<Post> posts = postService.getByAuthor(findUser.get().getUsername(),
+    Page<Post> posts = postService.getByPoster(findUser.get().getUsername(),
         getPageable(pageable));
     return ResponseEntity.ok(posts.map(p -> getPostDTO(p, user)));
   }
@@ -143,7 +143,7 @@ public class PostController {
     }
 
     // If we have reposted already, remove repost
-    Optional<Post> repostCheck = postService.findByTypeAndLinkedPostAndUsername(
+    Optional<Post> repostCheck = postService.findByTypeAndLinkedPostAndPoster_UsernameIgnoreCase(
         Post.PostType.REPOST, originalPost.get(), user.getUsername());
 
     if (repostCheck.isPresent()) {
@@ -171,7 +171,7 @@ public class PostController {
     var userRoles = List.of(user.getRoles());
 
     if (userRoles.contains(Role.ROLE_ADMIN) || (userRoles.contains(Role.ROLE_USER) && post.get()
-        .getAuthor().getId().equals(user.getId()))) {
+        .getPoster().getId().equals(user.getId()))) {
       postService.deletePost(post.get());
       return ResponseEntity.noContent().build();
     }

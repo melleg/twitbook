@@ -13,7 +13,6 @@ import lombok.Setter;
 import nl.itvitae.twitbook.hashtag.Hashtag;
 import nl.itvitae.twitbook.like.Like;
 import nl.itvitae.twitbook.user.User;
-import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -33,7 +32,7 @@ public class Post {
 
   @ManyToOne
   @OnDelete(action = OnDeleteAction.CASCADE) // If user is removed, this post is removed. Or it's empty...?
-  private User author;
+  private User poster;
 
   @OneToMany(mappedBy = "post", orphanRemoval = true)
   private Set<Like> likes = new HashSet<>();
@@ -58,9 +57,9 @@ public class Post {
     REPLY,
   }
 
-  public Post(String content, User author) {
+  public Post(String content, User poster) {
     this.content = content;
-    this.author = author;
+    this.poster = poster;
     this.postedDate = LocalDateTime.now();
   }
 }
