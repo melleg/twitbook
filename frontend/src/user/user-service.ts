@@ -13,11 +13,11 @@ export const getUserByUsername = async (username: string) => {
 };
 
 export const getFollowers = async (username: string) => {
-  return (await api.get<User>(`${uri}/followers-by-username/${username}`)).data;
+  return (await api.get<User[]>(`${uri}/followers-by-username/${username}`)).data;
 };
 
 export const getFollowing = async (username: string) => {
-  return (await api.get<User>(`${uri}/following-by-username/${username}`)).data;
+  return (await api.get<User[]>(`${uri}/following-by-username/${username}`)).data;
 };
 
 export const followUser = async (followUsername: string) => {
