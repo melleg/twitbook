@@ -16,7 +16,10 @@ const NavBar = () => {
           twitbook
         </Link>
         {/* Middle content */}
-        <div className="width-medium text-lg flex">
+        <div className="width-medium text-lg flex items-center justify-between gap-4">
+          <Link className="font-medium text-xl" to="/">
+            All Posts
+          </Link>
           <SearchBar />
         </div>
         {/* Right content */}
