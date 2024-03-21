@@ -1,6 +1,5 @@
 package nl.itvitae.twitbook.user;
 
-import java.util.List;
 import java.util.Optional;
 
 import lombok.AllArgsConstructor;
@@ -10,7 +9,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.domain.Sort.Direction;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -35,12 +33,19 @@ public class UserController {
     return PageRequest.of(
         pageable.getPageNumber(),
         Math.min(pageable.getPageSize(), PAGE_SIZE),
-        Sort.by(Direction.ASC, "displayName"));
+        Sort.by(Sort.Direction.DESC, "displayName"));
   }
 
   @GetMapping
-  public List<UserDTO> getAll() {
-    return userRepository.findAll().stream().map(UserDTO::new).toList();
+  public ResponseEntity<?> getAll(Pageable pageable) {
+    Page<User> users = userRepository.findAll(getPageable(pageable));
+    return ResponseEntity.ok(users.map(UserDTO::new));
+  }
+
+  @GetMapping("search/{query}")
+  public ResponseEntity<?> queryByDisplayName(@PathVariable String query, Pageable pageable) {
+    Page<User> users = userRepository.findByDisplayNameContainingIgnoreCase(query, getPageable(pageable));
+    return ResponseEntity.ok(users.map(UserDTO::new));
   }
 
   @GetMapping("by-username/{username}")

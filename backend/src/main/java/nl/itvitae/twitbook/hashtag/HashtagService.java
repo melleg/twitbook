@@ -1,6 +1,8 @@
 package nl.itvitae.twitbook.hashtag;
 
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -21,6 +23,8 @@ public class HashtagService {
     Pattern pattern = Pattern.compile("(#(\\w)+)");
     Matcher matcher = pattern.matcher(post.getContent());
 
+    Set<Hashtag> hashtags = new HashSet<>();
+
     while (matcher.find()) {
       String group = matcher.group();
 
@@ -28,7 +32,11 @@ public class HashtagService {
       Hashtag hashtag = findHashtagByText(group)
           .orElse(hashtagRepository.save(new Hashtag(group)));
 
+      hashtags.add(hashtag);
+
       System.out.println("Found/created hashTag: " + hashtag.getText());
     }
+
+    post.setHashtags(hashtags);
   }
 }

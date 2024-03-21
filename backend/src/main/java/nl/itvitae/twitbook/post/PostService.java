@@ -1,6 +1,7 @@
 package nl.itvitae.twitbook.post;
 
 import lombok.AllArgsConstructor;
+import nl.itvitae.twitbook.hashtag.Hashtag;
 import nl.itvitae.twitbook.hashtag.HashtagService;
 import nl.itvitae.twitbook.user.User;
 import org.springframework.data.domain.Page;
@@ -19,6 +20,8 @@ public class PostService {
   public Page<Post> findAll(Pageable pageable) {
     return postRepository.findAll(pageable);
   }
+
+  public Page<Post> findByHashtag(Hashtag hashtag, Pageable pageable) { return postRepository.findByHashtagsContaining(hashtag, pageable); }
 
   public Optional<Post> findById(Long id) {
     return postRepository.findById(id);
