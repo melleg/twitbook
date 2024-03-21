@@ -19,13 +19,19 @@ const PaginationControls: React.FC<PaginationProps> = ({ totalPages }) => {
   const checkIfLastPage = () => getPage() === totalPages - 1;
   const checkIfFirstPage = () => getPage() === 0;
 
-  const PageButton = (props: { page: number; text: string }) => {
+  const PageButton = (props: {
+    page: number;
+    text: string;
+    className?: string;
+    disabled?: boolean;
+  }) => {
     return (
       <button
-        className="btn-action"
+        className={`${props.className ?? ""}`}
         onClick={() => {
           setPage(props.page);
         }}
+        disabled={props.disabled}
       >
         {props.text}
       </button>
@@ -33,34 +39,43 @@ const PaginationControls: React.FC<PaginationProps> = ({ totalPages }) => {
   };
 
   return (
-    <div className="max-w-xl mx-auto flex flex-wrap justify-center gap-6 mb-2">
-      <div className="flex-grow basis-0">
-        {!checkIfFirstPage() && (
-          <PageButton page={getPage() - 1} text="Previous" />
-        )}
-      </div>
-      <div className="flex gap-1 ml-auto mr-auto">
-        <div className="w-10">
-          {!checkIfFirstPage() && (
-            <PageButton page={getPage() - 1} text={getPage().toString()} />
-          )}
-        </div>
-
-        <div className="w-10">
-          <PageButton page={getPage()} text={(getPage() + 1).toString()} />
-        </div>
-
-        <div className="w-10">
-          {!checkIfLastPage() && (
-            <PageButton
-              page={getPage() + 1}
-              text={(getPage() + 2).toString()}
-            />
-          )}
-        </div>
-      </div>
+    <div className="flex flex-wrap justify-center gap-2 mb-2">
       <div className="flex-grow basis-0 flex justify-end">
-        {!checkIfLastPage() && <PageButton page={getPage() + 1} text="Next" />}
+        <PageButton
+          page={getPage() - 1}
+          text="❮"
+          disabled={checkIfFirstPage()}
+          className="btn-transparent"
+        />
+      </div>
+      <div className="flex gap-1">
+        <PageButton
+          page={getPage() - 1}
+          text={getPage().toString()}
+          disabled={checkIfFirstPage()}
+          className="btn-action"
+        />
+
+        <PageButton
+          page={getPage()}
+          text={(getPage() + 1).toString()}
+          className="btn-action activated"
+        />
+
+        <PageButton
+          page={getPage() + 1}
+          text={(getPage() + 2).toString()}
+          disabled={checkIfLastPage()}
+          className="btn-action"
+        />
+      </div>
+      <div className="flex-grow basis-0 flex justify-start">
+        <PageButton
+          page={getPage() + 1}
+          text="❯"
+          disabled={checkIfLastPage()}
+          className="btn-transparent"
+        />
       </div>
     </div>
   );

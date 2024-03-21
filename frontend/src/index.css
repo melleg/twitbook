@@ -6,9 +6,12 @@
   --action: #72ddff;
   --action-hover: #58c9ec;
   --text-light: #545454;
+  --text-transparent: #ffffff6e;
   --grey: rgb(196, 196, 196);
   --grey-light: #ebebeb;
   --green-light: #51f903;
+  --green-activated: #aaff16;
+  --green-disabled: #b6ceac;
   --green-hover: #46d802;
   --green-dark: #2f9102ce;
   --glass: white;
@@ -82,12 +85,21 @@ input {
   padding: 0.35rem 0.95rem;
   font-weight: bold;
   color: white;
-  background-color: var(--green-light) !important;
+  background-color: var(--green-light);
   border-radius: 0.9rem;
   text-align: center;
 
   &:hover {
-    background-color: var(--green-hover) !important;
+    background-color: var(--green-hover);
+  }
+
+  &.activated {
+    background-color: var(--green-activated);
+  }
+
+  &:disabled {
+    background-color: var(--green-disabled) !important;
+    color: var(--text-transparent);
   }
 }
 
@@ -98,6 +110,26 @@ input {
 
   &:hover {
     font-weight: 700;
+  }
+
+  &.activated {
+    color: var(--purple);
+  }
+}
+
+.btn-transparent {
+  color: white;
+  background-color: transparent;
+  aspect-ratio: 1;
+  font-weight: 600;
+  border-radius: 100%;
+
+  &:hover {
+    background-color: var(--text-transparent);
+  }
+
+  &:disabled {
+    color: var(--text-transparent);
   }
 }
 
@@ -149,7 +181,6 @@ a {
 }
 
 .activated {
-  color: var(--purple);
   font-weight: bold;
 }
 
