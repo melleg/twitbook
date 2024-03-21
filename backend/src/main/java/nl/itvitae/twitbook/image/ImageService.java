@@ -1,6 +1,7 @@
 package nl.itvitae.twitbook.image;
 
-import java.util.Map;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Optional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -13,11 +14,10 @@ public class ImageService {
   private final ImageRepository imageRepository;
 
   public Image uploadImage(MultipartFile file) throws Exception {
-    if (imageRepository.existsByFilename(file.getOriginalFilename())) {
-      return null;
-    }
+    var sdf = new SimpleDateFormat("ddMMyy-hhmmss-SSS");
+
     var image = Image.builder()
-        .filename(file.getOriginalFilename())
+        .filename(sdf.format(new Date()) + ".jpg")
         .mimeType(file.getContentType())
         .data(file.getBytes())
         .build();

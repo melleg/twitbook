@@ -27,7 +27,7 @@ public class ImageController {
   private final ImageService imageService;
 
   @GetMapping("{filename}")
-  public ResponseEntity<Resource> getImage(@PathVariable String filename) {
+  public ResponseEntity<Resource> getByFilename(@PathVariable String filename) {
     Optional<Image> optionalImage = imageService.getByFilename(filename);
     if (optionalImage.isEmpty()) {
       return ResponseEntity.notFound().build();
