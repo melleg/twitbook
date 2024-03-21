@@ -118,8 +118,10 @@ public class Seeder implements CommandLineRunner {
   }
 
   private Image saveImage(String filename) throws Exception {
-    Image image = new Image(filename, "image/jpeg",
-        Files.readAllBytes(Paths.get("src/main/resources/images/" + filename)));
+    Image image = new Image();
+    image.setFilename(filename);
+    image.setMimeType("image/jpeg");
+    image.setData(Files.readAllBytes(Paths.get("src/main/resources/images/" + filename)));
     return imageRepository.save(image);
   }
 }

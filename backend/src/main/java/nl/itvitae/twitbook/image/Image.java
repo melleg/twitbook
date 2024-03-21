@@ -5,11 +5,15 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Entity
 @Data
+@Entity
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor
 public class Image {
 
@@ -23,10 +27,4 @@ public class Image {
   private String mimeType;
 
   private byte[] data;
-
-  public Image(String filename, String mimeType, byte[] data) {
-    this.filename = filename;
-    this.mimeType = mimeType;
-    this.data = data;
-  }
 }
