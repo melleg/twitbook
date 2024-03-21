@@ -9,11 +9,9 @@ const NavBar = () => {
     <>
       <nav className="sticky top-0 w-full z-10 px-4 nav-bg text-white">
         <div className="width-medium mx-auto flex items-center justify-between gap-4">
-          <div className="flex-grow basis-0">
-            {/* Left content */}
-            <Link to="/" className="font-medium text-xl flex items-center">
-              twitbook
-            </Link>
+          {/* Left content */}
+          <div className="flex-grow basis-0 flex items-center">
+            <Link to="/">twitbook</Link>
           </div>
           {/* Middle content */}
           <div className="basis-80 text-lg flex items-center justify-between gap-4">
@@ -29,7 +27,6 @@ const NavBar = () => {
             ) : (
               <>
                 <Link to="/login">Login</Link>
-                <Link to="/register">Register</Link>
               </>
             )}
           </div>
