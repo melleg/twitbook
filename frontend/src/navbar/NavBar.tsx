@@ -3,12 +3,12 @@ import { useGlobalContext } from "../auth/GlobalContext";
 import SearchBar from "../search/SearchBar";
 
 const NavBar = () => {
-  const { loggedIn, myUsername } = useGlobalContext();
+  const { loggedIn, myUsername, setRefresh, refresh } = useGlobalContext();
 
   return (
     <>
       <nav className="sticky top-0 w-full z-10 text-xl font-medium flex nav-bg text-white">
-        <Link to="/" className="p-3 mr-auto">
+        <Link to="/" className="p-3 mr-auto" onClick={() => setRefresh(refresh + 1)}>
           twitbook
         </Link>
         <SearchBar />
