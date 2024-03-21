@@ -19,58 +19,48 @@ const PaginationControls: React.FC<PaginationProps> = ({ totalPages }) => {
   const checkIfLastPage = () => getPage() === totalPages - 1;
   const checkIfFirstPage = () => getPage() === 0;
 
+  const PageButton = (props: { page: number; text: string }) => {
+    return (
+      <button
+        className="btn-action"
+        onClick={() => {
+          setPage(props.page);
+        }}
+      >
+        {props.text}
+      </button>
+    );
+  };
+
   return (
     <div className="flex justify-center gap-6 mb-2">
       {checkIfFirstPage() ? (
         <div></div>
       ) : (
-        <button
-          className="btn-action"
-          onClick={() => {
-            setPage(getPage() - 1);
-          }}
-        >
-          Previous
-        </button>
+        <PageButton page={getPage() - 1} text="Previous" />
       )}
-      <div>
-        {checkIfFirstPage() ? (
-          <></>
-        ) : (
-          <button
-            className="btn-action"
-            onClick={() => {
-              setPage(getPage() - 1);
-            }}
-          >
-            {getPage()}
-          </button>
-        )}
-        <button className="btn-action">{getPage() + 1}</button>
-        {checkIfLastPage() ? (
-          <></>
-        ) : (
-          <button
-            className="btn-action"
-            onClick={() => {
-              setPage(getPage() + 1);
-            }}
-          >
-            {getPage() + 2}
-          </button>
-        )}
+      <div className="flex gap-1">
+        <div>
+          {!checkIfFirstPage() && (
+            <PageButton page={getPage() - 1} text={getPage().toString()} />
+          )}
+        </div>
+
+        <PageButton page={getPage()} text={(getPage() + 1).toString()} />
+
+        <div>
+          {!checkIfLastPage() && (
+            <PageButton
+              page={getPage() + 1}
+              text={(getPage() + 2).toString()}
+            />
+          )}
+        </div>
       </div>
       {checkIfLastPage() ? (
         <div></div>
       ) : (
-        <button
-          className="btn-action"
-          onClick={() => {
-            setPage(getPage() + 1);
-          }}
-        >
-          Next
-        </button>
+        <PageButton page={getPage() + 1} text="Next" />
       )}
     </div>
   );
