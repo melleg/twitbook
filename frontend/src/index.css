@@ -87,6 +87,10 @@ input {
   border-radius: 0.25rem;
 }
 
+button {
+  user-select: none;
+}
+
 .btn-action {
   padding: 0.35rem 0.95rem;
   font-weight: bold;
@@ -154,11 +158,12 @@ input {
   font-weight: 600;
   border-radius: 100%;
 
-  &:hover {
+  &:hover:enabled {
     background-color: var(--text-transparent);
   }
 
   &:disabled {
+    user-select: none;
     color: var(--text-transparent);
   }
 }
