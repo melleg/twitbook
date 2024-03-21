@@ -30,6 +30,16 @@ body {
   background-repeat: no-repeat;
 }
 
+nav {
+  & a {
+    color: var(--green-activated);
+  }
+}
+
+.nav-bg {
+  background-image: linear-gradient(90deg, green, #0ae002);
+}
+
 h1,
 .h1,
 h2,
@@ -77,10 +87,6 @@ input {
   border-radius: 0.25rem;
 }
 
-.nav-bg {
-  background-image: linear-gradient(90deg, green, #0ae002);
-}
-
 .btn-action {
   padding: 0.35rem 0.95rem;
   font-weight: bold;
@@ -114,6 +120,15 @@ input {
 
   &.activated {
     color: var(--purple);
+  }
+}
+
+.search-bar {
+  background-color: var(--green-hover);
+  border-radius: 1rem;
+
+  &::placeholder {
+    color: var(--green-activated);
   }
 }
 
