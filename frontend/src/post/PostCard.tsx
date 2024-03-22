@@ -7,6 +7,7 @@ import { useGlobalContext } from "../auth/GlobalContext";
 import { Globals } from "../globals";
 import ReplyComponent from "./ReplyComponent";
 import RenderText from "./RenderText";
+import defaultImage from '/default.jpg'
 
 interface PostCardProps {
   post: Post;
@@ -154,7 +155,9 @@ const PostCard: React.FC<PostCardProps> = ({ post: postProp }) => {
             "inline-block rounded-full aspect-square " +
             (props.small ? "w-6 mr-1" : "w-14 absolute left-3 top-3")
           }
-          src="https://picsum.photos/50"
+          src={
+            props.post.profileImage ? `data:${props.post.profileImage.mimeType};base64,${props.post.profileImage.data}` : defaultImage
+          }
         ></img>
       </Link>
       <Link to={`/profile/${props.post.username}`} className="h4 mr-1">

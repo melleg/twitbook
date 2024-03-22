@@ -3,6 +3,7 @@ import PaginationControls from "../misc/PaginationControls";
 import User from "./user";
 import { Link } from "react-router-dom";
 import { format } from "date-fns";
+import defaultImage from "/default.jpg"
 
 interface FeedProps {
   getFunction: Promise<User[]>;
@@ -58,7 +59,9 @@ const UserFeed: React.FC<FeedProps> = ({ getFunction, totalPages }) => {
                 className={
                   "inline-block rounded-full aspect-square mr-1 w-14 left-3 top-3"
                 }
-                src="https://picsum.photos/50"
+                src={
+                  user.profileImage ? `data:${user.profileImage.mimeType};base64,${user.profileImage.data}` : defaultImage
+                }
               ></img>
             </Link>
             <div className="flex flex-col justify-center">

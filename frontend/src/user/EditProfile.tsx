@@ -7,7 +7,8 @@ const EditProfile: React.FC<ProfileModel> = ({ displayName, bio }) => {
   const { refresh, setRefresh } = useGlobalContext();
   const [newDisplayName, setNewDisplayName] = useState<string>(displayName);
   const [newBio, setNewBio] = useState<string>(bio ?? "");
-  const [errorMessage, setErrorMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState<string>("");
+  const [newImage, setNewImage] = useState<Blob>();
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
@@ -18,8 +19,7 @@ const EditProfile: React.FC<ProfileModel> = ({ displayName, bio }) => {
     };
 
     try {
-      //wip, needs to generate a new jwt i think
-      await updateProfile(model);
+      await updateProfile(model, newImage!);
     } catch (err) {
       setErrorMessage("Unable to update profile");
     }
@@ -27,10 +27,39 @@ const EditProfile: React.FC<ProfileModel> = ({ displayName, bio }) => {
     setRefresh(refresh + 1);
   };
 
+  const handleNewImage = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files![0];
+    file.type.startsWith("image")
+      ? setNewImage(file)
+      : setErrorMessage("unsupported file type, please use an image");
+  };
+
   return (
     <div className="p-4 bg-white rounded-md">
       <h1>Edit profile</h1>
       <form onSubmit={(e) => handleSubmit(e)}>
+        <label>
+          Profile image
+          {newImage && (
+            <div>
+              <img className="h-48 w-48" src={URL.createObjectURL(newImage)} />
+              <button
+                className="btn-action"
+                onClick={() => setNewImage(undefined)}
+              >
+                Remove
+              </button>
+            </div>
+          )}
+          <input
+            type="file"
+            accept="image/*"
+            name="profileImage"
+            onChange={(e) => {
+              handleNewImage(e);
+            }}
+          />
+        </label>
         <label>
           Display Name:
           <input

@@ -19,7 +19,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import nl.itvitae.twitbook.follow.Follow;
-import nl.itvitae.twitbook.like.Like;
+import nl.itvitae.twitbook.image.Image;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -47,6 +47,9 @@ public class User implements UserDetails {
 
   private LocalDateTime registerDate;
 
+  @OneToOne
+  private Image profileImage;
+
   @OneToMany(mappedBy = "follower")
   private Set<Follow> following = new HashSet<>();
 
@@ -58,6 +61,15 @@ public class User implements UserDetails {
     this.password = password;
     this.roles = roles;
     this.displayName = username;
+    this.registerDate = LocalDateTime.now();
+  }
+
+  public User(String username, String password, Image profileImage, Role... roles) {
+    this.username = username;
+    this.password = password;
+    this.roles = roles;
+    this.displayName = username;
+    this.profileImage = profileImage;
     this.registerDate = LocalDateTime.now();
   }
 

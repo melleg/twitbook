@@ -5,12 +5,13 @@ import LoginModel from "./login-model";
 import { setJwtHeader } from "../base-api";
 import { Link, useNavigate } from "react-router-dom";
 import { useGlobalContext } from "./GlobalContext";
+import { getProfileImage } from "../misc/image-service";
 
 const LoginComponent = () => {
   const [usernameInput, setUsernameInput] = useState("");
   const [passwordInput, setPasswordInput] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-  const { setLoggedIn, setMyUsername, setRoles } = useGlobalContext();
+  const { setLoggedIn, setMyUsername, setRoles, setMyProfileImage } = useGlobalContext();
 
   const navigate = useNavigate();
 
@@ -40,6 +41,7 @@ const LoginComponent = () => {
       setJwtHeader(jwt);
       setLoggedIn(true);
       setMyUsername(jwtParsed.sub);
+      setMyProfileImage(await getProfileImage(jwtParsed.sub))      
       setRoles(jwtParsed.roles.flatMap((r: any) => r.authority));
 
       navigate(`/profile/${jwtParsed.sub}`);
