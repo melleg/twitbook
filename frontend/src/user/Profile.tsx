@@ -80,12 +80,22 @@ function Profile() {
           }}
         ></div>
         {/* Username & follow */}
-        <div className="px-4 py-2 flex flex-wrap gap-2 justify-between items-end">
+        <div className="px-4 py-2 flex flex-wrap gap-2 items-end">
           {/* Profile picture */}
           <img
             className="h-40 -mt-32 rounded-md aspect-square border-solid border-4 border-white"
             src="https://picsum.photos/200"
           ></img>
+
+          <div className="flex gap-1 mr-auto">
+            <Link to={`followers`} className="btn-tab-light">
+              <b>{followers}</b> Followers
+            </Link>
+            <Link to={`following`} className="btn-tab-light">
+              <b>{user.numberOfFollowing}</b> Following
+            </Link>
+          </div>
+
           {loggedIn &&
             (username !== myUsername ? (
               <div>
@@ -118,8 +128,6 @@ function Profile() {
             <p>User since: {format(user.registerDate, "dd MMMM yyyy")}</p>
           </div>
           <p>{user.bio}</p>
-          <p>Followers: {followers}</p>
-          <Link to={`/profile/${user.username}/follows`}>Following: {user.numberOfFollowing}</Link>
         </div>
       </div>
 

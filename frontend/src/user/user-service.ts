@@ -24,16 +24,32 @@ export const queryUsers = async (
   return response.content as User[];
 };
 
+export const getFollowers = async (
+  username: string,
+  page: number,
+  setTotalPages: Dispatch<SetStateAction<number>>
+) => {
+  const response = (
+    await api.get(`${uri}/followers-by-username/${username}?page=${page}`)
+  ).data;
+  setTotalPages(response.totalPages);
+  return response.content as User[];
+};
+
+export const getFollowing = async (
+  username: string,
+  page: number,
+  setTotalPages: Dispatch<SetStateAction<number>>
+) => {
+  const response = (
+    await api.get(`${uri}/following-by-username/${username}?page=${page}`)
+  ).data;
+  setTotalPages(response.totalPages);
+  return response.content as User[];
+};
+
 export const getUserByUsername = async (username: string) => {
   return (await api.get<User>(`${uri}/by-username/${username}`)).data;
-};
-
-export const getFollowers = async (username: string) => {
-  return (await api.get<User[]>(`${uri}/followers-by-username/${username}`)).data;
-};
-
-export const getFollowing = async (username: string) => {
-  return (await api.get<User[]>(`${uri}/following-by-username/${username}`)).data;
 };
 
 export const followUser = async (followUsername: string) => {

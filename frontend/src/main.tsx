@@ -8,7 +8,7 @@ import Profile from "./user/Profile.tsx";
 import RegisterComponent from "./auth/RegisterComponent.tsx";
 import RegisterSuccess from "./auth/RegisterSuccess.tsx";
 import SearchResult from "./search/SearchResult.tsx";
-import ViewFollowsComponent from "./user/ViewFollowsComponent.tsx";
+import Follows from "./user/Follows.tsx";
 
 const router = createBrowserRouter([
   {
@@ -26,13 +26,17 @@ const router = createBrowserRouter([
       {
         path: "profile/:username",
         children: [
-          { 
-            path: "", 
-            element: <Profile /> 
+          {
+            path: "",
+            element: <Profile />,
           },
-          { 
-            path: "follows", 
-            element: <ViewFollowsComponent /> 
+          {
+            path: "following",
+            element: <Follows showFollowers={false} />,
+          },
+          {
+            path: "followers",
+            element: <Follows showFollowers={true} />,
           },
         ],
       },
