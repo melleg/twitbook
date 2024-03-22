@@ -67,8 +67,8 @@ public class PostController {
   }
 
   @GetMapping("responses-to/{id}")
-  public ResponseEntity<?> getResponsesTo(@PathVariable Long id, @AuthenticationPrincipal User user, Pageable pageable) {
-    Page<Post> posts = postService.findResponsesTo(id, getPageable(pageable));
+  public ResponseEntity<?> getPostResponses(@PathVariable Long id, @AuthenticationPrincipal User user, Pageable pageable) {
+    Page<Post> posts = postService.findPostResponses(id, getPageable(pageable));
     return ResponseEntity.ok(posts.map(p -> getPostDTO(p, user)));
   }
 
