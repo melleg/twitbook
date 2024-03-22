@@ -7,7 +7,6 @@ import { useGlobalContext } from "../auth/GlobalContext";
 import { Globals } from "../globals";
 import ReplyComponent from "./ReplyComponent";
 import RenderText from "./RenderText";
-import Image from "../user/image";
 import defaultImage from '/default.jpg'
 
 interface PostCardProps {

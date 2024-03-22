@@ -2,6 +2,7 @@ package nl.itvitae.twitbook.image;
 
 import java.util.Optional;
 import lombok.AllArgsConstructor;
+import nl.itvitae.twitbook.user.UserRepository;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -22,7 +23,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 @RequestMapping("api/v1/images")
 public class ImageController {
 
-  private final ImageRepository imageRepository;
+  private final UserRepository userRepository;
   private final ImageService imageService;
 
   @GetMapping("{filename}")
@@ -33,6 +34,12 @@ public class ImageController {
     }
     return ResponseEntity.ok().header(HttpHeaders.CONTENT_TYPE, optionalImage.get().getMimeType())
         .body(new ByteArrayResource(optionalImage.get().getData()));
+  }
+
+  @GetMapping("u/{username}")
+  public ResponseEntity<Image> getProfileImageByUsername(@PathVariable String username) {
+    return ResponseEntity.ok(userRepository.findByUsernameIgnoreCase(username).get()
+        .getProfileImage());
   }
 
   @PostMapping("upload")
