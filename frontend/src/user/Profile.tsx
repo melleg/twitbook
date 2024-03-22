@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import User from "./user";
 import { useParams, useSearchParams } from "react-router-dom";
 import { followUser, getUserByUsername } from "./user-service";
-import Feed from "../feed/Feed";
+import PostFeed from "../post/PostFeed";
 import { getPostsByUser } from "../post/post-service";
 import { format } from "date-fns";
 import CreatePostComponent from "../post/CreatePostComponent";
@@ -87,28 +87,29 @@ function Profile() {
             className="h-40 -mt-32 rounded-md aspect-square border-solid border-4 border-white"
             src={user.profileImage ? `data:${user.profileImage.mimeType};base64,${user.profileImage.data}` : defaultImage}
           ></img>
-          {loggedIn && (username !== myUsername ? (
-            <div>
-              <p className="error-message">{errorMessage}</p>
-              <button
-                type="button"
-                className="btn-action"
-                onClick={() => handleFollow()}
-              >
-                {hasFollowed ? <div className="unfollow"></div> : "Follow"}
-              </button>
-            </div>
-          ) : (
-            <div>
-              <Popup
-                trigger={<button className="btn-action">Edit profile</button>}
-                modal
-                nested
-              >
-                <EditProfile displayName={user.displayName} bio={user.bio} />
-              </Popup>
-            </div>
-          ))}
+          {loggedIn &&
+            (username !== myUsername ? (
+              <div>
+                <p className="error-message">{errorMessage}</p>
+                <button
+                  type="button"
+                  className="btn-action"
+                  onClick={() => handleFollow()}
+                >
+                  {hasFollowed ? <div className="unfollow"></div> : "Follow"}
+                </button>
+              </div>
+            ) : (
+              <div>
+                <Popup
+                  trigger={<button className="btn-action">Edit profile</button>}
+                  modal
+                  nested
+                >
+                  <EditProfile displayName={user.displayName} bio={user.bio} />
+                </Popup>
+              </div>
+            ))}
         </div>
         {/* Additional profile info */}
         <div className="px-4 pb-4">
@@ -125,7 +126,7 @@ function Profile() {
 
       {username === myUsername && <CreatePostComponent />}
 
-      <Feed
+      <PostFeed
         getFunction={getPostsByUser(user.username, getPage(), setTotalPages)}
         totalPages={totalPages}
       />

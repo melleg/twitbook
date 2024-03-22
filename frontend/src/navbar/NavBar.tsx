@@ -3,34 +3,37 @@ import { useGlobalContext } from "../auth/GlobalContext";
 import SearchBar from "../search/SearchBar";
 
 const NavBar = () => {
-  const { loggedIn, myUsername, setRefresh, refresh } = useGlobalContext();
+  const { loggedIn, myUsername } = useGlobalContext();
 
   return (
     <>
-      <nav className="sticky top-0 w-full z-10 text-xl font-medium flex nav-bg text-white">
-        <Link to="/" className="p-3 mr-auto" onClick={() => setRefresh(refresh + 1)}>
-          twitbook
-        </Link>
-        <SearchBar />
-        {loggedIn ? (
-          <>
-            <Link to={`/profile/${myUsername}`} className="p-3">
-              Profile
+      <nav className="sticky top-0 w-full z-10 px-4 nav-bg text-white">
+        <div className="width-medium mx-auto  h-12 flex items-center justify-between gap-4">
+          {/* Left content */}
+          <div className="flex-grow basis-10 flex items-center">
+            <Link to="/" className="w-8 flex-shrink-0">
+              <img
+                src="/favicon.ico"
+                style={{ filter: "grayscale(0.4) brightness(1.7)" }}
+              ></img>
             </Link>
-            <a href="" className="p-3">
-              Logout
-            </a>
-          </>
-        ) : (
-          <>
-            <Link to="/login" className="p-3">
-              Login
-            </Link>
-            <Link to="/register" className="p-3">
-              Register
-            </Link>
-          </>
-        )}
+          </div>
+          {/* Middle content */}
+          <SearchBar />
+          {/* Right content */}
+          <div className="flex-grow basis-0 font-medium text-xl flex justify-end items-center gap-2">
+            {loggedIn ? (
+              <>
+                <Link to={`/profile/${myUsername}`}>Profile</Link>
+                <a href="">Logout</a>
+              </>
+            ) : (
+              <>
+                <Link to="/login">Login</Link>
+              </>
+            )}
+          </div>
+        </div>
       </nav>
     </>
   );

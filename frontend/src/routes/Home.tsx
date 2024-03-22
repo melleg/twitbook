@@ -1,5 +1,5 @@
-import { useState } from "react";
-import Feed from "../feed/Feed";
+import { useEffect, useState } from "react";
+import PostFeed from "../post/PostFeed";
 import CreatePostComponent from "../post/CreatePostComponent";
 import { getPosts, getPostsByFollowing } from "../post/post-service";
 import { useGlobalContext } from "../auth/GlobalContext";
@@ -8,8 +8,13 @@ import { useSearchParams } from "react-router-dom";
 function Home() {
   const { loggedIn, refresh, setRefresh } = useGlobalContext();
   const [viewAll, setViewAll] = useState<boolean>(true);
-  const [ searchParams, setSearchParams ] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const [totalPages, setTotalPages] = useState<number>(0);
+
+  // On page load
+  useEffect(() => {
+    setRefresh(refresh + 1);
+  }, []);
 
   const showFollowingOnly = (value: boolean) => {
     if (value !== viewAll) {
@@ -20,9 +25,9 @@ function Home() {
   };
 
   const getPage = () => {
-    if(!searchParams) console.error("No search params!");
+    if (!searchParams) console.error("No search params!");
     return parseInt(searchParams.get("page") ?? "0");
-  }
+  };
 
   const setPage = (page: number) => {
     if (!searchParams) console.error("No search params!");
@@ -53,10 +58,16 @@ function Home() {
 
       {viewAll ? (
         <>
-          <Feed getFunction={getPosts(getPage(), setTotalPages)} totalPages={totalPages}/>
+          <PostFeed
+            getFunction={getPosts(getPage(), setTotalPages)}
+            totalPages={totalPages}
+          />
         </>
       ) : (
-        <Feed getFunction={getPostsByFollowing(getPage(), setTotalPages)} totalPages={totalPages}/>
+        <PostFeed
+          getFunction={getPostsByFollowing(getPage(), setTotalPages)}
+          totalPages={totalPages}
+        />
       )}
     </>
   );

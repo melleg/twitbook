@@ -1,60 +1,52 @@
 import { useEffect, useState } from "react";
-import { Link, useSearchParams } from "react-router-dom";
-import { getUsers } from "../user/user-service";
-import User from "../user/user";
+import { useSearchParams } from "react-router-dom";
+import { queryUsers } from "../user/user-service";
 import { useGlobalContext } from "../auth/GlobalContext";
-import { format } from "date-fns";
-import defaultImage from '/default.jpg'
+import { getPostsByHashtag as queryPostsByHashtag } from "../post/post-service";
+import PostFeed from "../post/PostFeed";
+import UserFeed from "../user/UserFeed";
 
 const SearchResult: React.FC = () => {
   const [searchParams] = useSearchParams();
   const { refresh } = useGlobalContext();
-  const [results, setResults] = useState<User[]>([]);
+  const [totalPages, setTotalPages] = useState<number>(0);
 
-  useEffect(() => {
-    const resultHandler = async () => {
-      const query = searchParams.get("q");
-      if (!query) return;
+  useEffect(() => {}, [refresh, searchParams]);
 
-      const res = await getUsers();
-      setResults(res.filter((user) => user.displayName.includes(query)));
-    };
-    resultHandler();
-  }, [refresh]);
+  const getHashtagQuery = () => searchParams.get("h");
+  const getQuery = () => searchParams.get("q");
+  const getPage = () => parseInt(searchParams.get("page") ?? "0");
 
+  // Hashtag results
+  if (getHashtagQuery()) {
+    return (
+      <>
+        <h3 className="text-white mt-4 mb-2">
+          Showing posts with hashtag <i>#{getHashtagQuery()}</i>
+        </h3>
+        <PostFeed
+          getFunction={queryPostsByHashtag(
+            getHashtagQuery()!,
+            getPage(),
+            setTotalPages
+          )}
+          totalPages={totalPages}
+        />
+      </>
+    );
+  }
+
+  // User results
   return (
-    <div className="flex flex-col gap-3 mt-2 mb-4">
-      {results.map((user) => (
-        <div
-          key={user.username}
-          className="py-2 pl-4 pr-4 glass rounded-lg text-left text-light gap-2 flex "
-        >
-          <Link to={`/profile/${user.displayName}`}>
-            <img
-              className={
-                "inline-block rounded-full aspect-square mr-1 w-14 left-3 top-3"
-              }
-              src={
-                user.profileImage ? `data:${user.profileImage.mimeType};base64,${user.profileImage.data}` : defaultImage
-              }
-            ></img>
-          </Link>
-          <div className="flex flex-col justify-center">
-            <div>
-              <Link
-                className="font-bold mr-1 text-black"
-                to={`/profile/${user.displayName}`}
-              >
-                {user.displayName}
-              </Link>
-              @{user.username} • User since:{" "}
-              {format(user.registerDate, "dd MMMM yyyy")}
-            </div>
-            {user.bio?.length > 0 && <p>"{user.bio}"</p>}
-          </div>
-        </div>
-      ))}
-    </div>
+    <>
+      <h3 className="text-white mt-4 mb-2">
+        Showing users with name "<i>{getQuery()}</i>"
+      </h3>
+      <UserFeed
+        getFunction={queryUsers(getQuery()!, getPage(), setTotalPages)}
+        totalPages={totalPages}
+      />
+    </>
   );
 };
 

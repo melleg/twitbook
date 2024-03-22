@@ -3,7 +3,7 @@ import { useState } from "react";
 import { login } from "./auth-service";
 import LoginModel from "./login-model";
 import { setJwtHeader } from "../base-api";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useGlobalContext } from "./GlobalContext";
 
 const LoginComponent = () => {
@@ -41,7 +41,7 @@ const LoginComponent = () => {
       setLoggedIn(true);
       setMyUsername(jwtParsed.sub);
       setRoles(jwtParsed.roles.flatMap((r: any) => r.authority));
-      
+
       navigate(`/profile/${jwtParsed.sub}`);
     } catch (err: any) {
       console.log(err);
@@ -80,6 +80,11 @@ const LoginComponent = () => {
           onChange={(e) => setPasswordInput(e.target.value)}
         />
       </label>
+
+      <Link to="/register" className="text-light mb-2">
+        Register account
+      </Link>
+
       <button type="submit" className="btn-action">
         Login
       </button>

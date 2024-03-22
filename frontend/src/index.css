@@ -6,9 +6,12 @@
   --action: #72ddff;
   --action-hover: #58c9ec;
   --text-light: #545454;
+  --text-transparent: #ffffff6e;
   --grey: rgb(196, 196, 196);
   --grey-light: #ebebeb;
   --green-light: #51f903;
+  --green-activated: #aaff16;
+  --green-disabled: #b6ceac;
   --green-hover: #46d802;
   --green-dark: #2f9102ce;
   --glass: white;
@@ -25,6 +28,16 @@ body {
   background-image: url(../SkyV1.png);
   background-size: cover;
   background-repeat: no-repeat;
+}
+
+nav {
+  & a {
+    color: var(--green-activated);
+  }
+}
+
+.nav-bg {
+  background-image: linear-gradient(90deg, green, #0ae002);
 }
 
 h1,
@@ -70,24 +83,33 @@ label > input {
 }
 
 input {
-  padding: 0.25rem 0.35rem;
+  padding: 0.3rem 0.7rem;
   border-radius: 0.25rem;
 }
 
-.nav-bg {
-  background-image: linear-gradient(90deg, green, #0ae002);
+button {
+  user-select: none;
 }
 
 .btn-action {
   padding: 0.35rem 0.95rem;
   font-weight: bold;
   color: white;
-  background-color: var(--green-light) !important;
+  background-color: var(--green-light);
   border-radius: 0.9rem;
   text-align: center;
 
   &:hover {
-    background-color: var(--green-hover) !important;
+    background-color: var(--green-hover);
+  }
+
+  &.activated {
+    background-color: var(--green-activated);
+  }
+
+  &:disabled {
+    background-color: var(--green-disabled) !important;
+    color: var(--text-transparent);
   }
 }
 
@@ -99,6 +121,60 @@ input {
   &:hover {
     font-weight: 700;
   }
+
+  &.activated {
+    color: var(--purple);
+  }
+}
+
+.search-bar {
+  transition: flex-basis 0.4s;
+
+  &:focus-within {
+    flex-basis: 22.5rem;
+
+    & button {
+      opacity: 1;
+    }
+  }
+
+  & button {
+    opacity: 0;
+    transition: opacity 0.15s;
+  }
+
+  & input {
+    background-color: var(--green-hover);
+    border-radius: 1rem;
+    border: 2px solid transparent;
+    line-height: 1;
+
+    &::placeholder {
+      color: var(--green-activated);
+    }
+
+    &:focus-visible {
+      outline: none;
+      border-color: var(--green-activated);
+    }
+  }
+}
+
+.btn-transparent {
+  color: white;
+  background-color: transparent;
+  aspect-ratio: 1;
+  font-weight: 600;
+  border-radius: 100%;
+
+  &:hover:enabled {
+    background-color: var(--text-transparent);
+  }
+
+  &:disabled {
+    user-select: none;
+    color: var(--text-transparent);
+  }
 }
 
 a {
@@ -108,6 +184,10 @@ a {
     text-decoration: underline 2px solid;
     text-underline-offset: 3px;
   }
+}
+
+.width-medium {
+  width: min(50rem, calc(100% - 20px));
 }
 
 .text-rendered {
@@ -145,7 +225,6 @@ a {
 }
 
 .activated {
-  color: var(--purple);
   font-weight: bold;
 }
 

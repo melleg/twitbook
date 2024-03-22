@@ -1,18 +1,20 @@
-import { useEffect, useState } from "react";
-import Post from "../post/post";
-import PostCard from "../post/PostCard";
-import PaginationControls from "./PaginationControls";
-import { useGlobalContext } from "../auth/GlobalContext";
+import { useContext, useEffect, useState } from "react";
+import Post from "./post";
+import PostCard from "./PostCard";
+import PaginationControls from "../misc/PaginationControls";
+import { MyGlobalContext } from "../auth/GlobalContext";
+import { useSearchParams } from "react-router-dom";
 
 interface FeedProps {
   getFunction: Promise<Post[]>;
   totalPages: number;
 }
 
-const Feed: React.FC<FeedProps> = ({ getFunction, totalPages }) => {
+const PostFeed: React.FC<FeedProps> = ({ getFunction, totalPages }) => {
+  const [setSearchParams] = useSearchParams();
   const [loading, setLoading] = useState<boolean>(true);
   const [posts, setPosts] = useState<Post[]>([]);
-  const { refresh } = useGlobalContext();
+  const { refresh } = useContext(MyGlobalContext);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -23,7 +25,7 @@ const Feed: React.FC<FeedProps> = ({ getFunction, totalPages }) => {
 
     fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [refresh]);
+  }, [refresh, setSearchParams]);
 
   const Body: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     return <div className="flex flex-col gap-2 py-2">{children}</div>;
@@ -55,9 +57,9 @@ const Feed: React.FC<FeedProps> = ({ getFunction, totalPages }) => {
             <PostCard key={post.id} post={post} />
           ))}
       </Body>
-      <PaginationControls totalPages={totalPages}/>
+      <PaginationControls totalPages={totalPages} />
     </>
   );
 };
 
-export default Feed;
+export default PostFeed;

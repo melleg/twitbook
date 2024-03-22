@@ -1,11 +1,27 @@
 import { api } from "../base-api";
 import User from "./user";
 import ProfileModel from "./profile-model";
+import { Dispatch, SetStateAction } from "react";
 
 const uri = "users";
 
-export const getUsers = async () => {
-  return (await api.get<User[]>(`${uri}`)).data;
+export const getUsers = async (
+  page: number,
+  setTotalPages: Dispatch<SetStateAction<number>>
+) => {
+  const response = (await api.get(`${uri}?page=${page}`)).data;
+  setTotalPages(response.totalPages);
+  return response.content as User[];
+};
+
+export const queryUsers = async (
+  query: string,
+  page: number,
+  setTotalPages: Dispatch<SetStateAction<number>>
+) => {
+  const response = (await api.get(`${uri}/search/${query}?page=${page}`)).data;
+  setTotalPages(response.totalPages);
+  return response.content as User[];
 };
 
 export const getUserByUsername = async (username: string) => {

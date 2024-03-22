@@ -10,6 +10,7 @@ public class PostDTO {
   public String content;
   public LocalDateTime postedDate;
   public String username;
+
   public String displayName;
 
   public Image profileImage;
@@ -20,8 +21,9 @@ public class PostDTO {
   public boolean hasLiked;
   public boolean hasReposted;
   public boolean hasReplied;
+  public PostDTO linkedPost;
 
-  public PostDTO(Post post, User userRequesting) {
+  public PostDTO(Post post, User userRequesting, boolean attachLinkedPost) {
     Post postInQuestion = (post.getType() == Post.PostType.REPOST) ? post.getLinkedPost() : post;
 
     this.id = post.getId();
@@ -31,9 +33,14 @@ public class PostDTO {
     this.displayName = post.getPoster().getDisplayName();
     this.profileImage = post.getPoster().getProfileImage();
     this.type = post.getType().ordinal();
-    this.likes = post.getLikes().size();
+
+    this.likes = postInQuestion.getLikes().size();
     this.reposts = postInQuestion.getLinkedPosts().stream().filter(p -> p.getType().equals(Post.PostType.REPOST)).count();
     this.replies = postInQuestion.getLinkedPosts().stream().filter(p -> p.getType().equals(Post.PostType.REPLY)).count();
+
+    if(attachLinkedPost && post.getLinkedPost() != null)
+      this.linkedPost = new PostDTO(post.getLinkedPost(), userRequesting, post.getType() == Post.PostType.REPOST);
+
     if(userRequesting != null) {
       this.hasLiked = postInQuestion.getLikes().stream().anyMatch(l -> l.getUser().getId().equals(userRequesting.getId()));
       this.hasReposted = postInQuestion.getLinkedPosts().stream().anyMatch(p -> p.getType().equals(Post.PostType.REPOST) && p.getPoster().getId().equals(userRequesting.getId()));
