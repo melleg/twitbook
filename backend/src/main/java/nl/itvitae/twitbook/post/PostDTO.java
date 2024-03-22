@@ -43,7 +43,7 @@ public class PostDTO {
     this.replies = postInQuestion.getLinkedPosts().stream().filter(p -> p.getType().equals(Post.PostType.REPLY)).count();
 
     if(attachLinkedPost && post.getLinkedPost() != null)
-      this.linkedPost = new PostDTO(post.getLinkedPost(), userRequesting, false);
+      this.linkedPost = new PostDTO(post.getLinkedPost(), userRequesting, post.getType() == Post.PostType.REPOST);
 
     if(userRequesting != null) {
       this.hasLiked = postInQuestion.getLikes().stream().anyMatch(l -> l.getUser().getId().equals(userRequesting.getId()));
