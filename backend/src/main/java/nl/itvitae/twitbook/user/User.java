@@ -1,5 +1,6 @@
 package nl.itvitae.twitbook.user;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -20,7 +21,6 @@ import lombok.Setter;
 
 import nl.itvitae.twitbook.follow.Follow;
 import nl.itvitae.twitbook.image.Image;
-import nl.itvitae.twitbook.like.Like;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -50,8 +50,7 @@ public class User implements UserDetails {
 
   @OneToOne
   private Image profileImage;
-
-
+  
   @OneToMany(mappedBy = "follower")
   private Set<Follow> following = new HashSet<>();
 

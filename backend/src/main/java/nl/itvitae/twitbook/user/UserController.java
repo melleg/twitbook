@@ -58,7 +58,11 @@ public class UserController {
     user.setDisplayName(editUserModel.displayName());
     user.setBio(editUserModel.bio());
     if (file != null){
+      var oldImage = user.getProfileImage();
       user.setProfileImage(imageService.uploadImage(file));
+      userRepository.save(user);
+      imageService.deleteImage(oldImage);
+      return ResponseEntity.ok().build();
     }
     userRepository.save(user);
     return ResponseEntity.ok().build();

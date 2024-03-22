@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Optional;
 import lombok.AllArgsConstructor;
+import nl.itvitae.twitbook.user.User;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -26,5 +27,9 @@ public class ImageService {
 
   public Optional<Image> getByFilename(String filename) {
     return imageRepository.findByFilename(filename);
+  }
+
+  public void deleteImage(Image image){
+    imageRepository.delete(image);
   }
 }
