@@ -83,10 +83,10 @@ public class UserController {
       user.setProfileImage(imageService.uploadImage(file));
       userRepository.save(user);
       imageService.deleteImage(oldImage);
-      return ResponseEntity.ok().build();
     } catch (Exception e) {
       userRepository.save(user);
-      return ResponseEntity.ok().build();
+      return new ResponseEntity<>("invalid file type", HttpStatus.CONFLICT);
     }
+    return ResponseEntity.ok().build();
   }
 }
