@@ -56,8 +56,6 @@ public class Seeder implements CommandLineRunner {
   @Override
   public void run(String... args) throws Exception {
 
-    Image defaultimage = saveImage("hello.jpg");
-
     User melle = saveUser("Melle", "Password", Role.ROLE_ADMIN);
     User raafi = saveUser("Raafi", "Password", saveImage("raafi_pfp.jpg"), Role.ROLE_ADMIN);
     User nol = saveUser("Nol", "Password",     saveImage("nol_pfp.jpg"), Role.ROLE_ADMIN);
