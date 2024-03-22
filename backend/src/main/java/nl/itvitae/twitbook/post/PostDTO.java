@@ -20,14 +20,6 @@ public class PostDTO {
   public boolean hasReplied;
   public PostDTO linkedPost;
 
-
-  // Okay so--
-  // Replies should have 1 linked post
-  // Reposts should have 1 linked post
-  // However, reposts OF replies should be 2 deep! Because it should show repost -> reply -> original
-
-
-
   public PostDTO(Post post, User userRequesting, boolean attachLinkedPost) {
     Post postInQuestion = (post.getType() == Post.PostType.REPOST) ? post.getLinkedPost() : post;
 
