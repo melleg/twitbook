@@ -1,5 +1,6 @@
 package nl.itvitae.twitbook.user;
 
+import java.io.IOException;
 import java.util.Optional;
 
 import lombok.AllArgsConstructor;
@@ -47,7 +48,8 @@ public class UserController {
 
   @GetMapping("search/{query}")
   public ResponseEntity<?> queryByDisplayName(@PathVariable String query, Pageable pageable) {
-    Page<User> users = userRepository.findByDisplayNameContainingIgnoreCase(query, getPageable(pageable));
+    Page<User> users = userRepository.findByDisplayNameContainingIgnoreCase(query,
+        getPageable(pageable));
     return ResponseEntity.ok(users.map(UserDTO::new));
   }
 
@@ -70,19 +72,21 @@ public class UserController {
 
 
   @PatchMapping("profile")
-  public ResponseEntity<?> editProfile(@RequestPart EditUserModel editUserModel, @RequestPart(required = false)
+  public ResponseEntity<?> editProfile(@RequestPart EditUserModel editUserModel,
+      @RequestPart(required = false)
       MultipartFile file,
-      @AuthenticationPrincipal User user) throws Exception {
+      @AuthenticationPrincipal User user) {
     user.setDisplayName(editUserModel.displayName());
     user.setBio(editUserModel.bio());
-    if (file != null){
+    try {
       var oldImage = user.getProfileImage();
       user.setProfileImage(imageService.uploadImage(file));
       userRepository.save(user);
       imageService.deleteImage(oldImage);
       return ResponseEntity.ok().build();
+    } catch (Exception e) {
+      userRepository.save(user);
+      return ResponseEntity.ok().build();
     }
-    userRepository.save(user);
-    return ResponseEntity.ok().build();
   }
 }

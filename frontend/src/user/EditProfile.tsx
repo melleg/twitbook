@@ -29,9 +29,8 @@ const EditProfile: React.FC<ProfileModel> = ({ displayName, bio }) => {
 
   const handleNewImage = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files![0];
-    console.log(file.type);
     file.type.startsWith("image")
-      ? setNewImage(e.target.files![0])
+      ? setNewImage(file)
       : setErrorMessage("unsupported file type, please use an image");
   };
 
