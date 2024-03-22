@@ -1,10 +1,12 @@
 package nl.itvitae.twitbook.user;
 
+import java.io.IOException;
 import java.util.Optional;
 
 import lombok.AllArgsConstructor;
 
 import nl.itvitae.twitbook.follow.FollowRepository;
+import nl.itvitae.twitbook.image.ImageService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @CrossOrigin("http://localhost:5173")
@@ -26,6 +29,7 @@ public class UserController {
 
   private final UserRepository userRepository;
   private final FollowRepository followRepository;
+  private final ImageService imageService;
 
   private static final int PAGE_SIZE = 4;
 
@@ -44,7 +48,8 @@ public class UserController {
 
   @GetMapping("search/{query}")
   public ResponseEntity<?> queryByDisplayName(@PathVariable String query, Pageable pageable) {
-    Page<User> users = userRepository.findByDisplayNameContainingIgnoreCase(query, getPageable(pageable));
+    Page<User> users = userRepository.findByDisplayNameContainingIgnoreCase(query,
+        getPageable(pageable));
     return ResponseEntity.ok(users.map(UserDTO::new));
   }
 
@@ -65,16 +70,23 @@ public class UserController {
             targetUser.get().getId())), HttpStatus.OK);
   }
 
-  private record UserUsernameBioOnly(String displayName, String bio) {
-
-  }
 
   @PatchMapping("profile")
-  public ResponseEntity<?> editProfile(@RequestBody UserUsernameBioOnly userUsernameBioOnly,
+  public ResponseEntity<?> editProfile(@RequestPart EditUserModel editUserModel,
+      @RequestPart(required = false)
+      MultipartFile file,
       @AuthenticationPrincipal User user) {
-    user.setDisplayName(userUsernameBioOnly.displayName());
-    user.setBio(userUsernameBioOnly.bio());
-    userRepository.save(user);
+    user.setDisplayName(editUserModel.displayName());
+    user.setBio(editUserModel.bio());
+    try {
+      var oldImage = user.getProfileImage();
+      user.setProfileImage(imageService.uploadImage(file));
+      userRepository.save(user);
+      imageService.deleteImage(oldImage);
+    } catch (Exception e) {
+      userRepository.save(user);
+      return new ResponseEntity<>("invalid file type", HttpStatus.CONFLICT);
+    }
     return ResponseEntity.ok().build();
   }
 }

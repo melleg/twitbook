@@ -32,6 +32,11 @@ export const followUser = async (followUsername: string) => {
   return await api.post(`follows/user/${followUsername}`);
 };
 
-export const updateProfile = async (model: ProfileModel) => {
-  return await api.patch(`${uri}/profile`, model);
+export const updateProfile = async (model: ProfileModel, image: Blob) => {
+  const formData = new FormData();
+  formData.append(
+    "editUserModel", new Blob([JSON.stringify(model)], { type: "application/json" })
+  );
+  formData.append("file", image);
+  return await api.patch(`${uri}/profile`, formData);
 };

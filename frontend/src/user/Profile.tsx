@@ -9,6 +9,7 @@ import CreatePostComponent from "../post/CreatePostComponent";
 import { useGlobalContext } from "../auth/GlobalContext";
 import EditProfile from "./EditProfile";
 import Popup from "reactjs-popup";
+import defaultImage from '/default.jpg'
 
 function Profile() {
   const { username } = useParams();
@@ -83,8 +84,8 @@ function Profile() {
         <div className="px-4 py-2 flex flex-wrap gap-2 justify-between items-end">
           {/* Profile picture */}
           <img
-            className="h-40 -mt-32 rounded-md aspect-square border-solid border-4 border-white"
-            src="https://picsum.photos/200"
+            className="h-40 -mt-32 rounded-md aspect-square border-solid border-4 border-white profile-image"
+            src={user.profileImage ? `data:${user.profileImage.mimeType};base64,${user.profileImage.data}` : defaultImage}
           ></img>
           {loggedIn &&
             (username !== myUsername ? (

@@ -1,10 +1,14 @@
 package nl.itvitae.twitbook.seeder;
 
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.List;
 import lombok.AllArgsConstructor;
 
 import nl.itvitae.twitbook.follow.Follow;
 import nl.itvitae.twitbook.follow.FollowRepository;
+import nl.itvitae.twitbook.image.Image;
+import nl.itvitae.twitbook.image.ImageRepository;
 import nl.itvitae.twitbook.like.Like;
 import nl.itvitae.twitbook.like.LikeRepository;
 import nl.itvitae.twitbook.post.Post;
@@ -20,11 +24,13 @@ import org.springframework.stereotype.Component;
 @Component
 @AllArgsConstructor
 public class Seeder implements CommandLineRunner {
+
   private final PostService postService;
   private final UserRepository userRepository;
   private final FollowRepository followRepository;
   private final LikeRepository likeRepository;
   private final PasswordEncoder passwordEncoder;
+  private final ImageRepository imageRepository;
 
   private static final String[] CONTENT = {
       "TAke a look, y'all: IMG_4346.jpeg", "Xenoblade",
@@ -48,11 +54,12 @@ public class Seeder implements CommandLineRunner {
   };
 
   @Override
-  public void run(String... args) {
+  public void run(String... args) throws Exception {
+
     User melle = saveUser("Melle", "Password", Role.ROLE_ADMIN);
-    User raafi = saveUser("Raafi", "Password", Role.ROLE_ADMIN);
-    User nol = saveUser("Nol", "Password", Role.ROLE_ADMIN);
-    User sjaakie = saveUser("sjaakie", "Password", Role.ROLE_USER);
+    User raafi = saveUser("Raafi", "Password", saveImage("raafi_pfp.jpg"), Role.ROLE_ADMIN);
+    User nol = saveUser("Nol", "Password",     saveImage("nol_pfp.jpg"), Role.ROLE_ADMIN);
+    User sjaakie = saveUser("sjaakie", "Password", saveImage("trollface.jpg"), Role.ROLE_USER);
 
     Post post1 = savePost("#Bingleblong", nol);
     Post post2 = savePost("Melle en Raafi zijn #chads #winning", sjaakie);
@@ -69,7 +76,9 @@ public class Seeder implements CommandLineRunner {
     followUser(sjaakie, raafi);
 
     likePost(post1, melle);
+
   }
+
   private static String randomContent() {
     return CONTENT[(int) (Math.random() * CONTENT.length)];
   }
@@ -94,11 +103,23 @@ public class Seeder implements CommandLineRunner {
     return userRepository.save(new User(username, passwordEncoder.encode(password), roles));
   }
 
+  private User saveUser(String username, String password, Image profileImage, Role... roles) {
+    return userRepository.save(new User(username, passwordEncoder.encode(password), profileImage, roles));
+  }
+
   private Follow followUser(User follower, User following) {
     return followRepository.save(new Follow(follower, following));
   }
 
   private Like likePost(Post post, User user) {
     return likeRepository.save(new Like(post, user));
+  }
+
+  private Image saveImage(String filename) throws Exception {
+    Image image = new Image();
+    image.setFilename(filename);
+    image.setMimeType("image/jpeg");
+    image.setData(Files.readAllBytes(Paths.get("src/main/resources/images/" + filename)));
+    return imageRepository.save(image);
   }
 }

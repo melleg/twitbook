@@ -186,6 +186,10 @@ a {
   }
 }
 
+.profile-image {
+  backdrop-filter: blur(10px);
+}
+
 .width-medium {
   width: min(50rem, calc(100% - 20px));
 }
