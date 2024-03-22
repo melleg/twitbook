@@ -18,7 +18,8 @@ public class ImageService {
     var sdf = new SimpleDateFormat("ddMMyy-hhmmss-SSS");
 
     var image = Image.builder()
-        .filename(sdf.format(new Date()) + ".jpg")
+        .filename(String.format("%s.%s", sdf.format(new Date()),
+            file.getContentType().substring(file.getContentType().lastIndexOf('/') + 1)))
         .mimeType(file.getContentType())
         .data(file.getBytes())
         .build();
@@ -29,7 +30,7 @@ public class ImageService {
     return imageRepository.findByFilename(filename);
   }
 
-  public void deleteImage(Image image){
+  public void deleteImage(Image image) {
     imageRepository.delete(image);
   }
 }
