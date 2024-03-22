@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import Post, { PostType } from "./post";
 import { format } from "date-fns";
 import { deletePost, likePost, repost } from "./post-service";
-import { ReactElement, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useGlobalContext } from "../auth/GlobalContext";
 import { Globals } from "../globals";
 import ReplyComponent from "./ReplyComponent";
@@ -10,7 +10,7 @@ import RenderText from "./RenderText";
 
 interface PostCardProps {
   post: Post;
-  children?: ReactElement;
+  children?: React.ReactNode;
 }
 
 const PostCard: React.FC<PostCardProps> = ({ post: postProp }) => {
@@ -96,7 +96,7 @@ const PostCard: React.FC<PostCardProps> = ({ post: postProp }) => {
   };
 
   // Post html
-  const PostContent = (props: { post: Post; children?: ReactElement }) => {
+  const PostContent = (props: { post: Post; children?: React.ReactNode }) => {
     switch (props.post.type) {
       // Post
       case PostType.POST:
