@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import User from "./user";
-import { useParams, useSearchParams } from "react-router-dom";
+import { Link, useParams, useSearchParams } from "react-router-dom";
 import { followUser, getUserByUsername } from "./user-service";
 import PostFeed from "../post/PostFeed";
 import { getPostsByUser } from "../post/post-service";
@@ -81,12 +81,22 @@ function Profile() {
           }}
         ></div>
         {/* Username & follow */}
-        <div className="px-4 py-2 flex flex-wrap gap-2 justify-between items-end">
+        <div className="px-4 py-2 flex flex-wrap gap-2 items-end">
           {/* Profile picture */}
           <img
             className="h-40 -mt-32 rounded-md aspect-square border-solid border-4 border-white profile-image"
             src={user.profileImage ? `data:${user.profileImage.mimeType};base64,${user.profileImage.data}` : defaultImage}
           ></img>
+
+          <div className="flex gap-1 mr-auto">
+            <Link to={`followers`} className="btn-tab-light">
+              <b>{followers}</b> Followers
+            </Link>
+            <Link to={`following`} className="btn-tab-light">
+              <b>{user.numberOfFollowing}</b> Following
+            </Link>
+          </div>
+
           {loggedIn &&
             (username !== myUsername ? (
               <div>
@@ -119,8 +129,6 @@ function Profile() {
             <p>User since: {format(user.registerDate, "dd MMMM yyyy")}</p>
           </div>
           <p>{user.bio}</p>
-          <p>Followers: {followers}</p>
-          <p>Following: {user.numberOfFollowing}</p>
         </div>
       </div>
 

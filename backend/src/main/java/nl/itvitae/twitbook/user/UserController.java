@@ -55,21 +55,56 @@ public class UserController {
 
   @GetMapping("by-username/{username}")
   public ResponseEntity<?> findByUsername(@PathVariable String username,
-      @AuthenticationPrincipal User user) {
+      @AuthenticationPrincipal User callingUser) {
     Optional<User> targetUser = userRepository.findByUsernameIgnoreCase(username);
 
     if (targetUser.isEmpty()) {
       return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
     }
 
-    if (user == null) {
+    if (callingUser == null) {
       return new ResponseEntity<>(new UserDTO(targetUser.get()), HttpStatus.OK);
     }
     return new ResponseEntity<>(new UserDTO(targetUser.get(),
-        followRepository.existsFollowByFollowerIdAndFollowingId(user.getId(),
+        followRepository.existsFollowByFollowerIdAndFollowingId(callingUser.getId(),
             targetUser.get().getId())), HttpStatus.OK);
   }
 
+  @GetMapping("followers-by-username/{username}")
+  public ResponseEntity<?> findFollowersByUsername(@PathVariable String username,
+      @AuthenticationPrincipal User callingUser, Pageable pageable) {
+
+    Optional<User> targetUser = userRepository.findByUsernameIgnoreCase(username);
+
+    if (targetUser.isEmpty()) {
+      return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
+    }
+
+    Page<User> followersPage = userRepository.findByFollowing_Following_UsernameIgnoreCase(targetUser.get().getUsername(),
+        getPageable(pageable));
+
+    Page<UserDTO> followersDTOPage = followersPage.map(UserDTO::new);
+
+    return new ResponseEntity<>(followersDTOPage, HttpStatus.OK);
+  }
+
+  @GetMapping("following-by-username/{username}")
+  public ResponseEntity<?> findFollowingByUsername(@PathVariable String username,
+      @AuthenticationPrincipal User callingUser, Pageable pageable) {
+
+    Optional<User> targetUser = userRepository.findByUsernameIgnoreCase(username);
+
+    if (targetUser.isEmpty()) {
+      return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
+    }
+
+    Page<User> followingPage = userRepository.findByFollowers_Follower_UsernameIgnoreCase(targetUser.get().getUsername(),
+        getPageable(pageable));
+
+    Page<UserDTO> followingDTOPage = followingPage.map(UserDTO::new);
+
+    return new ResponseEntity<>(followingDTOPage, HttpStatus.OK);
+  }
 
   @PatchMapping("profile")
   public ResponseEntity<?> editProfile(@RequestPart EditUserModel editUserModel,
