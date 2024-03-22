@@ -13,7 +13,7 @@ const NavBar = () => {
           <div className="flex-grow basis-10 flex items-center">
             <Link to="/" className="w-8 flex-shrink-0">
               <img
-                src="/public/favicon.ico"
+                src="/favicon.ico"
                 style={{ filter: "grayscale(0.4) brightness(1.7)" }}
               ></img>
             </Link>

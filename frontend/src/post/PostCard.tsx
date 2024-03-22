@@ -10,11 +10,12 @@ import RenderText from "./RenderText";
 
 interface PostCardProps {
   post: Post;
+  children?: React.ReactNode;
 }
 
 const PostCard: React.FC<PostCardProps> = ({ post: postProp }) => {
-  const [post] = useState<Post>(postProp);
-  const [linkedPost] = useState<Post | undefined>(postProp.linkedPost);
+  // const [post] = useState<Post>(postProp);
+  // const [linkedPost] = useState<Post | undefined>(postProp.linkedPost);
 
   const getPost = () =>
     postProp.type == PostType.REPOST ? postProp.linkedPost : postProp;
@@ -38,7 +39,7 @@ const PostCard: React.FC<PostCardProps> = ({ post: postProp }) => {
   const [hasReposted, setHasReposted] = useState(!!getPost()?.hasReposted);
   const [hasReplied] = useState(!!getPost()?.hasReplied);
 
-  useEffect(() => {}, [post, setPostReplying]);
+  useEffect(() => {}, [postProp, setPostReplying]);
 
   const authFail = (text: string) => {
     if (!loggedIn) alert(text);
@@ -95,70 +96,59 @@ const PostCard: React.FC<PostCardProps> = ({ post: postProp }) => {
   };
 
   // Post html
-  const PostContent = () => {
-    switch (post.type) {
+  const PostContent = (props: { post: Post; children?: React.ReactNode }) => {
+    switch (props.post.type) {
       // Post
       case PostType.POST:
         return (
           <>
-            <UserInfo displayName={post.displayName} username={post.username} />
-            <RenderText content={post.content} />
-            <BottomButtons post={post} />
+            <UserInfo post={props.post} />
+            {props.children}
+            <RenderText content={props.post.content} />
+            <BottomButtons post={props.post} />
           </>
         );
 
       // Repost
       case PostType.REPOST:
-        if (!linkedPost) return <div>Error: original post not found</div>;
+        if (!props.post.linkedPost)
+          return <div>Error: original post not found</div>;
 
         return (
-          <>
-            <UserInfo
-              displayName={linkedPost.displayName}
-              username={linkedPost.username}
-            />
+          <PostContent post={props.post.linkedPost}>
             <span className="ml-2 text-light italic">
-              • 🔁 by {post.username}
+              • 🔁 by {props.post.username}
             </span>
-            <RenderText content={linkedPost.content} />
-            <BottomButtons post={linkedPost} />
-          </>
+          </PostContent>
         );
 
       // Reply
       case PostType.REPLY:
         return (
           <>
-            <UserInfo displayName={post.displayName} username={post.username} />
-            <RenderText content={post.content} />
+            <UserInfo post={props.post} />
+            {props.children}
+            <RenderText content={props.post.content} />
             <div className="rounded-lg border-green p-2 mt-1">
-              {!linkedPost ? (
+              {!props.post.linkedPost ? (
                 <span className="text-light">Not found</span>
               ) : (
                 <>
-                  <UserInfo
-                    displayName={linkedPost.displayName}
-                    username={linkedPost.username}
-                    small={true}
-                  />
-                  <RenderText content={linkedPost.content} />
+                  <UserInfo post={props.post.linkedPost} small={true} />
+                  <RenderText content={props.post.linkedPost.content} />
                 </>
               )}
             </div>
-            <BottomButtons post={post} />
+            <BottomButtons post={props.post} />
           </>
         );
     }
   };
 
   // Post top info
-  const UserInfo = (props: {
-    displayName: string;
-    username: string;
-    small?: boolean;
-  }) => (
+  const UserInfo = (props: { post: Post; small?: boolean }) => (
     <>
-      <Link to={`/profile/${props.username}`}>
+      <Link to={`/profile/${props.post.username}`}>
         <img
           className={
             "inline-block rounded-full aspect-square " +
@@ -167,11 +157,11 @@ const PostCard: React.FC<PostCardProps> = ({ post: postProp }) => {
           src="https://picsum.photos/50"
         ></img>
       </Link>
-      <Link to={`/profile/${props.username}`} className="h4 mr-1">
-        {props.displayName}
+      <Link to={`/profile/${props.post.username}`} className="h4 mr-1">
+        {props.post.displayName}
       </Link>
       <span className="text-light">
-        @{props.username} • {format(post.postedDate, "dd MMMM yyyy")}
+        @{props.post.username} • {format(props.post.postedDate, "dd MMMM yyyy")}
       </span>
     </>
   );
@@ -236,7 +226,7 @@ const PostCard: React.FC<PostCardProps> = ({ post: postProp }) => {
 
   return (
     <div className="py-2 pl-20 pr-4 glass relative rounded-lg">
-      <PostContent />
+      <PostContent post={postProp} />
     </div>
   );
 };

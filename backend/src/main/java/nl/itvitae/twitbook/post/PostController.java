@@ -46,8 +46,7 @@ public class PostController {
 
   // Returns the proper DTO based on post type
   private Object getPostDTO(Post post, User userRequesting) {
-    return post.getLinkedPost() == null ? new PostDTO(post, userRequesting)
-        : new RepostDTO(post, userRequesting);
+    return new PostDTO(post, userRequesting, true);
   }
 
   private PageRequest getPageable(Pageable pageable) {

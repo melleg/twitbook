@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import PostFeed from "../post/PostFeed";
 import CreatePostComponent from "../post/CreatePostComponent";
 import { getPosts, getPostsByFollowing } from "../post/post-service";
@@ -10,6 +10,11 @@ function Home() {
   const [viewAll, setViewAll] = useState<boolean>(true);
   const [searchParams, setSearchParams] = useSearchParams();
   const [totalPages, setTotalPages] = useState<number>(0);
+
+  // On page load
+  useEffect(() => {
+    setRefresh(refresh + 1);
+  }, []);
 
   const showFollowingOnly = (value: boolean) => {
     if (value !== viewAll) {
