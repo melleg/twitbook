@@ -42,7 +42,7 @@ public class ImageController {
         .getProfileImage());
   }
 
-  @PostMapping("upload")
+  @PostMapping
   public ResponseEntity<?> uploadImage(@RequestPart MultipartFile file, UriComponentsBuilder uriBuilder) throws Exception {
     var image = imageService.uploadImage(file);
 
