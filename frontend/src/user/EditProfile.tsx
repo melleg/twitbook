@@ -27,6 +27,14 @@ const EditProfile: React.FC<ProfileModel> = ({ displayName, bio }) => {
     setRefresh(refresh + 1);
   };
 
+  const handleNewImage = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files![0];
+    console.log(file.type);
+    file.type.startsWith("image")
+      ? setNewImage(e.target.files![0])
+      : setErrorMessage("unsupported file type, please use an image");
+  };
+
   return (
     <div className="p-4 bg-white rounded-md">
       <h1>Edit profile</h1>
@@ -36,16 +44,20 @@ const EditProfile: React.FC<ProfileModel> = ({ displayName, bio }) => {
           {newImage && (
             <div>
               <img src={URL.createObjectURL(newImage)} />
-              <button onClick={() => setNewImage(undefined)}>
+              <button
+                className="btn-action"
+                onClick={() => setNewImage(undefined)}
+              >
                 Remove
               </button>
             </div>
           )}
           <input
             type="file"
+            accept="image/*"
             name="profileImage"
             onChange={(e) => {
-              setNewImage(e.target.files![0]);
+              handleNewImage(e);
             }}
           />
         </label>
