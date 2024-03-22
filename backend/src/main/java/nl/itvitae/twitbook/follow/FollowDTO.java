@@ -1,6 +1,5 @@
 package nl.itvitae.twitbook.follow;
 
-import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 
 public record FollowDTO(Long id, String followerUsername, String followingUsername,

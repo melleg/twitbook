@@ -50,7 +50,6 @@ public class UserController {
   }
 
 
-
   @PatchMapping("profile")
   public ResponseEntity<?> editProfile(@RequestPart EditUserModel editUserModel, @RequestPart(required = false)
       MultipartFile file,

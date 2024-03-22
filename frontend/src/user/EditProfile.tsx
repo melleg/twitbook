@@ -43,7 +43,7 @@ const EditProfile: React.FC<ProfileModel> = ({ displayName, bio }) => {
           Profile image
           {newImage && (
             <div>
-              <img src={URL.createObjectURL(newImage)} />
+              <img className="h-48 w-48" src={URL.createObjectURL(newImage)} />
               <button
                 className="btn-action"
                 onClick={() => setNewImage(undefined)}

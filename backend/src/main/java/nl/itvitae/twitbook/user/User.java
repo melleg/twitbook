@@ -1,6 +1,5 @@
 package nl.itvitae.twitbook.user;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -50,7 +49,7 @@ public class User implements UserDetails {
 
   @OneToOne
   private Image profileImage;
-  
+
   @OneToMany(mappedBy = "follower")
   private Set<Follow> following = new HashSet<>();
 
