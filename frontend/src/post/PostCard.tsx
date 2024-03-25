@@ -170,7 +170,7 @@ const PostCard: React.FC<PostCardProps> = ({ post: postProp }) => {
       </Link>
       <Link
         to={`/profile/${props.post.username}`}
-        onClick={(e) => noPropagate(e)}
+        onClick={noPropagate}
         className="h4 mr-1"
       >
         {props.post.displayName}
@@ -179,7 +179,7 @@ const PostCard: React.FC<PostCardProps> = ({ post: postProp }) => {
         @{props.post.username} •
         <Link
           to={`/posts/${props.post.id}`}
-          onClick={(e) => noPropagate(e)}
+          onClick={noPropagate}
           className="text-light"
         >
           {format(props.post.postedDate, "dd MMMM yyyy")}
