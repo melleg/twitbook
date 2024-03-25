@@ -35,7 +35,7 @@ public class PostController {
   private final LikeRepository likeRepository;
   private final HashtagService hashtagService;
 
-  private static final int PAGE_SIZE = 4;
+  private static final int PAGE_SIZE = 12;
 
   // Returns the proper DTO based on post type
   private Object getPostDTO(Post post, User userRequesting) {
