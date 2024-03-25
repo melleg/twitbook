@@ -80,7 +80,8 @@ public class UserController {
       return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
     }
 
-    Page<User> followersPage = userRepository.findByFollowing_Following_UsernameIgnoreCase(targetUser.get().getUsername(),
+    Page<User> followersPage = userRepository.findByFollowing_Following_UsernameIgnoreCase(
+        targetUser.get().getUsername(),
         getPageable(pageable));
 
     Page<UserDTO> followersDTOPage = followersPage.map(UserDTO::new);
@@ -98,7 +99,8 @@ public class UserController {
       return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
     }
 
-    Page<User> followingPage = userRepository.findByFollowers_Follower_UsernameIgnoreCase(targetUser.get().getUsername(),
+    Page<User> followingPage = userRepository.findByFollowers_Follower_UsernameIgnoreCase(
+        targetUser.get().getUsername(),
         getPageable(pageable));
 
     Page<UserDTO> followingDTOPage = followingPage.map(UserDTO::new);
@@ -113,15 +115,20 @@ public class UserController {
       @AuthenticationPrincipal User user) {
     user.setDisplayName(editUserModel.displayName());
     user.setBio(editUserModel.bio());
-    try {
-      var oldImage = user.getProfileImage();
-      user.setProfileImage(imageService.uploadImage(file));
-      userRepository.save(user);
-      imageService.deleteImage(oldImage);
-    } catch (Exception e) {
-      userRepository.save(user);
-      return new ResponseEntity<>("invalid file type", HttpStatus.CONFLICT);
+    var oldImage = user.getProfileImage();
+    if (file.getContentType().startsWith("image/")) {
+      try {
+        user.setProfileImage(imageService.uploadImage(file));
+      } catch (Exception e) {
+        return new ResponseEntity<>("file not found", HttpStatus.BAD_REQUEST);
+      }
+    } else {
+      oldImage = null;
     }
-    return ResponseEntity.ok().build();
+    userRepository.save(user);
+    if (oldImage != null) {
+      imageService.deleteImage(oldImage);
+    }
+    return ResponseEntity.ok(user.getProfileImage());
   }
 }
