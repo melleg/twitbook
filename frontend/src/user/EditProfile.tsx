@@ -20,9 +20,7 @@ const EditProfile: React.FC<ProfileModel> = ({ displayName, bio }) => {
 
     try {
       const newPfp = await updateProfile(model, newImage!);
-      setMyProfileImage(newPfp.data);
-      console.log(newPfp.data);
-      
+      setMyProfileImage(newPfp.data);     
     } catch (err) {
       setErrorMessage("Unable to update profile");
     }
