@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { useGlobalContext } from "../auth/GlobalContext";
 import SearchBar from "../search/SearchBar";
-import defaultImage from '/default.jpg'
+import defaultImage from "/default.jpg";
 
 const NavBar = () => {
   const { loggedIn, myUsername, myProfileImage } = useGlobalContext();
@@ -27,8 +27,9 @@ const NavBar = () => {
               <>
                 <Link to={`/profile/${myUsername}`}>
                   <img
-                  className={
-                    "inline-block rounded-full aspect-square w-10 mr-2"} 
+                    className={
+                      "profile-image-small inline-block rounded-full aspect-square w-10 mr-2"
+                    }
                     src={
                       myProfileImage
                         ? `data:${myProfileImage.mimeType};base64,${myProfileImage.data}`
