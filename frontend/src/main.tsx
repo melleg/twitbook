@@ -8,6 +8,7 @@ import Profile from "./user/Profile.tsx";
 import RegisterComponent from "./auth/RegisterComponent.tsx";
 import RegisterSuccess from "./auth/RegisterSuccess.tsx";
 import SearchResult from "./search/SearchResult.tsx";
+import PostDetails from "./post/PostDetails.tsx";
 
 const router = createBrowserRouter([
   {
@@ -25,6 +26,10 @@ const router = createBrowserRouter([
       {
         path: "profile/:username",
         element: <Profile />,
+      },
+      {
+        path: "posts/:id",
+        element: <PostDetails />,
       },
       {
         path: "search",
