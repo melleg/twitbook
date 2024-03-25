@@ -123,8 +123,7 @@ public class UserController {
         return new ResponseEntity<>("file not found", HttpStatus.BAD_REQUEST);
       }
     } else {
-      userRepository.save(user);
-      return ResponseEntity.ok().build();
+      oldImage = null;
     }
     userRepository.save(user);
     if (oldImage != null) {
