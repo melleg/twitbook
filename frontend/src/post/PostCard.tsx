@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import Post, { PostType } from "./post";
 import { format } from "date-fns";
 import { deletePost, likePost, repost } from "./post-service";
@@ -21,14 +21,10 @@ const PostCard: React.FC<PostCardProps> = ({
   hideReply,
   className,
 }) => {
-  // const [post] = useState<Post>(postProp);
-  // const [linkedPost] = useState<Post | undefined>(postProp.linkedPost);
-
+  const { id } = useParams();
   const navigate = useNavigate();
-
   const getPost = () =>
     postProp.type == PostType.REPOST ? postProp.linkedPost : postProp;
-
   const {
     loggedIn,
     myUsername,
@@ -158,8 +154,7 @@ const PostCard: React.FC<PostCardProps> = ({
                   <div
                     className="reply mt-1"
                     onClick={(e) => {
-                      e.stopPropagation();
-                      navigate(`/posts/${props.post.linkedPost!.id}`);
+                      tryNavigate(e, props.post.linkedPost!.id);
                     }}
                   >
                     <UserInfo post={props.post.linkedPost} small={true} />
@@ -270,6 +265,12 @@ const PostCard: React.FC<PostCardProps> = ({
     </>
   );
 
+  const tryNavigate = (e: React.MouseEvent, postId: number) => {
+    e.stopPropagation();
+    if (id && postId == parseInt(id)) return; // Only navigate if not on post page already
+    navigate(`/posts/${postId}`);
+  };
+
   // If deleted...
   if (deleted)
     return (
@@ -278,10 +279,7 @@ const PostCard: React.FC<PostCardProps> = ({
 
   return (
     <div
-      onClick={(e) => {
-        e.stopPropagation;
-        navigate(`/posts/${getPost()!.id}`);
-      }}
+      onClick={(e) => tryNavigate(e, getPost()!.id)}
       className={`py-2 pl-20 pr-4 glass relative rounded-lg ${className ?? ""}`}
     >
       <PostContent post={postProp} />
