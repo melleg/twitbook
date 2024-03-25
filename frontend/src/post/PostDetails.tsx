@@ -36,7 +36,7 @@ const PostDetails = () => {
           {/* Original post */}
           <PostCard post={post}></PostCard>
           {/* Responses to post */}
-          <div className="replies mt-1 flex flex-col gap-2">
+          <div className="mt-1 flex flex-col gap-2">
             <span className="font-bold">
               {responses.length} {responses.length === 1 ? "reply" : "replies"}
             </span>
