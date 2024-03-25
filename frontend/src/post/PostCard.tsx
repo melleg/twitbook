@@ -55,7 +55,9 @@ const PostCard: React.FC<PostCardProps> = ({
     return !loggedIn;
   };
 
-  const handleDelete = async (post: Post) => {
+  const handleDelete = async (e: React.MouseEvent, post: Post) => {
+    e.stopPropagation();
+
     if (authFail("You must be logged in to delete")) return;
 
     try {
@@ -67,7 +69,9 @@ const PostCard: React.FC<PostCardProps> = ({
     }
   };
 
-  const handleLike = async (post: Post) => {
+  const handleLike = async (e: React.MouseEvent, post: Post) => {
+    e.stopPropagation();
+
     if (authFail("You must be logged in to like")) return;
 
     try {
@@ -79,7 +83,9 @@ const PostCard: React.FC<PostCardProps> = ({
     }
   };
 
-  const handleReply = (post: Post) => {
+  const handleReply = (e: React.MouseEvent, post: Post) => {
+    e.stopPropagation();
+
     if (authFail("You must be logged in to reply")) return;
     setPostReplying(postReplying != post ? post : null);
   };
@@ -91,7 +97,9 @@ const PostCard: React.FC<PostCardProps> = ({
     setSuccessMessage("You replied.");
   };
 
-  const handleRepost = async (post: Post) => {
+  const handleRepost = async (e: React.MouseEvent, post: Post) => {
+    e.stopPropagation();
+
     if (authFail("You must be logged in to repost")) return;
 
     try {
@@ -206,7 +214,7 @@ const PostCard: React.FC<PostCardProps> = ({
           className={"btn-icon w-16" + (hasLiked ? " activated" : "")}
           type="button"
           title="Like"
-          onClick={() => handleLike(props.post)}
+          onClick={(e) => handleLike(e, props.post)}
         >
           👍{likes}
         </button>
@@ -215,7 +223,7 @@ const PostCard: React.FC<PostCardProps> = ({
           className={"btn-icon w-16" + (hasReplied ? " activated" : "")}
           type="button"
           title="Reply"
-          onClick={() => handleReply(props.post)}
+          onClick={(e) => handleReply(e, props.post)}
         >
           ↪️{replies}
         </button>
@@ -224,7 +232,7 @@ const PostCard: React.FC<PostCardProps> = ({
           className={"btn-icon w-16" + (hasReposted ? " activated" : "")}
           type="button"
           title="Repost"
-          onClick={() => handleRepost(props.post)}
+          onClick={(e) => handleRepost(e, props.post)}
         >
           🔁{reposts}
         </button>
@@ -235,7 +243,7 @@ const PostCard: React.FC<PostCardProps> = ({
             <button
               className="btn-icon text-left"
               type="button"
-              onClick={() => handleDelete(props.post)}
+              onClick={(e) => handleDelete(e, props.post)}
             >
               🗑 Delete Post
             </button>
@@ -257,7 +265,10 @@ const PostCard: React.FC<PostCardProps> = ({
 
   return (
     <div
-      onClick={() => navigate(`/posts/${postProp.id}`)}
+      onClick={(e) => {
+        e.stopPropagation;
+        navigate(`/posts/${getPost()!.id}`);
+      }}
       className={`py-2 pl-20 pr-4 glass relative rounded-lg ${className ?? ""}`}
     >
       <PostContent post={postProp} />
