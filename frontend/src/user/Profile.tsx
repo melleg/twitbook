@@ -104,11 +104,11 @@ function Profile() {
                 <p className="error-message">{errorMessage}</p>
                 <button
                   type="button"
-                  className="btn-action"
+                  className={`btn-action ${
+                    hasFollowed ? "unfollow" : "follow"
+                  }`}
                   onClick={() => handleFollow()}
-                >
-                  {hasFollowed ? <div className="unfollow"></div> : "Follow"}
-                </button>
+                ></button>
               </div>
             ) : (
               <div>
