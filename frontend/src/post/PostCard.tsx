@@ -280,7 +280,9 @@ const PostCard: React.FC<PostCardProps> = ({
   return (
     <div
       onClick={(e) => tryNavigate(e, getPost()!.id)}
-      className={`py-2 pl-20 pr-4 glass relative rounded-lg ${className ?? ""}`}
+      className={`cursor-pointer py-2 pl-20 pr-4 glass relative rounded-lg ${
+        className ?? ""
+      }`}
     >
       <PostContent post={postProp} />
     </div>
