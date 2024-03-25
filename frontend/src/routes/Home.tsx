@@ -17,8 +17,8 @@ function Home() {
   }, []);
 
   const showFollowingOnly = (value: boolean) => {
-    if (value !== viewAll) {
-      setViewAll(value);
+    if (value === viewAll) {
+      setViewAll(!value);
       setPage(0);
       setRefresh(refresh + 1);
     }
@@ -38,21 +38,21 @@ function Home() {
     <>
       {loggedIn && (
         <>
-          <div className="flex justify-around">
+          <CreatePostComponent />
+          <div className="glass rounded-md p-1 flex justify-center gap-1">
             <button
-              className="btn-action my-4"
-              onClick={() => showFollowingOnly(true)}
+              className={`btn-tab ${viewAll ? "activated" : ""}`}
+              onClick={() => showFollowingOnly(false)}
             >
               View all posts
             </button>
             <button
-              className="btn-action my-4"
-              onClick={() => showFollowingOnly(false)}
+              className={`btn-tab ${!viewAll ? "activated" : ""}`}
+              onClick={() => showFollowingOnly(true)}
             >
               View personal feed
             </button>
           </div>
-          <CreatePostComponent />
         </>
       )}
 

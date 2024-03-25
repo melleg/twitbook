@@ -32,16 +32,19 @@ const CreatePostComponent: React.FC = () => {
 
   return (
     <form
-      className="p-4 glass flex flex-col rounded-lg gap-2 my-2"
+      className="flex flex-col gap-2 my-2 relative"
       onSubmit={handleSubmit}
     >
-      <span className="error-message">{errorMessage}</span>
+      {errorMessage?.length > 0 && (
+        <span className="error-message">{errorMessage}</span>
+      )}
+
       <TextArea
         onChange={(e) => setContent(e.target.value)}
         value={content}
         placeholder="What're you twitting about?"
       />
-      <button type="submit" className="btn-action ml-auto">
+      <button type="submit" className="btn-action absolute right-1 bottom-1">
         Post
       </button>
     </form>

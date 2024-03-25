@@ -18,13 +18,14 @@ public class ImageService {
     var sdf = new SimpleDateFormat("ddMMyy-hhmmss-SSS");
 
     try {
-      var image = Image.builder()
-          .filename(String.format("%s.%s", sdf.format(new Date()),
-              file.getContentType().substring(file.getContentType().lastIndexOf('/') + 1)))
-          .mimeType(file.getContentType())
-          .data(file.getBytes())
-          .build();
-      return imageRepository.save(image);
+      String contentType = file.getContentType();
+        var image = Image.builder()
+            .filename(String.format("%s.%s", sdf.format(new Date()),
+                contentType.substring(contentType.lastIndexOf('/') + 1)))
+            .mimeType(contentType)
+            .data(file.getBytes())
+            .build();
+        return imageRepository.save(image);
     } catch (IOException e) {
       return null;
     }

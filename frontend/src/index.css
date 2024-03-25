@@ -78,6 +78,15 @@ h5,
   font-size: 1;
 }
 
+a {
+  cursor: pointer;
+
+  &:hover {
+    text-decoration: underline 2px solid;
+    text-underline-offset: 3px;
+  }
+}
+
 label > input {
   width: 100%;
 }
@@ -128,6 +137,51 @@ button {
   }
 }
 
+.btn-tab {
+  padding: 0.35rem 0.95rem;
+  font-weight: bold;
+  border-radius: 0.75rem;
+  text-align: center;
+  text-decoration: none !important;
+
+  &:hover {
+    background: linear-gradient(80deg, rgba(5, 184, 5, 0.712), #17fa0fbe);
+  }
+
+  &.activated {
+    background: linear-gradient(80deg, rgb(2, 153, 2), #15e00e);
+  }
+}
+
+.btn-tab-light {
+  padding: 0.35rem 0.55rem;
+  border-radius: 0.75rem;
+  text-align: center;
+  text-decoration: none !important;
+  color: var(--text-light);
+
+  &:hover {
+    background-color: var(--grey);
+  }
+}
+
+.btn-transparent {
+  color: white;
+  background-color: transparent;
+  aspect-ratio: 1;
+  font-weight: 600;
+  border-radius: 100%;
+
+  &:hover:enabled {
+    background-color: var(--text-transparent);
+  }
+
+  &:disabled {
+    user-select: none;
+    color: var(--text-transparent);
+  }
+}
+
 .search-bar {
   transition: flex-basis 0.4s;
 
@@ -158,32 +212,6 @@ button {
       outline: none;
       border-color: var(--green-activated);
     }
-  }
-}
-
-.btn-transparent {
-  color: white;
-  background-color: transparent;
-  aspect-ratio: 1;
-  font-weight: 600;
-  border-radius: 100%;
-
-  &:hover:enabled {
-    background-color: var(--text-transparent);
-  }
-
-  &:disabled {
-    user-select: none;
-    color: var(--text-transparent);
-  }
-}
-
-a {
-  cursor: pointer;
-
-  &:hover {
-    text-decoration: underline 2px solid;
-    text-underline-offset: 3px;
   }
 }
 
@@ -223,6 +251,7 @@ a {
 
 .glass {
   background-color: var(--glass);
+  box-shadow: 0px 2px 0px 2px #0000000f;
 }
 
 .reply {
