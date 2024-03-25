@@ -190,11 +190,11 @@ const PostCard: React.FC<PostCardProps> = ({
           }
         ></img>
       </Link>
-      <div className="inline-flex items-center gap-1">
+      <div className="inline-flex flex-wrap items-center gap-1">
         <Link
           to={`/profile/${props.post.username}`}
           onClick={noPropagate}
-          className="flex items-center gap-1"
+          className="flex flex-wrap items-center gap-1"
         >
           <span className="h4">{props.post.displayName}</span>{" "}
           <span>@{props.post.username}</span>
