@@ -158,7 +158,7 @@ const PostCard: React.FC<PostCardProps> = ({
                   <div
                     className="reply mt-1"
                     onClick={(e) => {
-                      e.stopPropagation;
+                      e.stopPropagation();
                       navigate(`/posts/${props.post.linkedPost!.id}`);
                     }}
                   >
@@ -195,23 +195,26 @@ const PostCard: React.FC<PostCardProps> = ({
           }
         ></img>
       </Link>
-      <Link
-        to={`/profile/${props.post.username}`}
-        onClick={noPropagate}
-        className="h4 mr-1"
-      >
-        {props.post.displayName}
-      </Link>
-      <span className="text-light">
-        @{props.post.username} •
+      <div className="inline-flex items-center gap-1">
         <Link
-          to={`/posts/${props.post.id}`}
+          to={`/profile/${props.post.username}`}
           onClick={noPropagate}
-          className="text-light"
+          className="flex items-center gap-1"
         >
-          {format(props.post.postedDate, "dd MMMM yyyy")}
+          <span className="h4">{props.post.displayName}</span>{" "}
+          <span>@{props.post.username}</span>
         </Link>
-      </span>
+        <span className="text-light">•</span>
+        <span className="text-light">
+          <Link
+            to={`/posts/${props.post.id}`}
+            onClick={noPropagate}
+            className="text-light"
+          >
+            {format(props.post.postedDate, "dd MMMM yyyy")}
+          </Link>
+        </span>
+      </div>
     </>
   );
 

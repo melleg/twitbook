@@ -29,22 +29,21 @@ const PostDetails = () => {
 
   return (
     <div className="mt-2">
-      {/* Back link */}
-      <a className="text-white font-bold" onClick={() => window.history.back()}>
-        Back
-      </a>
-
       {responses.length === 0 ? (
         <PostCard post={post}></PostCard>
       ) : (
         <>
           {/* Original post */}
-          <PostCard post={post} className="rounded-b-none"></PostCard>
+          <PostCard post={post}></PostCard>
           {/* Responses to post */}
-          <div className="replies">
-            <p>{responses.length} replies</p>
+          <div className="replies flex flex-col gap-2">
+            <p className="text-white font-bold">{responses.length} replies</p>
             {responses.map((response) => (
-              <PostCard post={response} hideReply={true}></PostCard>
+              <PostCard
+                key={response.id}
+                post={response}
+                hideReply={true}
+              ></PostCard>
             ))}
             <br />
             <PaginationControls totalPages={totalPages}></PaginationControls>
