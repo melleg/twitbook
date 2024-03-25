@@ -25,7 +25,7 @@ const NavBar = () => {
           <div className="flex-grow basis-0 font-medium text-xl flex justify-end items-center gap-2">
             {loggedIn ? (
               <>
-                <Link to={`/profile/${myUsername}`}>
+                <Link to={`/profile/${myUsername}`} className="shrink-0">
                   <img
                     className={
                       "profile-image-small inline-block rounded-full aspect-square w-10 mr-2"
