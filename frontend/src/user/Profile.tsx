@@ -9,7 +9,7 @@ import CreatePostComponent from "../post/CreatePostComponent";
 import { useGlobalContext } from "../auth/GlobalContext";
 import EditProfile from "./EditProfile";
 import Popup from "reactjs-popup";
-import defaultImage from '/default.jpg'
+import defaultImage from "/default.jpg";
 
 function Profile() {
   const { username } = useParams();
@@ -42,10 +42,7 @@ function Profile() {
     loadUser();
   }, [refresh, username, searchParams]);
 
-  const getPage = () => {
-    if (!searchParams) console.error("No search params!");
-    return parseInt(searchParams.get("page") ?? "0");
-  };
+  const getPage = () => parseInt(searchParams.get("page") ?? "0");
 
   const handleFollow = async () => {
     if (!loggedIn) {
@@ -85,7 +82,11 @@ function Profile() {
           {/* Profile picture */}
           <img
             className="h-40 -mt-32 rounded-md aspect-square border-solid border-4 border-white profile-image"
-            src={user.profileImage ? `data:${user.profileImage.mimeType};base64,${user.profileImage.data}` : defaultImage}
+            src={
+              user.profileImage
+                ? `data:${user.profileImage.mimeType};base64,${user.profileImage.data}`
+                : defaultImage
+            }
           ></img>
 
           <div className="flex gap-1 mr-auto">
