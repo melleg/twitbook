@@ -147,18 +147,28 @@ const PostCard: React.FC<PostCardProps> = ({
             {props.children}
             <RenderText content={props.post.content} />
 
+            {/* Render original post */}
             {!hideReply && (
-              <div className="rounded-lg border-green p-2 mt-1">
+              <>
                 {!props.post.linkedPost ? (
-                  <span className="text-light">Not found</span>
+                  <div className="reply mt-1">
+                    <span className="text-light">Not found</span>
+                  </div>
                 ) : (
-                  <>
+                  <div
+                    className="reply mt-1"
+                    onClick={(e) => {
+                      e.stopPropagation;
+                      navigate(`/posts/${props.post.linkedPost!.id}`);
+                    }}
+                  >
                     <UserInfo post={props.post.linkedPost} small={true} />
                     <RenderText content={props.post.linkedPost.content} />
-                  </>
+                  </div>
                 )}
-              </div>
+              </>
             )}
+
             <BottomButtons post={props.post} />
           </>
         );

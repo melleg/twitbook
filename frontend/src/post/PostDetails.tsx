@@ -44,15 +44,12 @@ const PostDetails = () => {
           <div className="replies">
             <p>{responses.length} replies</p>
             {responses.map((response) => (
-              <PostCard
-                className="rounded-none border-t-2"
-                post={response}
-                hideReply={true}
-              ></PostCard>
+              <PostCard post={response} hideReply={true}></PostCard>
             ))}
             <br />
+            <PaginationControls totalPages={totalPages}></PaginationControls>
+            <br />
           </div>
-          <PaginationControls totalPages={totalPages}></PaginationControls>
         </>
       )}
     </div>
