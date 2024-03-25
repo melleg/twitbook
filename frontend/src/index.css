@@ -224,6 +224,16 @@ a {
   background-color: var(--glass);
 }
 
+.replies {
+  padding-left: 1rem;
+  background-color: #f3f3f3;
+
+  & > * {
+    border-left: 3px dashed #ededed;
+    background-color: transparent;
+  }
+}
+
 .error-message {
   color: var(--red);
 }

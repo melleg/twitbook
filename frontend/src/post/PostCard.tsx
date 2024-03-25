@@ -11,10 +11,16 @@ import defaultImage from "/default.jpg";
 
 interface PostCardProps {
   post: Post;
+  hideReply?: boolean;
+  className?: string;
   children?: React.ReactNode;
 }
 
-const PostCard: React.FC<PostCardProps> = ({ post: postProp }) => {
+const PostCard: React.FC<PostCardProps> = ({
+  post: postProp,
+  hideReply,
+  className,
+}) => {
   // const [post] = useState<Post>(postProp);
   // const [linkedPost] = useState<Post | undefined>(postProp.linkedPost);
 
@@ -132,16 +138,19 @@ const PostCard: React.FC<PostCardProps> = ({ post: postProp }) => {
             <UserInfo post={props.post} />
             {props.children}
             <RenderText content={props.post.content} />
-            <div className="rounded-lg border-green p-2 mt-1">
-              {!props.post.linkedPost ? (
-                <span className="text-light">Not found</span>
-              ) : (
-                <>
-                  <UserInfo post={props.post.linkedPost} small={true} />
-                  <RenderText content={props.post.linkedPost.content} />
-                </>
-              )}
-            </div>
+
+            {!hideReply && (
+              <div className="rounded-lg border-green p-2 mt-1">
+                {!props.post.linkedPost ? (
+                  <span className="text-light">Not found</span>
+                ) : (
+                  <>
+                    <UserInfo post={props.post.linkedPost} small={true} />
+                    <RenderText content={props.post.linkedPost.content} />
+                  </>
+                )}
+              </div>
+            )}
             <BottomButtons post={props.post} />
           </>
         );
@@ -249,7 +258,7 @@ const PostCard: React.FC<PostCardProps> = ({ post: postProp }) => {
   return (
     <div
       onClick={() => navigate(`/posts/${postProp.id}`)}
-      className="py-2 pl-20 pr-4 glass relative rounded-lg"
+      className={`py-2 pl-20 pr-4 glass relative rounded-lg ${className ?? ""}`}
     >
       <PostContent post={postProp} />
     </div>

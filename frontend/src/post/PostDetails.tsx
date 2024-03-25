@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import Post from "./post";
 import { getPostById, getPostResponses } from "./post-service";
 import PostCard from "./PostCard";
+import PaginationControls from "../misc/PaginationControls";
 
 const PostDetails = () => {
   const { id } = useParams();
@@ -21,7 +22,7 @@ const PostDetails = () => {
     setPost(await getPostById(postId));
 
     // Load responses
-    setResponses(await getPostResponses(postId, 1, setTotalPages));
+    setResponses(await getPostResponses(postId, 0, setTotalPages));
   };
 
   if (!post) return <div>No post...</div>;
@@ -33,13 +34,27 @@ const PostDetails = () => {
         Back
       </a>
 
-      {/* Original post */}
-      <PostCard post={post}></PostCard>
-
-      {/* Responses to post */}
-      {responses.map((r) => (
-        <div>{r.id}</div>
-      ))}
+      {responses.length === 0 ? (
+        <PostCard post={post}></PostCard>
+      ) : (
+        <>
+          {/* Original post */}
+          <PostCard post={post} className="rounded-b-none"></PostCard>
+          {/* Responses to post */}
+          <div className="replies">
+            <p>{responses.length} replies</p>
+            {responses.map((response) => (
+              <PostCard
+                className="rounded-none border-t-2"
+                post={response}
+                hideReply={true}
+              ></PostCard>
+            ))}
+            <br />
+          </div>
+          <PaginationControls totalPages={totalPages}></PaginationControls>
+        </>
+      )}
     </div>
   );
 };

@@ -21,7 +21,7 @@ public class PostService {
     return postRepository.findAll(pageable);
   }
 
-  public Page<Post> findPostResponses(Long id, Pageable pageable) { return postRepository.findByLinkedPostId(id, pageable); }
+  public Page<Post> findPostResponses(Long id, Pageable pageable) { return postRepository.findByLinkedPost_Id(id, pageable); }
 
   public Page<Post> findByHashtag(Hashtag hashtag, Pageable pageable) { return postRepository.findByHashtagsContaining(hashtag, pageable); }
 
