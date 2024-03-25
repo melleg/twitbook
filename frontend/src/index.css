@@ -140,17 +140,21 @@ button {
 
 .btn-tab {
   padding: 0.35rem 0.95rem;
-  font-weight: bold;
+  font-weight: 700;
   border-radius: 0.75rem;
   text-align: center;
   text-decoration: none !important;
+  background-color: var(--grey-light);
+  color: var(--grey);
 
-  &:hover {
-    background: linear-gradient(80deg, rgba(5, 184, 5, 0.712), #17fa0fbe);
+  &:hover,
+  &.activated {
+    background-color: var(--green-activated);
+    color: white;
   }
 
   &.activated {
-    background: linear-gradient(80deg, rgb(2, 153, 2), #15e00e);
+    cursor: default;
   }
 }
 
@@ -218,6 +222,10 @@ button {
 
 .profile-image {
   backdrop-filter: blur(10px);
+}
+
+.profile-image-small {
+  background-color: var(--green-dark);
 }
 
 .width-medium {
