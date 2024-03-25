@@ -1,16 +1,16 @@
-import { useState } from "react";
+import { FormEvent, useState } from "react";
 import { updateProfile } from "./user-service";
 import ProfileModel from "./profile-model";
 import { useGlobalContext } from "../auth/GlobalContext";
 
 const EditProfile: React.FC<ProfileModel> = ({ displayName, bio }) => {
-  const { refresh, setRefresh } = useGlobalContext();
+  const { refresh, setRefresh, setMyProfileImage } = useGlobalContext();
   const [newDisplayName, setNewDisplayName] = useState<string>(displayName);
   const [newBio, setNewBio] = useState<string>(bio ?? "");
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [newImage, setNewImage] = useState<Blob>();
 
-  const handleSubmit = async (e: any) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const model: ProfileModel = {
@@ -19,12 +19,16 @@ const EditProfile: React.FC<ProfileModel> = ({ displayName, bio }) => {
     };
 
     try {
-      await updateProfile(model, newImage!);
+      const newPfp = await updateProfile(model, newImage!);
+      setMyProfileImage(newPfp.data);
+      console.log(newPfp.data);
+      
     } catch (err) {
       setErrorMessage("Unable to update profile");
     }
 
     setRefresh(refresh + 1);
+    
   };
 
   const handleNewImage = (e: React.ChangeEvent<HTMLInputElement>) => {
