@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Post, { PostType } from "./post";
 import { format } from "date-fns";
 import { deletePost, likePost, repost } from "./post-service";
@@ -7,7 +7,7 @@ import { useGlobalContext } from "../auth/GlobalContext";
 import { Globals } from "../globals";
 import ReplyComponent from "./ReplyComponent";
 import RenderText from "./RenderText";
-import defaultImage from '/default.jpg'
+import defaultImage from "/default.jpg";
 
 interface PostCardProps {
   post: Post;
@@ -17,6 +17,8 @@ interface PostCardProps {
 const PostCard: React.FC<PostCardProps> = ({ post: postProp }) => {
   // const [post] = useState<Post>(postProp);
   // const [linkedPost] = useState<Post | undefined>(postProp.linkedPost);
+
+  const navigate = useNavigate();
 
   const getPost = () =>
     postProp.type == PostType.REPOST ? postProp.linkedPost : postProp;
@@ -146,25 +148,42 @@ const PostCard: React.FC<PostCardProps> = ({ post: postProp }) => {
     }
   };
 
+  const noPropagate = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.stopPropagation();
+  };
+
   // Post top info
   const UserInfo = (props: { post: Post; small?: boolean }) => (
     <>
-      <Link to={`/profile/${props.post.username}`}>
+      <Link to={`/profile/${props.post.username}`} onClick={noPropagate}>
         <img
           className={
             "inline-block rounded-full aspect-square " +
             (props.small ? "w-6 mr-1" : "w-14 absolute left-3 top-3")
           }
           src={
-            props.post.profileImage ? `data:${props.post.profileImage.mimeType};base64,${props.post.profileImage.data}` : defaultImage
+            props.post.profileImage
+              ? `data:${props.post.profileImage.mimeType};base64,${props.post.profileImage.data}`
+              : defaultImage
           }
         ></img>
       </Link>
-      <Link to={`/profile/${props.post.username}`} className="h4 mr-1">
+      <Link
+        to={`/profile/${props.post.username}`}
+        onClick={(e) => noPropagate(e)}
+        className="h4 mr-1"
+      >
         {props.post.displayName}
       </Link>
       <span className="text-light">
-        @{props.post.username} • {format(props.post.postedDate, "dd MMMM yyyy")}
+        @{props.post.username} •
+        <Link
+          to={`/posts/${props.post.id}`}
+          onClick={(e) => noPropagate(e)}
+          className="text-light"
+        >
+          {format(props.post.postedDate, "dd MMMM yyyy")}
+        </Link>
       </span>
     </>
   );
@@ -228,7 +247,10 @@ const PostCard: React.FC<PostCardProps> = ({ post: postProp }) => {
     );
 
   return (
-    <div className="py-2 pl-20 pr-4 glass relative rounded-lg">
+    <div
+      onClick={() => navigate(`/posts/${postProp.id}`)}
+      className="py-2 pl-20 pr-4 glass relative rounded-lg"
+    >
       <PostContent post={postProp} />
     </div>
   );
