@@ -86,8 +86,8 @@ public class Seeder implements CommandLineRunner {
   public void run(String... args) throws Exception {
 
     User melle = saveUser("Melle", "Password", Role.ROLE_ADMIN);
-    User raafi = saveUser("Raafi", "Password", saveImage("raafi_pfp.jpg"), Role.ROLE_ADMIN);
-    User nol = saveUser("Nol", "Password",     saveImage("nol_pfp.jpg"), Role.ROLE_ADMIN);
+    User raafi = saveUser("Raafi", "BIGXENOBLADEFAN3000", "Password", saveImage("raafi_pfp.jpg"), Role.ROLE_ADMIN);
+    User nol = saveUser("Nol", "Go10", "Password", saveImage("nol_pfp.jpg"), Role.ROLE_ADMIN);
     User sjaakie = saveUser("sjaakie", "Password", saveImage("trollface.jpg"), Role.ROLE_USER);
 
     Post post1 = savePost("#Bingleblong", nol);
@@ -145,7 +145,13 @@ public class Seeder implements CommandLineRunner {
   }
 
   private User saveUser(String username, String password, Image profileImage, Role... roles) {
-    return userRepository.save(new User(username, passwordEncoder.encode(password), profileImage, roles));
+    return userRepository.save(
+        new User(username, passwordEncoder.encode(password), profileImage, roles));
+  }
+
+  private User saveUser(String username, String displayName, String password, Image profileImage, Role... roles) {
+    return userRepository.save(
+        new User(username,displayName, passwordEncoder.encode(password), profileImage, roles));
   }
 
   private Follow followUser(User follower, User following) {

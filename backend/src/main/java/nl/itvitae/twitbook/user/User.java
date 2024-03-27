@@ -72,6 +72,14 @@ public class User implements UserDetails {
     this.profileImage = profileImage;
     this.registerDate = LocalDateTime.now();
   }
+  public User(String username, String displayName, String password, Image profileImage, Role... roles) {
+    this.username = username;
+    this.password = password;
+    this.roles = roles;
+    this.displayName = displayName;
+    this.profileImage = profileImage;
+    this.registerDate = LocalDateTime.now();
+  }
 
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {
