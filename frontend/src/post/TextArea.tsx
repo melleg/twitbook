@@ -13,7 +13,7 @@ const TextArea: React.FC<TextAreaProps> = ({
   onChange,
 }) => {
   return (
-    <div className="text-area relative w-full overflow-hidden h-72 sm:h-40 md:h-32">
+    <div className="text-area glass rounded-lg relative w-full overflow-hidden h-72 sm:h-40 md:h-32">
       <textarea
         placeholder={placeholder}
         maxLength={Globals.POST_MAX_LENGTH}

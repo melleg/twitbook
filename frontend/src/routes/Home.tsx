@@ -39,18 +39,18 @@ function Home() {
       {loggedIn && (
         <>
           <CreatePostComponent />
-          <div className="glass rounded-md p-1 flex justify-center gap-1">
+          <div className="p-1 flex justify-center gap-3">
             <button
               className={`btn-tab ${viewAll ? "activated" : ""}`}
               onClick={() => showFollowingOnly(false)}
             >
-              View all posts
+              Everything
             </button>
             <button
               className={`btn-tab ${!viewAll ? "activated" : ""}`}
               onClick={() => showFollowingOnly(true)}
             >
-              View personal feed
+              My Feed
             </button>
           </div>
         </>

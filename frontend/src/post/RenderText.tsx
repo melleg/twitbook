@@ -12,7 +12,11 @@ const RenderText: React.FC<RenderTextInterface> = ({ content, className }) => {
 
     return matchesAndNonMatches.map((w, index) =>
       w.match(Globals.HASHTAG_REGEX) ? (
-        <Link key={index} to={`/search?h=${w.slice(1)}`}>
+        <Link
+          onClick={(e) => e.stopPropagation()}
+          key={index}
+          to={`/search?h=${w.slice(1)}`}
+        >
           {w}
         </Link>
       ) : (

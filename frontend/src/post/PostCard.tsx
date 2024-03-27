@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import Post, { PostType } from "./post";
 import { format } from "date-fns";
 import { deletePost, likePost, repost } from "./post-service";
@@ -7,20 +7,24 @@ import { useGlobalContext } from "../auth/GlobalContext";
 import { Globals } from "../globals";
 import ReplyComponent from "./ReplyComponent";
 import RenderText from "./RenderText";
-import defaultImage from '/default.jpg'
+import defaultImage from "/default.jpg";
 
 interface PostCardProps {
   post: Post;
+  hideReply?: boolean;
+  className?: string;
   children?: React.ReactNode;
 }
 
-const PostCard: React.FC<PostCardProps> = ({ post: postProp }) => {
-  // const [post] = useState<Post>(postProp);
-  // const [linkedPost] = useState<Post | undefined>(postProp.linkedPost);
-
+const PostCard: React.FC<PostCardProps> = ({
+  post: postProp,
+  hideReply,
+  className,
+}) => {
+  const { id } = useParams();
+  const navigate = useNavigate();
   const getPost = () =>
     postProp.type == PostType.REPOST ? postProp.linkedPost : postProp;
-
   const {
     loggedIn,
     myUsername,
@@ -47,7 +51,9 @@ const PostCard: React.FC<PostCardProps> = ({ post: postProp }) => {
     return !loggedIn;
   };
 
-  const handleDelete = async (post: Post) => {
+  const handleDelete = async (e: React.MouseEvent, post: Post) => {
+    e.stopPropagation();
+
     if (authFail("You must be logged in to delete")) return;
 
     try {
@@ -59,7 +65,9 @@ const PostCard: React.FC<PostCardProps> = ({ post: postProp }) => {
     }
   };
 
-  const handleLike = async (post: Post) => {
+  const handleLike = async (e: React.MouseEvent, post: Post) => {
+    e.stopPropagation();
+
     if (authFail("You must be logged in to like")) return;
 
     try {
@@ -71,7 +79,9 @@ const PostCard: React.FC<PostCardProps> = ({ post: postProp }) => {
     }
   };
 
-  const handleReply = (post: Post) => {
+  const handleReply = (e: React.MouseEvent, post: Post) => {
+    e.stopPropagation();
+
     if (authFail("You must be logged in to reply")) return;
     setPostReplying(postReplying != post ? post : null);
   };
@@ -83,7 +93,9 @@ const PostCard: React.FC<PostCardProps> = ({ post: postProp }) => {
     setSuccessMessage("You replied.");
   };
 
-  const handleRepost = async (post: Post) => {
+  const handleRepost = async (e: React.MouseEvent, post: Post) => {
+    e.stopPropagation();
+
     if (authFail("You must be logged in to repost")) return;
 
     try {
@@ -130,42 +142,74 @@ const PostCard: React.FC<PostCardProps> = ({ post: postProp }) => {
             <UserInfo post={props.post} />
             {props.children}
             <RenderText content={props.post.content} />
-            <div className="rounded-lg border-green p-2 mt-1">
-              {!props.post.linkedPost ? (
-                <span className="text-light">Not found</span>
-              ) : (
-                <>
-                  <UserInfo post={props.post.linkedPost} small={true} />
-                  <RenderText content={props.post.linkedPost.content} />
-                </>
-              )}
-            </div>
+
+            {/* Render original post */}
+            {!hideReply && (
+              <>
+                {!props.post.linkedPost ? (
+                  <div className="reply mt-1">
+                    <span className="text-light">Not found</span>
+                  </div>
+                ) : (
+                  <div
+                    className="reply mt-1"
+                    onClick={(e) => {
+                      tryNavigate(e, props.post.linkedPost!.id);
+                    }}
+                  >
+                    <UserInfo post={props.post.linkedPost} small={true} />
+                    <RenderText content={props.post.linkedPost.content} />
+                  </div>
+                )}
+              </>
+            )}
+
             <BottomButtons post={props.post} />
           </>
         );
     }
   };
 
+  const noPropagate = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.stopPropagation();
+  };
+
   // Post top info
   const UserInfo = (props: { post: Post; small?: boolean }) => (
     <>
-      <Link to={`/profile/${props.post.username}`}>
+      <Link to={`/profile/${props.post.username}`} onClick={noPropagate}>
         <img
           className={
             "inline-block rounded-full aspect-square " +
             (props.small ? "w-6 mr-1" : "w-14 absolute left-3 top-3")
           }
           src={
-            props.post.profileImage ? `data:${props.post.profileImage.mimeType};base64,${props.post.profileImage.data}` : defaultImage
+            props.post.profileImage
+              ? `data:${props.post.profileImage.mimeType};base64,${props.post.profileImage.data}`
+              : defaultImage
           }
         ></img>
       </Link>
-      <Link to={`/profile/${props.post.username}`} className="h4 mr-1">
-        {props.post.displayName}
-      </Link>
-      <span className="text-light">
-        @{props.post.username} • {format(props.post.postedDate, "dd MMMM yyyy")}
-      </span>
+      <div className="inline-flex flex-wrap items-center gap-1">
+        <Link
+          to={`/profile/${props.post.username}`}
+          onClick={noPropagate}
+          className="flex flex-wrap items-center gap-1"
+        >
+          <span className="h4">{props.post.displayName}</span>{" "}
+          <span>@{props.post.username}</span>
+        </Link>
+        <span className="text-light">•</span>
+        <span className="text-light">
+          <Link
+            to={`/posts/${props.post.id}`}
+            onClick={noPropagate}
+            className="text-light"
+          >
+            {format(props.post.postedDate, "dd MMMM yyyy")}
+          </Link>
+        </span>
+      </div>
     </>
   );
 
@@ -178,7 +222,7 @@ const PostCard: React.FC<PostCardProps> = ({ post: postProp }) => {
           className={"btn-icon w-16" + (hasLiked ? " activated" : "")}
           type="button"
           title="Like"
-          onClick={() => handleLike(props.post)}
+          onClick={(e) => handleLike(e, props.post)}
         >
           👍{likes}
         </button>
@@ -187,7 +231,7 @@ const PostCard: React.FC<PostCardProps> = ({ post: postProp }) => {
           className={"btn-icon w-16" + (hasReplied ? " activated" : "")}
           type="button"
           title="Reply"
-          onClick={() => handleReply(props.post)}
+          onClick={(e) => handleReply(e, props.post)}
         >
           ↪️{replies}
         </button>
@@ -196,7 +240,7 @@ const PostCard: React.FC<PostCardProps> = ({ post: postProp }) => {
           className={"btn-icon w-16" + (hasReposted ? " activated" : "")}
           type="button"
           title="Repost"
-          onClick={() => handleRepost(props.post)}
+          onClick={(e) => handleRepost(e, props.post)}
         >
           🔁{reposts}
         </button>
@@ -207,7 +251,7 @@ const PostCard: React.FC<PostCardProps> = ({ post: postProp }) => {
             <button
               className="btn-icon text-left"
               type="button"
-              onClick={() => handleDelete(props.post)}
+              onClick={(e) => handleDelete(e, props.post)}
             >
               🗑 Delete Post
             </button>
@@ -221,6 +265,12 @@ const PostCard: React.FC<PostCardProps> = ({ post: postProp }) => {
     </>
   );
 
+  const tryNavigate = (e: React.MouseEvent, postId: number) => {
+    e.stopPropagation();
+    if (id && postId == parseInt(id)) return; // Only navigate if not on post page already
+    navigate(`/posts/${postId}`);
+  };
+
   // If deleted...
   if (deleted)
     return (
@@ -228,7 +278,12 @@ const PostCard: React.FC<PostCardProps> = ({ post: postProp }) => {
     );
 
   return (
-    <div className="py-2 pl-20 pr-4 glass relative rounded-lg">
+    <div
+      onClick={(e) => tryNavigate(e, getPost()!.id)}
+      className={`cursor-pointer py-2 pl-20 pr-4 glass relative rounded-lg ${
+        className ?? ""
+      }`}
+    >
       <PostContent post={postProp} />
     </div>
   );

@@ -2,6 +2,7 @@ package nl.itvitae.twitbook.seeder;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.AllArgsConstructor;
 
@@ -50,7 +51,35 @@ public class Seeder implements CommandLineRunner {
         *distraction*
         Haha omg i reaaally need to st-""", "twitbook is love, twitbook is life", "gameing",
       "me when the", "banaan", "fun", "wow", "concerning", "interesting", "looking into this",
-      "I'm running out of unique tweets"
+      "I'm running out of unique tweets",
+      "Flamingos can juggle fireballs. #BirdFacts",
+      "Sparrows host underground dance battles. #BirdFacts",
+      "Pigeons are expert chess players. #BirdFacts",
+      "Owls run secret libraries in the woods. #BirdFacts",
+      "Seagulls attend clown school on weekends. #BirdFacts",
+      "Robins moonlight as stand-up comedians. #BirdFacts",
+      "Pelicans are certified scuba divers. #BirdFacts",
+      "Crows practice parkour in their spare time. #BirdFacts",
+      "Hummingbirds invented breakdancing. #BirdFacts",
+      "Eagles coach the national soccer team. #BirdFacts",
+      "Woodpeckers hold drumming concerts at dawn. #BirdFacts",
+      "Ducks lead underwater treasure expeditions. #BirdFacts",
+      "Geese run a gourmet bakery in the countryside. #BirdFacts",
+      "Parrots are fluent in seven languages. #BirdFacts",
+      "Swans moonlight as ballerinas. #BirdFacts",
+      "Toucans solve complex math equations. #BirdFacts",
+      "Penguins are expert chefs specializing in sushi. #BirdFacts",
+      "Roadrunners are professional race car drivers. #BirdFacts",
+      "Emus are master architects building skyscrapers. #BirdFacts",
+      "Condors are world-class skydivers. #BirdFacts"
+  };
+
+  private static final String[] REPLIES = {
+      "Hard pass",
+      "Big if true",
+      "Kind of agree but not really",
+      "Makes me #think",
+      "What happened to being a gentleman?"
   };
 
   @Override
@@ -64,9 +93,18 @@ public class Seeder implements CommandLineRunner {
     Post post1 = savePost("#Bingleblong", nol);
     Post post2 = savePost("Melle en Raafi zijn #chads #winning", sjaakie);
 
-    final int amountOfPosts = 30;
-    for (int i = 0; i < amountOfPosts; i++) {
-      postService.addPost(randomContent(), randomUser(melle, raafi, nol, sjaakie));
+    List<Post> newPosts = new ArrayList<>();
+
+    // Create random posts and replies
+    int numPosts = 500;
+    for(int i = 0; i < numPosts; i++) {
+      if (newPosts.isEmpty() || Math.random() > 0.7) {
+        newPosts.add(postService.addPost(randomContent(), randomUser(melle, raafi, nol, sjaakie)));
+      }
+      else {
+        Post randomPost = newPosts.get((int)(Math.random() * newPosts.size()));
+        postService.addReply(randomReply(), randomUser(melle, raafi, nol, sjaakie), randomPost);
+      }
     }
 
     Post repost = saveRepost(sjaakie, post1);
@@ -76,11 +114,14 @@ public class Seeder implements CommandLineRunner {
     followUser(sjaakie, raafi);
 
     likePost(post1, melle);
-
   }
 
   private static String randomContent() {
     return CONTENT[(int) (Math.random() * CONTENT.length)];
+  }
+
+  private static String randomReply() {
+    return REPLIES[(int) (Math.random() * REPLIES.length)];
   }
 
   private static User randomUser(User... users) {

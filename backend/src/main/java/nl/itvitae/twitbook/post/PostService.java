@@ -21,7 +21,13 @@ public class PostService {
     return postRepository.findAll(pageable);
   }
 
-  public Page<Post> findByHashtag(Hashtag hashtag, Pageable pageable) { return postRepository.findByHashtagsContaining(hashtag, pageable); }
+  public Page<Post> findPostResponses(Long id, Pageable pageable) {
+    return postRepository.findByLinkedPostIdAndType(id, Post.PostType.REPLY, pageable);
+  }
+
+  public Page<Post> findByHashtag(Hashtag hashtag, Pageable pageable) {
+    return postRepository.findByHashtagsContaining(hashtag, pageable);
+  }
 
   public Optional<Post> findById(Long id) {
     return postRepository.findById(id);
@@ -30,6 +36,8 @@ public class PostService {
   public Optional<Post> findByTypeAndLinkedPostAndPoster_UsernameIgnoreCase(Post.PostType postType, Post linkedPost, String username) {
     return postRepository.findByTypeAndLinkedPostAndPoster_UsernameIgnoreCase(postType, linkedPost, username);
   }
+
+
 
   public List<Post> findByPoster_UsernameIgnoreCase(String username) {
     return postRepository.findByPoster_UsernameIgnoreCase(username);

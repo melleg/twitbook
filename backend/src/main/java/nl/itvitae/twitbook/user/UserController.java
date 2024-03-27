@@ -113,10 +113,12 @@ public class UserController {
       @RequestPart(required = false)
       MultipartFile file,
       @AuthenticationPrincipal User user) {
+
     user.setDisplayName(editUserModel.displayName());
     user.setBio(editUserModel.bio());
+
     var oldImage = user.getProfileImage();
-    if (file.getContentType().startsWith("image/")) {
+    if (file != null && file.getContentType().startsWith("image/")) {
       try {
         user.setProfileImage(imageService.uploadImage(file));
       } catch (Exception e) {

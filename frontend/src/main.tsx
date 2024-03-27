@@ -8,6 +8,7 @@ import Profile from "./user/Profile.tsx";
 import RegisterComponent from "./auth/RegisterComponent.tsx";
 import RegisterSuccess from "./auth/RegisterSuccess.tsx";
 import SearchResult from "./search/SearchResult.tsx";
+import PostDetails from "./post/PostDetails.tsx";
 import Follows from "./user/Follows.tsx";
 
 const router = createBrowserRouter([
@@ -39,6 +40,10 @@ const router = createBrowserRouter([
             element: <Follows showFollowers={true} />,
           },
         ],
+      },
+      {
+        path: "posts/:id",
+        element: <PostDetails />,
       },
       {
         path: "search",

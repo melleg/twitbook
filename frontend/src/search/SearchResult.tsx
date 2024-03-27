@@ -21,7 +21,7 @@ const SearchResult: React.FC = () => {
   if (getHashtagQuery()) {
     return (
       <>
-        <h3 className="text-white mt-4 mb-2">
+        <h3 className="mt-4 mb-2">
           Showing posts with hashtag <i>#{getHashtagQuery()}</i>
         </h3>
         <PostFeed
@@ -39,7 +39,7 @@ const SearchResult: React.FC = () => {
   // User results
   return (
     <>
-      <h3 className="text-white mt-4 mb-2">
+      <h3 className="mt-4 mb-2">
         Showing users with name "<i>{getQuery()}</i>"
       </h3>
       <UserFeed

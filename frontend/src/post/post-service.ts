@@ -59,6 +59,19 @@ export const getPostsByHashtag = async (
   return posts;
 };
 
+export const getPostResponses = async (
+  postId: number,
+  page: number,
+  setTotalPages: Dispatch<SetStateAction<number>>
+) => {
+  const response = (await api.get(`${uri}/responses-to/${postId}?page=${page}`))
+    .data;
+  const posts: Post[] = response.content ?? [];
+  setTotalPages(response.totalPages);
+  posts.forEach((p: Post) => mapPost(p));
+  return posts;
+};
+
 export const createPost = async (model: PostModel) => {
   return await api.post(`${uri}`, model);
 };

@@ -11,7 +11,7 @@ import java.util.Optional;
 
 public interface PostRepository extends JpaRepository<Post, Long> {
     List<Post> findByPoster_UsernameIgnoreCase(String username);
-
+    Page<Post> findByLinkedPostIdAndType(Long id, Post.PostType postType, Pageable pageable);
     Page<Post> findByHashtagsContaining(Hashtag hashtag, Pageable pageable);
     Page<Post> findByPoster_UsernameIgnoreCase(String username, Pageable pageable);
     Page<Post> findByPoster_Followers_Follower_UsernameIgnoreCase(String username, Pageable pageable);

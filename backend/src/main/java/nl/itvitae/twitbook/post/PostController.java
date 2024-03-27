@@ -21,14 +21,7 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 @RestController
@@ -42,7 +35,7 @@ public class PostController {
   private final LikeRepository likeRepository;
   private final HashtagService hashtagService;
 
-  private static final int PAGE_SIZE = 4;
+  private static final int PAGE_SIZE = 20;
 
   // Returns the proper DTO based on post type
   private Object getPostDTO(Post post, User userRequesting) {
@@ -71,6 +64,12 @@ public class PostController {
     }
 
     return new ResponseEntity<>(getPostDTO(post.get(), user), HttpStatus.OK);
+  }
+
+  @GetMapping("responses-to/{id}")
+  public ResponseEntity<?> getPostResponses(@PathVariable Long id, @AuthenticationPrincipal User user, Pageable pageable) {
+    Page<Post> posts = postService.findPostResponses(id, getPageable(pageable));
+    return ResponseEntity.ok(posts.map(p -> getPostDTO(p, user)));
   }
 
   @GetMapping("by-username/{username}")
