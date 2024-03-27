@@ -12,6 +12,7 @@ const PaginationControls: React.FC<PaginationProps> = ({ totalPages }) => {
   const setPage = (page: number) => {
     searchParams.set("page", page.toString());
     setSearchParams(searchParams);
+    window.scrollTo(0,0);
   };
 
   const PageButton = (props: {
