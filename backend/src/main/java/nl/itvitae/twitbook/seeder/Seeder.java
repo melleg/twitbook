@@ -50,7 +50,8 @@ public class Seeder implements CommandLineRunner {
         *distraction*
         *distraction*
         Haha omg i reaaally need to st-""", "twitbook is love, twitbook is life", "gameing",
-      "me when the", "banaan", "fun", "wow", "concerning", "interesting", "looking into this",
+      "me when the", "banaan", "fun", "amogus", "when the imposter is sus", "ඞ", "emotional damage",
+      "Why do they call it oven when you of in the cold food of out hot eat the food",
       "I'm running out of unique tweets",
       "Flamingos can juggle fireballs. #BirdFacts",
       "Sparrows host underground dance battles. #BirdFacts",
@@ -79,7 +80,13 @@ public class Seeder implements CommandLineRunner {
       "Big if true",
       "Kind of agree but not really",
       "Makes me #think",
-      "What happened to being a gentleman?"
+      "What happened to being a gentleman?",
+      "wow",
+      "concerning",
+      "interesting",
+      "looking into this",
+      "skill issue",
+      "\uD83E\uDD13" //nerd emoji
   };
 
   @Override
@@ -97,12 +104,11 @@ public class Seeder implements CommandLineRunner {
 
     // Create random posts and replies
     int numPosts = 500;
-    for(int i = 0; i < numPosts; i++) {
+    for (int i = 0; i < numPosts; i++) {
       if (newPosts.isEmpty() || Math.random() > 0.7) {
         newPosts.add(postService.addPost(randomContent(), randomUser(melle, raafi, nol, sjaakie)));
-      }
-      else {
-        Post randomPost = newPosts.get((int)(Math.random() * newPosts.size()));
+      } else {
+        Post randomPost = newPosts.get((int) (Math.random() * newPosts.size()));
         postService.addReply(randomReply(), randomUser(melle, raafi, nol, sjaakie), randomPost);
       }
     }
